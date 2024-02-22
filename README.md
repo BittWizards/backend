@@ -47,7 +47,7 @@ Docker Compose, утилита виртуального окружения pytho
 
 Склонируйте репозиторий:
 ````bash
-git clone git@github.com:ALFA-9/Backend.git
+git clone git@github.com:BittWizards/backend.git
 ````
 
 Cоздайте файл **.env**:
