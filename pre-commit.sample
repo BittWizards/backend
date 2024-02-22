@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Получаем список файлов, которые пользователь пытается закоммитить,
+# и выбираем из них те, которые заканчиваются на `.py`.
+CHANGED_PYTHON_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep ".py\$")
+
+if [ -z "$CHANGED_PYTHON_FILES" ]
+then
+   echo "No Python files found. No reason to run checks."
+   exit 0
+fi
+
+# Включаем режим, в котором любая ошибка сразу же завершит весь скрипт ошибкой.
+set -e
+
+# Запускаем форматирование.
+black .
+
+# Запускаем проверку black.
+black --check $CHANGED_PYTHON_FILES
+
+# Запускаем форматирование.
+isort .
+
+# Запускаем проверку flake8.
+flake8 $CHANGED_PYTHON_FILES
+
+git add $CHANGED_PYTHON_FILES
+
+echo "All checks successfully passed."
