@@ -17,3 +17,29 @@ python_files = "test_*.py"
 known_third_party = [
     "venv/lib/*",
 ]
+
+[tool.poetry]
+name = "hackathon-y&y-backend"
+version = "0.1.0"
+description = ""
+authors = ["Pavel Drovnin <pavel98rus@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+django = "4.2.9"
+django-filter = "23.4"
+django-debug-toolbar = "4.2.0"
+djangorestframework = "3.14.0"
+djangorestframework-simplejwt = "4.8.0"
+djoser = "2.1.0"
+drf-spectacular = "0.27.1"
+psycopg2-binary = "2.9.9"
+pytest = "7.4.4"
+pytest-django = "4.7.0"
+django-cors-headers = "4.3.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

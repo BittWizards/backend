@@ -39,8 +39,7 @@ services:
   #     - redis
 
   nginx:
-    build: ./nginx/
-    env_file: .env
+    image: nginx:1.25.1-alpine
     ports:
       - "8000:80"
     volumes:
