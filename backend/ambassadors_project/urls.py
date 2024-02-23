@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path, include
-from rest_framework import routers
+from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework import routers
 
 router_v1 = routers.DefaultRouter()
 
@@ -14,7 +14,9 @@ api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),
     # path("auth/", AuthAPIView.as_view(), name="registration"),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
-    path("docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"),
+    path(
+        "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
+    ),
 ]
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
