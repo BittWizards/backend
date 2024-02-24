@@ -71,9 +71,7 @@ REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
     "DATETIME_FORMAT": "%d.%m.%Y",
     "DATE_FORMAT": "%d.%m.%Y",
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -97,6 +95,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ambassadors_project.wsgi.application"
 ASGI_APPLICATION = "ambassadors_project.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    }
+}
 
 DATABASES = {
     "default": {

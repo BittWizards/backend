@@ -11,6 +11,7 @@ pytest==7.4.4
 pytest-django==4.7.0
 django-cors-headers==4.3.1
 channels[daphne]==4.0.0
+channels-redis==4.2.0
 
 # redis==5.0.1
 # celery==5.3.6
