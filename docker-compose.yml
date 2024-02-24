@@ -6,6 +6,8 @@ services:
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
 
   backend:
     restart: always
@@ -41,7 +43,7 @@ services:
   nginx:
     image: nginx:1.25.1-alpine
     ports:
-      - "8000:80"
+      - 8000:80
     volumes:
       - static:/static/
       - media:/media/
