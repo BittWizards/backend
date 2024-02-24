@@ -15,6 +15,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 HOST_URL = os.getenv("HOST_URL", "http://localhost:8000")
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -25,6 +26,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_filters",
     "drf_spectacular",
+    "live",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,7 @@ if DEBUG:
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Ambassadors Project",
-    "VERSION": "1.0.5",
+    "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
     "SERVERS": [{"url": HOST_URL}],
     "COMPONENT_SPLIT_REQUEST": True,
@@ -94,6 +96,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ambassadors_project.wsgi.application"
+ASGI_APPLICATION = "ambassadors_project.asgi.application"
 
 DATABASES = {
     "default": {
