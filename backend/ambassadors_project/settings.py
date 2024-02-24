@@ -25,6 +25,9 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_filters",
     "drf_spectacular",
+    # project apps
+    "ambassadors",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -101,7 +104,7 @@ DATABASES = {
         "NAME": os.getenv("POSTGRES_DB", "django_dev"),
         "USER": os.getenv("POSTGRES_USER", "django_user"),
         "PASSWORD": os.getenv("POSTGRES_PASSWORD", "django_pass"),
-        "HOST": os.getenv("DB_HOST", ""),
+        "HOST": os.getenv("DB_HOST", "localhost"),
         "PORT": os.getenv("DB_PORT", 5432),
     }
 }
@@ -136,3 +139,7 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Using custom user model
+AUTH_USER_MODEL = "users.User"
