@@ -7,7 +7,16 @@ from rest_framework.status import (
 )
 
 from .models import Merch, Order, OrderStatus
+from .serializers import OrderSerializer, MerchSerializer
 
 
-class Order(viewsets.ModelViewSet):
-    pass
+class OrderViewSet(viewsets.ModelViewSet):
+    """ViewSet для заявок на мерч"""
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+
+class MerchViewSet(viewsets.ModelViewSet):
+    """ViewSet для мерча"""
+    queryset = Merch.objects.all()
+    serializer_class = MerchSerializer
