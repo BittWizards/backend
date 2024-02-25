@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "django_filters",
     "drf_spectacular",
-    "merch",
+    "order",
 ]
 
 MIDDLEWARE = [
