@@ -12,3 +12,6 @@ addopts = [
 ]
 testpaths = "tests/"
 python_files = "test_*.py"
+
+[tool.isort]
+src_paths = ["backend"]
