@@ -30,8 +30,9 @@ def create_ambassadors():
             ya_programm=programms[i],
             phone=f"7 (917) 123-45-6{i}",
             tg_acc=f"ivanov{i}",
+            goal="Закончить",
             education="9 классов",
-            work_now=True,
+            work_now="Беллинсгаузен",
             status="active",
             created=now,
         )
