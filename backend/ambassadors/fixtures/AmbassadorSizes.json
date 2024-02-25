@@ -1,0 +1,29 @@
+[
+    {
+        "model": "ambassadors.AmbassadorSize",
+        "pk": 1,
+        "fields": {
+            "ambassador_id": "1",
+            "clothes_size": "M",
+            "foot_size": "43"
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorSize",
+        "pk": 2,
+        "fields": {
+            "ambassador_id": "2",
+            "clothes_size": "M",
+            "foot_size": "42"
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorSize",
+        "pk": 3,
+        "fields": {
+            "ambassador_id": "3",
+            "clothes_size": "S",
+            "foot_size": "39"
+        }
+    }
+]
