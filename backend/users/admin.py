@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from .custom_functions import get_full_name
 from .models import User
 
 
@@ -15,9 +16,6 @@ class UserAdmin(admin.ModelAdmin):
     )
 
     def fio(self, obj):
-        fi = f"{obj.last_name} {obj.first_name}"
-        if obj.middle_name:
-            fi = f"{obj.last_name} {obj.first_name} {obj.middle_name}"
-        return fi
+        return get_full_name(obj)
 
     fio.short_description = "ФИО"

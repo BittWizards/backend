@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+from users.custom_functions import get_full_name
+
 from .models import (
     Actions,
     Ambassador,
@@ -35,11 +37,17 @@ class AmbassdorAdmin(admin.ModelAdmin):
         "work_now",
         "status",
         "created",
+        "fio",
     )
     inlines = [
         AmbassadorActionsTabularInline,
         MessageToAmbassadorTabularInline,
     ]
+
+    def fio(self, instance):
+        return get_full_name(instance)
+
+    fio.short_description = "ФИО"
 
 
 @admin.register(YandexProgramm)

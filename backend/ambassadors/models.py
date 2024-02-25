@@ -2,7 +2,9 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
-from .choices import AmbassadorStatus, Gender
+from users import custom_functions
+
+from .choices import AmbassadorsSizes, AmbassadorStatus, Gender
 
 User = get_user_model()
 
@@ -12,8 +14,8 @@ class YandexProgramm(models.Model):
     Модель курса Яндекса.
     """
 
-    title = models.CharField(verbose_name="заголовок", max_length=100)
-    description = models.CharField(verbose_name="Описание", max_length=100)
+    title = models.CharField(verbose_name="заголовок", max_length=300)
+    description = models.CharField(verbose_name="Описание", max_length=1000)
 
     class Meta:
         verbose_name = "Курс"
@@ -21,7 +23,7 @@ class YandexProgramm(models.Model):
         ordering = ("id",)
 
     def __str__(self) -> str:
-        return {self.title}
+        return str(self.title)
 
 
 class Ambassador(models.Model):
@@ -56,7 +58,9 @@ class Ambassador(models.Model):
         max_length=15,
         blank=False,
     )
-    tg_acc = models.CharField(verbose_name="Телеграмм аккаунт", max_length=150)
+    tg_acc = models.CharField(
+        verbose_name="Телеграмм аккаунт", max_length=150, unique=True
+    )
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work_now = models.BooleanField(verbose_name="Работает")
     status = models.CharField(
@@ -73,6 +77,10 @@ class Ambassador(models.Model):
 
     def __str__(self) -> str:
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def get_full_name(self):
+        return custom_functions.get_full_name(self)
 
 
 class Actions(models.Model):
@@ -131,7 +139,7 @@ class AmbassadorAddress(models.Model):
         ordering = ("id",)
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id} {self.post_index}"
+        return f"{self.ambassador_id} — {self.country} {self. city} {self.street_home} {self.post_index}"
 
 
 class AmbassadorSize(models.Model):
@@ -143,7 +151,9 @@ class AmbassadorSize(models.Model):
         Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
     )
     clothes_size = models.CharField(
-        verbose_name="Размер одежды", max_length=30
+        verbose_name="Размер одежды",
+        max_length=30,
+        choices=AmbassadorsSizes.choices,
     )
     foot_size = models.IntegerField(
         verbose_name="Размер обуви",
@@ -165,9 +175,7 @@ class SendingMessage(models.Model):
 
     title = models.CharField(verbose_name="Заголовок", max_length=100)
     description = models.CharField(verbose_name="Описание", max_length=2000)
-    created = models.DateTimeField(
-        verbose_name="Дата создания", default=timezone.now
-    )
+    created = models.DateTimeField(verbose_name="Было отправлено", null=True)
     supervisor_id = models.ForeignKey(
         User, verbose_name="Супервизор", on_delete=models.CASCADE
     )

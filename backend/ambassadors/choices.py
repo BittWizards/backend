@@ -17,3 +17,15 @@ class AmbassadorStatus(models.TextChoices):
 
     ACTIVE = "Active", "Активный"
     NOT_ACTIVE = "Not active", "Не активный"
+
+
+class AmbassadorsSizes(models.TextChoices):
+    """
+    Выбор размера одежды амбассадора.
+    """
+
+    XS = "XS"
+    S = "S"
+    M = "M"
+    L = "L"
+    XL = "XL"
