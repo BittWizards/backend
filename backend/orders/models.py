@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
@@ -53,8 +53,9 @@ class Order(models.Model):
     )
     merch = models.ManyToManyField(
         Merch,
-        related_name="order",
+        related_name="in_order",
         verbose_name="Мерч в заявке",
+        through="MerchInOrder"
     )
     order_status = models.CharField(
         verbose_name="Размер для одежды",
@@ -76,3 +77,34 @@ class Order(models.Model):
         verbose_name = "Заявка на отправку мерча"
         verbose_name_plural = "Заявка на отправку мерча"
         ordering = "id"
+
+
+class MerchInOrder(models.Model):
+    """Модель для хранения количества мерча в заказе"""
+    order = models.ForeignKey(
+        Order,
+        related_name="merch",
+        verbose_name="Заявка для отправки мерча",
+    )
+    merch = models.ForeignKey(
+        Merch,
+        related_name="order",
+        verbose_name="Мерч в заявке",
+    )
+    amount = models.IntegerField(
+        verbose_name="Количество мерча",
+        validators=[
+            MinValueValidator(1, "Количество не может быть меньше 1"),
+            MaxValueValidator(10, "Количество не может быть больше 10")
+        ],
+        default=1,
+    )
+
+    class Meta:
+        verbose_name = "Мерч в заказе с количеством и общей ценой"
+        verbose_name_plural = "Мерч в заказе с количеством и общей ценой"
+        ordering = "id"
+
+    @classmethod
+    def total_cost(self):
+        return self.merch.cost * self.amount
