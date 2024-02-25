@@ -20,6 +20,7 @@ class OrderStatus(models.TextChoices):
 
 
 class Merch(models.Model):
+    """Модель для мерча"""
     name = models.CharField(
         verbose_name="Название продукции", max_length=60, unique=True
     )
@@ -44,6 +45,7 @@ class Merch(models.Model):
 
 
 class Order(models.Model):
+    """Модель для заявки на мерч"""
     ambassador = models.ForeignKey(
         Ambassador,
         verbose_name="Получатель (амбассадор)",

@@ -5,6 +5,8 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
+from order.urls import router as order_router  # включить в роутер для амбасадора
+
 router_v1 = routers.DefaultRouter()
 
 v1_urlpatterns = [
