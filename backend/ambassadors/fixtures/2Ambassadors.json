@@ -1,0 +1,51 @@
+[
+    {
+        "model": "ambassadors.Ambassador",
+        "pk": 1,
+        "fields": {
+            "email": "test_ambassador@test.ru",
+            "first_name": "Andrey",
+            "last_name": "Test",
+            "middle_name": "Testovich",
+            "gender": "Male",
+            "phone": "88005553535",
+            "tg_acc": "t.me/dartanyun",
+            "education": "Школа магии и волшебства Хогвартс",
+            "work_now": "False",
+            "status": "Active"
+        }
+    },
+    {
+        "model": "ambassadors.Ambassador",
+        "pk": 2,
+        "fields": {
+            "email": "test_ambassador2@test.ru",
+            "first_name": "Pavel",
+            "last_name": "Durov",
+            "middle_name": "Andreevich",
+            "gender": "Male",
+            "ya_programm": "2",
+            "phone": "88005553536",
+            "tg_acc": "t.me/durov",
+            "education": "Пермский техникум промышленных и информационных технологий",
+            "work_now": "True",
+            "status": "Not active"
+        }
+    },
+    {
+        "model": "ambassadors.Ambassador",
+        "pk": 3,
+        "fields": {
+            "email": "test_ambassador3@test.ru",
+            "first_name": "Anna",
+            "last_name": "Varacheva",
+            "middle_name": "Aleksandrovna",
+            "gender": "Female",
+            "phone": "88005553537",
+            "tg_acc": "t.me/anna",
+            "education": "ПГНИУ",
+            "work_now": "True",
+            "status": "Active"
+        }
+    }
+]
