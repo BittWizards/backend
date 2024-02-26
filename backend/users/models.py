@@ -69,7 +69,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(
         verbose_name="Фамилия", max_length=100, blank=False
     )
-    middle_name = models.CharField(verbose_name="Отчество", max_length=100)
+    middle_name = models.CharField(
+        verbose_name="Отчество", max_length=100, blank=True
+    )
     phone = models.CharField(
         verbose_name="Номер телефона",
         max_length=15,
