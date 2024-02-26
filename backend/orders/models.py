@@ -1,6 +1,8 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from ambassadors.models import Ambassador
+
 
 class ClothSize(models.TextChoices):
     """Список размеров для одежды"""

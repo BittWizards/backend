@@ -2,11 +2,11 @@ from rest_framework import serializers
 
 
 from .models import Merch, Order
-from ambassador.serializers import AmbassadorSerializer
+from ambassadors.serializers import AmbassadorSerializer
 
 
 class MerchSerializer(serializers.ModelSerializer):
-    """Сериалайзер для тегов"""
+    """Сериалайзер для мерча"""
 
     class Meta:
         model = Merch
