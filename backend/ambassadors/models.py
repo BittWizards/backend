@@ -4,7 +4,12 @@ from django.utils import timezone
 
 from users import custom_functions
 
-from .choices import AmbassadorsSizes, AmbassadorStatus, Gender
+from .choices import (
+    AmbassadorsClothesSizes,
+    AmbassadorsFootsSizes,
+    AmbassadorStatus,
+    Gender,
+)
 
 User = get_user_model()
 
@@ -153,10 +158,12 @@ class AmbassadorSize(models.Model):
     clothes_size = models.CharField(
         verbose_name="Размер одежды",
         max_length=30,
-        choices=AmbassadorsSizes.choices,
+        choices=AmbassadorsClothesSizes.choices,
     )
-    foot_size = models.IntegerField(
+    foot_size = models.CharField(
         verbose_name="Размер обуви",
+        max_length=30,
+        choices=AmbassadorsFootsSizes.choices,
     )
 
     class Meta:
@@ -165,7 +172,7 @@ class AmbassadorSize(models.Model):
         ordering = ("id",)
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id}"
+        return f"{self.ambassador_id}. Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
 
 
 class SendingMessage(models.Model):
