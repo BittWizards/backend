@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.hashers import make_password
+
 from .custom_functions import get_full_name
 from .models import User
 
