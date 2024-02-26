@@ -1,6 +1,4 @@
-from django.shortcuts import get_object_or_404
 from rest_framework import serializers
-from rest_framework.status import HTTP_400_BAD_REQUEST
 
 
 from .models import Merch, Order
@@ -18,8 +16,9 @@ class MerchSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     """Сериалайзер для заявок на мерч"""
     ambassador = AmbassadorSerializer()
+    merch = MerchSerializer(many=True)
 
     class Meta:
         model = Order
         fields = ('__all__')
-        read_only_fields = ('created_date',)
+        read_only_fields = ('created_date', 'order_status')

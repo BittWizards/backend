@@ -9,9 +9,9 @@ class MerchInline(admin.TabularInline):
 
 
 class MerchAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "size", "cost")
+    list_display = ("id", "name", "cost")
     search_fields = ("name",)
-    list_filter = ("name", "size", "cost")
+    list_filter = ("name", "cost")
     empty_value_display = "-пусто-"
 
 
@@ -20,6 +20,7 @@ class OrderAdmin(admin.ModelAdmin):
         "id",
         "ambassador",
         "merch",
+        "merch_size",
         "order_status",
         "created_date",
         "delivered_date",

@@ -1,4 +1,4 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -24,9 +24,6 @@ class Merch(models.Model):
     name = models.CharField(
         verbose_name="Название продукции", max_length=60, unique=True
     )
-    size = models.CharField(
-        verbose_name="Размер для одежды", choices=ClothSize, null=True
-    )
     cost = models.IntegerField(
         verbose_name="Стоимость продукции",
         validators=[
@@ -41,7 +38,7 @@ class Merch(models.Model):
         ordering = ("name", "size")
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name} {self.size}"
 
 
 class Order(models.Model):
@@ -55,7 +52,11 @@ class Order(models.Model):
         Merch,
         related_name="in_order",
         verbose_name="Мерч в заявке",
-        through="MerchInOrder"
+    )
+    merch_size = models.CharField(
+        verbose_name="Размер для одежды",
+        null=True,
+        choices=ClothSize,  # TODO добавить размеры
     )
     order_status = models.CharField(
         verbose_name="Размер для одежды",
@@ -63,48 +64,29 @@ class Order(models.Model):
         default=OrderStatus.CREATED,
     )
     created_date = models.DateField(
-        verbose_name="Дата создания заявки", auto_now_add=True
+        verbose_name="Дата создания заявки",
+        auto_now_add=True
     )
     delivered_date = models.DateField(
-        verbose_name="Дата получения заказа", null=True
+        verbose_name="Дата получения заказа",
+        null=True
     )
     track_number = models.CharField(
-        verbose_name="Трек-номер", max_length=20, unique=True
+        verbose_name="Трек-номер",
+        max_length=20,
+        unique=True,
+        null=True
     )
-    comment = models.CharField(verbose_name="Комментарий к заявке")
+    comment = models.CharField(
+        verbose_name="Комментарий к заявке",
+        null=True
+    )
 
     class Meta:
         verbose_name = "Заявка на отправку мерча"
         verbose_name_plural = "Заявка на отправку мерча"
         ordering = "id"
 
-
-class MerchInOrder(models.Model):
-    """Модель для хранения количества мерча в заказе"""
-    order = models.ForeignKey(
-        Order,
-        related_name="merch",
-        verbose_name="Заявка для отправки мерча",
-    )
-    merch = models.ForeignKey(
-        Merch,
-        related_name="order",
-        verbose_name="Мерч в заявке",
-    )
-    amount = models.IntegerField(
-        verbose_name="Количество мерча",
-        validators=[
-            MinValueValidator(1, "Количество не может быть меньше 1"),
-            MaxValueValidator(10, "Количество не может быть больше 10")
-        ],
-        default=1,
-    )
-
-    class Meta:
-        verbose_name = "Мерч в заказе с количеством и общей ценой"
-        verbose_name_plural = "Мерч в заказе с количеством и общей ценой"
-        ordering = "id"
-
-    @classmethod
+    @property
     def total_cost(self):
-        return self.merch.cost * self.amount
+        return sum(cost for merch in self.merch for cost in merch)
