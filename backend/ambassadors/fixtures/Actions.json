@@ -1,0 +1,26 @@
+[
+    {
+        "model": "ambassadors.Actions",
+        "pk": 1,
+        "fields": {
+            "title": "Регистрация",
+            "description": "Пользователь зарегистрировался на ресурсе."
+        }
+    },
+    {
+        "model": "ambassadors.Actions",
+        "pk": 2,
+        "fields": {
+            "title": "Авторизация",
+            "description": "Пользователь авторизировался на ресурсе."
+        }
+    },
+    {
+        "model": "ambassadors.Actions",
+        "pk": 3,
+        "fields": {
+            "title": "Покупка курса",
+            "description": "Амбассадор купил курс."
+        }
+    }
+]

@@ -68,6 +68,14 @@ MVP CRM ambassador
     python3 manage.py createsuperuser
     python3 manage.py runserver
   ```
+3. *Наполните базу данными*:
 
+    Команда для загрузки данных в бд:
+
+    ```sh
+    python manage.py loaddata */fixtures/*.json
+    ```
+    User password: user_test
+    Admin password: admin
 
 [Оглавление](#contents)
