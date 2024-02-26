@@ -6,6 +6,3 @@ def get_full_name(obj):
     if obj.middle_name:
         fio = fio + f" {obj.middle_name}"
     return fio
-
-
-get_full_name.short_description = "ФИО"
