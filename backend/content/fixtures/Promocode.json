@@ -4,9 +4,9 @@
     "pk": 1,
     "fields": {
         "ambassador": 1,
-        "promocode": "TESTPROMO1",
+        "promocode": "DFGHDJHN",
         "is_active": true,
-        "created_at": "2024-02-26T09:19:15.241Z"
+        "created_at": "2024-02-27T08:16:48.010Z"
     }
 },
 {
@@ -14,19 +14,29 @@
     "pk": 2,
     "fields": {
         "ambassador": 2,
-        "promocode": "–í–´–ß–ü–ê–´–í–ü",
-        "is_active": true,
-        "created_at": "2024-02-27T02:49:35.729Z"
+        "promocode": "TGHDNJ345345FD",
+        "is_active": false,
+        "created_at": "2024-02-27T08:16:57.758Z"
     }
 },
 {
     "model": "content.promocode",
     "pk": 3,
     "fields": {
-        "ambassador": 3,
-        "promocode": "FDGH445S",
+        "ambassador": 2,
+        "promocode": "REG¿¬œ–¿",
         "is_active": true,
-        "created_at": "2024-02-27T02:49:44.812Z"
+        "created_at": "2024-02-27T08:17:07.573Z"
+    }
+},
+{
+    "model": "content.promocode",
+    "pk": 4,
+    "fields": {
+        "ambassador": 3,
+        "promocode": "24”””",
+        "is_active": true,
+        "created_at": "2024-02-27T08:17:16.115Z"
     }
 }
 ]

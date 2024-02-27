@@ -4,11 +4,13 @@
     "pk": 1,
     "fields": {
         "ambassador": 1,
-        "created_at": "2024-02-27T02:21:35.524Z",
+        "created_at": "2024-02-27T08:13:05.204Z",
         "link": "https://www.google.com/search?q=loaddata++%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE+fixtures&newwindow=1&sca_esv=4f1517d75eb18543&sxsrf=ACQVn09cmWsaSyDI6jzVQSvG6_18xrYoyQ%3A1708924140803&",
-        "start_guid": false,
+        "start_guid": true,
+        "is_review": false,
+        "is_photo": false,
         "platform": "youtube",
-        "comment": "–ø–ø–ø",
+        "comment": "",
         "accepted": true
     }
 },
@@ -17,12 +19,14 @@
     "pk": 2,
     "fields": {
         "ambassador": 2,
-        "created_at": "2024-02-27T02:51:06.037Z",
-        "link": "https://stackoverflow.com/questions/2225062/load-multiple-fixtures-at-once",
+        "created_at": "2024-02-27T08:17:51.561Z",
+        "link": "https://www.youtube.com/watch?v=o0XbHvKxw7Y&t=105s",
         "start_guid": true,
-        "platform": "project",
-        "comment": "",
-        "accepted": false
+        "is_review": false,
+        "is_photo": true,
+        "platform": "youtube",
+        "comment": "”÷÷”¿",
+        "accepted": true
     }
 },
 {
@@ -30,10 +34,12 @@
     "pk": 3,
     "fields": {
         "ambassador": 3,
-        "created_at": "2024-02-27T02:53:06.184Z",
-        "link": "https://www.youtube.com/watch?v=o0XbHvKxw7Y&t=105s",
-        "start_guid": true,
-        "platform": "youtube",
+        "created_at": "2024-02-27T08:18:14.750Z",
+        "link": "https://stackoverflow.com/questions/2225062/load-multiple-fixtures-at-once",
+        "start_guid": false,
+        "is_review": false,
+        "is_photo": false,
+        "platform": null,
         "comment": "",
         "accepted": false
     }

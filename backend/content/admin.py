@@ -30,9 +30,11 @@ class ContentAdmin(admin.ModelAdmin):
         "ambassador",
         "created_at",
         "start_guid",
+        "is_review",
+        "is_photo",
+        "accepted",
         "platform",
         "comment",
-        "accepted",
         "count_files",
         "link",
     )

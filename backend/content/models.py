@@ -9,15 +9,14 @@ from ambassadors_project.constants import PROMOSIZE
 class Platform(models.TextChoices):
     """Варианты платформ для размещения"""
 
-    REVIEW = ("review", "Отзыв")
     HABR = ("habr", "Хабр")
     VC = ("VC", "VC")
     YOUTUBE = ("youtube", "Youtube")
     TG = ("telegram", "Телеграм")
-    PHOTO_IN_MERCH = ("photo", "Фото в мерче")
     INSTAGRAM = ("instagram", "Инстаграм")
     LINKEDIN = ("linkedin", "lLinkedin")
     PROJECT = ("project", "Участие в проекте")
+    OTHER = ("other", "Прочее")
 
 
 class Content(models.Model):
@@ -34,8 +33,12 @@ class Content(models.Model):
     )
     link = models.URLField(verbose_name="ссылка на контент")
     start_guid = models.BooleanField(default=False, verbose_name="По гайду")
+    is_review = models.BooleanField(default=False, verbose_name="Отзыв")
+    is_photo = models.BooleanField(default=False, verbose_name="Фото в мерче")
     platform = models.CharField(
         max_length=max([len(platform) for platform in Platform]),
+        null=True,
+        blank=True,
         choices=Platform.choices,
         verbose_name="Площадка",
     )
@@ -53,6 +56,18 @@ class Content(models.Model):
 
     def __str__(self) -> str:
         return f"content_id: {self.pk}"
+
+    def clean(self):
+        super().clean()
+        if self.is_review:
+            if Content.objects.filter(
+                ambassador=self.ambassador, is_review=True
+            ).exclude(pk=self.pk):
+                raise ValidationError("У амбассадора уже есть отзыв")
+        if self.accepted and self.platform is None:
+            raise ValidationError(
+                "Выберите площадку на которой размещен контент"
+            )
 
 
 class Documents(models.Model):
