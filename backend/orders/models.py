@@ -2,23 +2,15 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from ambassadors.models import Ambassador
-
-
-class ClothSize(models.TextChoices):
-    """Список размеров для одежды"""
-
-    XS = "XS"
-    S = "S"
-    M = "M"
-    L = "L"
+from ambassadors.choices import AmbassadorsFootsSizes, AmbassadorsClothesSizes
 
 
 class OrderStatus(models.TextChoices):
     """Список статусов заказа"""
 
-    CREATED = "Создано"
-    DELIVERED = "Доставлено"
-    SHIPPED = "Отправлено"
+    CREATED = "создано", "created"
+    DELIVERED = "доставлено", "delivered"
+    SHIPPED = "отправлено", "shipped"
 
 
 class Merch(models.Model):
@@ -37,7 +29,7 @@ class Merch(models.Model):
     class Meta:
         verbose_name = "Мерч"
         verbose_name_plural = "Мерч"
-        ordering = ("name", "size")
+        ordering = ("name",)
 
     def __str__(self):
         return f"{self.name} {self.size}"
@@ -58,11 +50,11 @@ class Order(models.Model):
     merch_size = models.CharField(
         verbose_name="Размер для одежды",
         null=True,
-        choices=ClothSize,  # TODO добавить размеры
+        choices=(AmbassadorsClothesSizes.choices + AmbassadorsFootsSizes.choices)
     )
     order_status = models.CharField(
         verbose_name="Размер для одежды",
-        choices=OrderStatus,
+        choices=OrderStatus.choices,
         default=OrderStatus.CREATED,
     )
     created_date = models.DateField(
@@ -87,7 +79,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Заявка на отправку мерча"
         verbose_name_plural = "Заявка на отправку мерча"
-        ordering = "id"
+        ordering = ("id",)
 
     @property
     def total_cost(self):

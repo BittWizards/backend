@@ -3,11 +3,6 @@ from django.contrib import admin
 from .models import Merch, Order
 
 
-class MerchInline(admin.TabularInline):
-    model = Merch
-    verbose_name = "Мерч"
-
-
 class MerchAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "cost")
     search_fields = ("name",)
@@ -19,7 +14,6 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "ambassador",
-        "merch",
         "merch_size",
         "order_status",
         "created_date",
@@ -30,9 +24,9 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ("ambassador", "merch", "order_status")
     list_filter = ("ambassador", "merch", "order_status")
     empty_value_display = "-пусто-"
-    inlines = [
-        MerchInline,
-    ]
+
+    def get_merch(self, obj):
+        return ", ".join([merch.name for merch in obj.merch.all()])
 
 
 admin.site.register(Merch, MerchAdmin)
