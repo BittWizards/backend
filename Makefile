@@ -4,12 +4,12 @@ app-up:
 
 up:
 	@echo "Starting service ..."
-	sudo docker compose up --build -d
+	cd infra && sudo docker compose up --build -d
 
 down:
 	@echo "Stopping service ..."
-	sudo docker compose down
+	cd infra && sudo docker compose down
 
-down-volumes:
+down-v:
 	@echo "Stopping service and removing all volumes ..."
-	sudo docker compose down -v
+	cd infra && sudo docker compose down -v
