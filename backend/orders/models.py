@@ -32,7 +32,7 @@ class Merch(models.Model):
         ordering = ("name",)
 
     def __str__(self):
-        return f"{self.name} {self.size}"
+        return f"{self.name}"
 
 
 class Order(models.Model):
@@ -50,10 +50,11 @@ class Order(models.Model):
     merch_size = models.CharField(
         verbose_name="Размер для одежды",
         null=True,
+        blank=True,
         choices=(AmbassadorsClothesSizes.choices + AmbassadorsFootsSizes.choices)
     )
     order_status = models.CharField(
-        verbose_name="Размер для одежды",
+        verbose_name="Статус заявки",
         choices=OrderStatus.choices,
         default=OrderStatus.CREATED,
     )
@@ -63,17 +64,20 @@ class Order(models.Model):
     )
     delivered_date = models.DateField(
         verbose_name="Дата получения заказа",
-        null=True
+        null=True,
+        blank=True
     )
     track_number = models.CharField(
         verbose_name="Трек-номер",
         max_length=20,
         unique=True,
-        null=True
+        null=True,
+        blank=True
     )
     comment = models.CharField(
         verbose_name="Комментарий к заявке",
-        null=True
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -83,4 +87,4 @@ class Order(models.Model):
 
     @property
     def total_cost(self):
-        return sum(cost for merch in self.merch for cost in merch)
+        return sum(merch.get('cost', 0) for merch in self.merch.values())
