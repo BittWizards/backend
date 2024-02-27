@@ -4,14 +4,13 @@
     "pk": 1,
     "fields": {
         "ambassador": 1,
-        "created_at": "2024-02-27T08:13:05.204Z",
+        "created_at": "2024-02-27T12:30:53.541Z",
         "link": "https://www.google.com/search?q=loaddata++%D0%BD%D0%B5%D1%81%D0%BA%D0%BE%D0%BB%D1%8C%D0%BA%D0%BE+fixtures&newwindow=1&sca_esv=4f1517d75eb18543&sxsrf=ACQVn09cmWsaSyDI6jzVQSvG6_18xrYoyQ%3A1708924140803&",
-        "start_guid": true,
-        "is_review": false,
-        "is_photo": false,
-        "platform": "youtube",
+        "start_guid": false,
+        "type": "review",
+        "platform": "habr",
         "comment": "",
-        "accepted": true
+        "accepted": false
     }
 },
 {
@@ -19,14 +18,13 @@
     "pk": 2,
     "fields": {
         "ambassador": 2,
-        "created_at": "2024-02-27T08:17:51.561Z",
-        "link": "https://www.youtube.com/watch?v=o0XbHvKxw7Y&t=105s",
+        "created_at": "2024-02-27T12:35:43.554Z",
+        "link": "https://stackoverflow.com/questions/2225062/load-multiple-fixtures-at-once",
         "start_guid": true,
-        "is_review": false,
-        "is_photo": true,
-        "platform": "youtube",
-        "comment": "”÷÷”¿",
-        "accepted": true
+        "type": "content",
+        "platform": "other",
+        "comment": "",
+        "accepted": false
     }
 },
 {
@@ -34,14 +32,27 @@
     "pk": 3,
     "fields": {
         "ambassador": 3,
-        "created_at": "2024-02-27T08:18:14.750Z",
-        "link": "https://stackoverflow.com/questions/2225062/load-multiple-fixtures-at-once",
-        "start_guid": false,
-        "is_review": false,
-        "is_photo": false,
-        "platform": null,
+        "created_at": "2024-02-27T12:36:18.471Z",
+        "link": "https://www.youtube.com/watch?v=o0XbHvKxw7Y&t=105s",
+        "start_guid": true,
+        "type": "content",
+        "platform": "youtube",
         "comment": "",
-        "accepted": false
+        "accepted": true
+    }
+},
+{
+    "model": "content.content",
+    "pk": 4,
+    "fields": {
+        "ambassador": 3,
+        "created_at": "2024-02-27T12:37:20.531Z",
+        "link": "https://tproger.ru/articles/sql-interview-questions?utm_referrer=recommendation-banner",
+        "start_guid": false,
+        "type": "photo",
+        "platform": "instagram",
+        "comment": "",
+        "accepted": true
     }
 }
 ]
