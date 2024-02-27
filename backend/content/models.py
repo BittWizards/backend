@@ -69,18 +69,6 @@ class Content(models.Model):
     def __str__(self) -> str:
         return f"content_id: {self.pk}"
 
-    def clean(self):
-        super().clean()
-        if self.is_review:
-            if Content.objects.filter(
-                ambassador=self.ambassador, is_review=True
-            ).exclude(pk=self.pk):
-                raise ValidationError("У амбассадора уже есть отзыв")
-        if self.accepted and self.platform is None:
-            raise ValidationError(
-                "Выберите площадку на которой размещен контент"
-            )
-
 
 class Documents(models.Model):
     """Таблица для хранения скриншотов к отчетам о контентах"""
