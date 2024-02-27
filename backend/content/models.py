@@ -3,7 +3,7 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from ambassadors.models import Ambassador
-from ambassadors_project import settings
+from ambassadors_project.constants import PROMOSIZE
 
 
 class Platform(models.TextChoices):
@@ -12,12 +12,12 @@ class Platform(models.TextChoices):
     REVIEW = ("review", "Отзыв")
     HABR = ("habr", "Хабр")
     VC = ("VC", "VC")
-    YOUTUBE = ("youtube", "youtube")
-    TG = ("telegram", "телеграм")
-    PHOTO_IN_MERCH = ("photo", "фото в мерче")
-    INSTAGRAM = ("instagram", "инстаграм")
-    LINKEDIN = ("linkedin", "linkedin")
-    PROJECT = ("project", "участие в проекте")
+    YOUTUBE = ("youtube", "Youtube")
+    TG = ("telegram", "Телеграм")
+    PHOTO_IN_MERCH = ("photo", "Фото в мерче")
+    INSTAGRAM = ("instagram", "Инстаграм")
+    LINKEDIN = ("linkedin", "lLinkedin")
+    PROJECT = ("project", "Участие в проекте")
 
 
 class Content(models.Model):
@@ -39,7 +39,9 @@ class Content(models.Model):
         choices=Platform.choices,
         verbose_name="Площадка",
     )
-    comment = models.TextField(verbose_name="комментарий менеджера")
+    comment = models.TextField(
+        null=True, blank=True, verbose_name="комментарий менеджера"
+    )
     accepted = models.BooleanField(
         default=False, verbose_name="Заявка принята"
     )
@@ -49,30 +51,30 @@ class Content(models.Model):
         verbose_name_plural = "Контент"
         ordering = ("-created_at", "ambassador")
 
-    def __str__(self):
-        return self.platform
+    def __str__(self) -> str:
+        return f"content_id: {self.pk}"
 
 
-class Screenshots(models.Model):
+class Documents(models.Model):
     """Таблица для хранения скриншотов к отчетам о контентах"""
 
     content = models.ForeignKey(
         Content,
-        verbose_name="скриншоты",
-        related_name="screen",
+        verbose_name="Контент_id",
+        related_name="documents",
         on_delete=models.CASCADE,
     )
-    screen = models.URLField(
-        verbose_name="Скриншот",
+    document = models.URLField(
+        verbose_name="Ссылка на документ",
     )
 
     class Meta:
-        verbose_name = "Скриншот"
-        verbose_name_plural = "скришоты"
+        verbose_name = "Доп.документ"
+        verbose_name_plural = "Доп.документы"
         ordering = ("content",)
 
-    def __str__(self):
-        return self.screen
+    def __str__(self) -> str:
+        return self.document
 
 
 class Promocode(models.Model):
@@ -87,7 +89,7 @@ class Promocode(models.Model):
         related_name="my_promocode",
     )
     promocode = models.CharField(
-        max_length=settings.PROMOSIZE,
+        max_length=PROMOSIZE,
         verbose_name="промокод",
         validators=[
             RegexValidator(
@@ -106,7 +108,7 @@ class Promocode(models.Model):
         verbose_name_plural = "Промокоды"
         ordering = ("-created_at",)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.promocode
 
     def clean(self):

@@ -1,19 +1,28 @@
 from django.contrib import admin
 
-from .models import Content, Promocode, Screenshots
+from .models import Content, Documents, Promocode
 
 
-class ScreenshotsAdmin(admin.TabularInline):
-    model = Screenshots
-    fields = ("screen",)
+class DocumentsAdmin(admin.TabularInline):
+    model = Documents
+    fields = ("document",)
+
+
+@admin.register(Documents)
+class DocumentsContentAdmin(admin.ModelAdmin):
+    list_display = (
+        "pk",
+        "document",
+        "content_id",
+    )
 
 
 @admin.register(Content)
 class ContentAdmin(admin.ModelAdmin):
     @admin.display(description="Доп материалы")
     def count_files(self, obj):
-        if obj.screen:
-            return obj.screen.count()
+        if obj.documents:
+            return obj.documents.count()
         return None
 
     list_display = (
@@ -38,7 +47,7 @@ class ContentAdmin(admin.ModelAdmin):
         "start_guid",
     )
     empty_value_display = "-пусто-"
-    inlines = (ScreenshotsAdmin,)
+    inlines = (DocumentsAdmin,)
 
 
 @admin.register(Promocode)
