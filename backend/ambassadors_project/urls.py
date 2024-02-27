@@ -5,7 +5,11 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
+from content.views import ContentViewSet
+
 router_v1 = routers.DefaultRouter()
+router_v1.register("contents", ContentViewSet, basename="contents")
+
 
 v1_urlpatterns = [
     path("", include(router_v1.urls)),

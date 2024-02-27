@@ -19,6 +19,14 @@ class Platform(models.TextChoices):
     OTHER = ("other", "Прочее")
 
 
+class ContentType(models.TextChoices):
+    """Тип контента"""
+
+    REVIEW = ("review", "Отзыв")
+    CONTENT = ("content", "Контент")
+    PHOTO = ("photo", "Фото с мерчем")
+
+
 class Content(models.Model):
     """Таблица для хранения контента"""
 
@@ -33,8 +41,12 @@ class Content(models.Model):
     )
     link = models.URLField(verbose_name="ссылка на контент")
     start_guid = models.BooleanField(default=False, verbose_name="По гайду")
-    is_review = models.BooleanField(default=False, verbose_name="Отзыв")
-    is_photo = models.BooleanField(default=False, verbose_name="Фото в мерче")
+    type = models.CharField(
+        null=True,
+        blank=True,
+        choices=ContentType.choices,
+        verbose_name="Тип контента",
+    )
     platform = models.CharField(
         max_length=max([len(platform) for platform in Platform]),
         null=True,
