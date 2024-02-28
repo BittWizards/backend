@@ -1,8 +1,17 @@
+from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from .views import (OrderViewSet, MerchViewSet)
+from .routers import CustomOrdersRouter
 
 
-router = DefaultRouter()
-router.register('merch', MerchViewSet, basename='merch')
-router.register('orders', OrderViewSet, basename='orders')
+router_orders = CustomOrdersRouter()
+router_orders.register('orders', OrderViewSet, basename='orders')
+
+router_merch = DefaultRouter()
+router_merch.register('merch', MerchViewSet, basename='merch')
+
+urlpatterns = [
+    path('', include(router_orders.urls)),
+    path('', include(router_merch.urls)),
+]
