@@ -1,0 +1,1 @@
+PROMOSIZE = 20
