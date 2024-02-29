@@ -2,14 +2,15 @@ from rest_framework import viewsets
 from rest_framework.serializers import Serializer
 from rest_framework.response import Response
 from rest_framework.request import Request
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 from django.shortcuts import get_object_or_404
-from django.db.models import Q, QuerySet
+from django.db.models import QuerySet
 from drf_spectacular.utils import extend_schema_view
 
 from openapi.orders_schema import (orders_extend_schema_view,
                                    merch_extend_schema_view)
 from orders.models import Merch, Order
+from orders.utils import get_filtered_merch_objects
 from ambassadors.models import Ambassador
 from orders.serializers import (
     OrderSerializer,
@@ -36,12 +37,8 @@ class OrderViewSet(viewsets.ModelViewSet):
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        merch = Merch.objects.filter(
-            Q(name__in=(merch.get('name') for merch in request.data['merch'])),
-            Q(
-                size__in=(merch.get('size') for merch in request.data['merch'])
-            ) | Q(size__isnull=True)
-        )
+        # Фильтруем мерч из базы по данным из request
+        merch = get_filtered_merch_objects(request.data['merch'])
         self.perform_create(serializer, merch)
         headers = self.get_success_headers(serializer.data)
         return Response(
@@ -55,13 +52,13 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer.validated_data['ambassador_id'] = ambassador
         serializer.save(merch=merch)
 
-    def partial_update(self, request: Request, *args, **kwargs) -> Response:
-        return super().partial_update(request, *args, **kwargs)
+    def destroy(self, request: Request, *args, **kwargs) -> Response:
+        order = get_object_or_404(Order, pk=kwargs['pk'])
+        self.perform_destroy(order)
+        return Response(status=HTTP_204_NO_CONTENT)
 
     # TODO: Если добавить трек -> изменить статус
-    # TODO: Изменение адрес в заявке
     # TODO: Если статус отправлен -> нельзя изменять заявку
-    # TODO: Проверка на макс количества мерча в завке
 
 
 @extend_schema_view(**merch_extend_schema_view)
