@@ -63,4 +63,4 @@ class MerchViewSet(viewsets.ModelViewSet):
     """ViewSet для мерча"""
     queryset = Merch.objects.all()
     serializer_class = MerchSerializer
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ['get']
