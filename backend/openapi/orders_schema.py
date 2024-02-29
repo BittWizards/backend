@@ -1,4 +1,4 @@
-from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiRequest, OpenApiExample
+from drf_spectacular.utils import OpenApiResponse, extend_schema, OpenApiExample
 from orders.serializers import OrderSerializer
 
 merch_example = {

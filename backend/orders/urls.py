@@ -1,8 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from .views import (OrderViewSet, MerchViewSet)
-from .routers import CustomOrdersRouter
+from orders.views import OrderViewSet, MerchViewSet
+from orders.routers import CustomOrdersRouter
 
 
 router_orders = CustomOrdersRouter()
