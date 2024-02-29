@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from orders.models import Merch, Order
-from orders.validators import validate_merch_num
 from orders.utils import get_filtered_merch_objects
+from orders.validators import validate_merch_num
 
 
 class MerchSerializer(serializers.ModelSerializer):

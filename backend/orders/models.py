@@ -1,9 +1,9 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from ambassadors.models import (Ambassador, AbstractAmbassador,
-                                AbstractAmbassadorAddress)
-from ambassadors.choices import AmbassadorsFootsSizes, AmbassadorsClothesSizes
+from ambassadors.choices import AmbassadorsClothesSizes, AmbassadorsFootsSizes
+from ambassadors.models import (AbstractAmbassador, AbstractAmbassadorAddress,
+                                Ambassador)
 
 
 class OrderStatus(models.TextChoices):

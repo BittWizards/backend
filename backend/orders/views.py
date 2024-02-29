@@ -1,21 +1,18 @@
-from rest_framework import viewsets
-from rest_framework.serializers import Serializer
-from rest_framework.response import Response
-from rest_framework.request import Request
-from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
-from django.shortcuts import get_object_or_404
 from django.db.models import QuerySet
+from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view
+from rest_framework import viewsets
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.serializers import Serializer
+from rest_framework.status import HTTP_201_CREATED, HTTP_204_NO_CONTENT
 
-from openapi.orders_schema import (orders_extend_schema_view,
-                                   merch_extend_schema_view)
-from orders.models import Merch, Order
-from orders.utils import get_filtered_merch_objects
 from ambassadors.models import Ambassador
-from orders.serializers import (
-    OrderSerializer,
-    MerchSerializer
-)
+from openapi.orders_schema import (merch_extend_schema_view,
+                                   orders_extend_schema_view)
+from orders.models import Merch, Order
+from orders.serializers import MerchSerializer, OrderSerializer
+from orders.utils import get_filtered_merch_objects
 
 
 @extend_schema_view(**orders_extend_schema_view)

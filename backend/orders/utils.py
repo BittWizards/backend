@@ -1,5 +1,6 @@
+from django.db.models import Q, QuerySet
+
 from orders.models import Merch
-from django.db.models import QuerySet, Q
 
 
 def get_filtered_merch_objects(merch_data: dict) -> QuerySet[Merch]:

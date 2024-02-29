@@ -1,4 +1,4 @@
-from rest_framework.routers import Route, DynamicRoute, DefaultRouter
+from rest_framework.routers import DefaultRouter, DynamicRoute, Route
 
 
 class CustomOrdersRouter(DefaultRouter):
