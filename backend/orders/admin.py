@@ -1,20 +1,20 @@
 from django.contrib import admin
 
-from .models import Merch, Order
+from ambassadors.models import Ambassador
+from orders.models import Merch, Order
 
 
 class MerchAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "cost")
-    search_fields = ("name",)
-    list_filter = ("name", "cost")
+    list_display = ("id", "name", "cost", "size")
+    search_fields = ("name", "size")
+    list_filter = ("name", "cost", "size")
     empty_value_display = "-пусто-"
 
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "ambassador",
-        "merch_size",
+        "get_full_address",
         "order_status",
         "created_date",
         "delivered_date",
@@ -22,12 +22,15 @@ class OrderAdmin(admin.ModelAdmin):
         "comment",
         "total_cost"
     )
-    search_fields = ("ambassador", "merch", "order_status")
-    list_filter = ("ambassador", "merch", "order_status")
+    search_fields = ("ambassador_id", "merch", "order_status")
+    list_filter = ("ambassador_id", "merch", "order_status")
     empty_value_display = "-пусто-"
 
     def get_merch(self, obj):
         return ", ".join([merch.name for merch in obj.merch.all()])
+
+    def get_ambassador(self, obj):
+        return Ambassador.objects.get(pk=obj.ambassador_id)
 
 
 admin.site.register(Merch, MerchAdmin)
