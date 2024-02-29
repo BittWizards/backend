@@ -4,20 +4,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('orders', '0006_remove_order_address_remove_order_ambassador_and_more'),
+        (
+            "orders",
+            "0006_remove_order_address_remove_order_ambassador_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='email',
-            field=models.CharField(max_length=200, verbose_name='Электронная почта'),
+            model_name="order",
+            name="email",
+            field=models.CharField(
+                max_length=200, verbose_name="Электронная почта"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='tg_acc',
-            field=models.CharField(max_length=150, verbose_name='Телеграмм аккаунт'),
+            model_name="order",
+            name="tg_acc",
+            field=models.CharField(
+                max_length=150, verbose_name="Телеграмм аккаунт"
+            ),
         ),
     ]

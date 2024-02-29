@@ -9,6 +9,7 @@ from .manager import MyUserManager
 class AbstractUser(models.Model):
     """Абстрактная модель User для наследования с полями Имя, Фамилия, Отечство,
     Почта, Телефон."""
+
     email = models.CharField(
         verbose_name="Электронная почта",
         max_length=200,

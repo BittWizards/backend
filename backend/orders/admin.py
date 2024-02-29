@@ -20,7 +20,7 @@ class OrderAdmin(admin.ModelAdmin):
         "delivered_date",
         "track_number",
         "comment",
-        "total_cost"
+        "total_cost",
     )
     search_fields = ("ambassador_id", "merch", "order_status")
     list_filter = ("ambassador_id", "merch", "order_status")

@@ -18,6 +18,7 @@ User = get_user_model()
 class AbstractAmbassador(AbstractUser):
     """Абстрактная модель амбассадора с полями Имя, Фамилия, Отечство,
     Почта, Телефон, Телеграм."""
+
     tg_acc = models.CharField(
         verbose_name="Телеграмм аккаунт", max_length=150, unique=True
     )
@@ -28,6 +29,7 @@ class AbstractAmbassador(AbstractUser):
 
 class AbstractAmbassadorAddress(models.Model):
     """Абстрактный класс для адреса амбассадора."""
+
     country = models.CharField(verbose_name="Страна", max_length=100)
     city = models.CharField(verbose_name="Город", max_length=100)
     street_home = models.CharField(verbose_name="Улица", max_length=200)
@@ -60,6 +62,7 @@ class Ambassador(AbstractAmbassador):
     """
     Модель амбассадора.
     """
+
     gender = models.CharField(
         verbose_name="Пол", max_length=20, choices=Gender.choices
     )

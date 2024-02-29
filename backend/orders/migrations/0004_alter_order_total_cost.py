@@ -5,15 +5,26 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('orders', '0003_alter_merch_options_remove_order_merch_size_and_more'),
+        (
+            "orders",
+            "0003_alter_merch_options_remove_order_merch_size_and_more",
+        ),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='total_cost',
-            field=models.IntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0, 'Стоимость не может быть отрицательной')], verbose_name='Полная стоимость продукции в заявке'),
+            model_name="order",
+            name="total_cost",
+            field=models.IntegerField(
+                blank=True,
+                null=True,
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        0, "Стоимость не может быть отрицательной"
+                    )
+                ],
+                verbose_name="Полная стоимость продукции в заявке",
+            ),
         ),
     ]

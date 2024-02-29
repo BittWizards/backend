@@ -4,35 +4,67 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('orders', '0001_initial'),
+        ("orders", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='order',
-            name='comment',
-            field=models.CharField(blank=True, null=True, verbose_name='Комментарий к заявке'),
+            model_name="order",
+            name="comment",
+            field=models.CharField(
+                blank=True, null=True, verbose_name="Комментарий к заявке"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='delivered_date',
-            field=models.DateField(blank=True, null=True, verbose_name='Дата получения заказа'),
+            model_name="order",
+            name="delivered_date",
+            field=models.DateField(
+                blank=True, null=True, verbose_name="Дата получения заказа"
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='merch_size',
-            field=models.CharField(blank=True, choices=[('XS', 'Xs'), ('S', 'S'), ('M', 'M'), ('L', 'L'), ('XL', 'Xl'), ('Low', '35-39'), ('Medium', '39-41'), ('High', '41-44'), ('Large', '44-46')], null=True, verbose_name='Размер для одежды'),
+            model_name="order",
+            name="merch_size",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("XS", "Xs"),
+                    ("S", "S"),
+                    ("M", "M"),
+                    ("L", "L"),
+                    ("XL", "Xl"),
+                    ("Low", "35-39"),
+                    ("Medium", "39-41"),
+                    ("High", "41-44"),
+                    ("Large", "44-46"),
+                ],
+                null=True,
+                verbose_name="Размер для одежды",
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='order_status',
-            field=models.CharField(choices=[('создано', 'created'), ('доставлено', 'delivered'), ('отправлено', 'shipped')], default='создано', verbose_name='Статус заявки'),
+            model_name="order",
+            name="order_status",
+            field=models.CharField(
+                choices=[
+                    ("создано", "created"),
+                    ("доставлено", "delivered"),
+                    ("отправлено", "shipped"),
+                ],
+                default="создано",
+                verbose_name="Статус заявки",
+            ),
         ),
         migrations.AlterField(
-            model_name='order',
-            name='track_number',
-            field=models.CharField(blank=True, max_length=20, null=True, unique=True, verbose_name='Трек-номер'),
+            model_name="order",
+            name="track_number",
+            field=models.CharField(
+                blank=True,
+                max_length=20,
+                null=True,
+                unique=True,
+                verbose_name="Трек-номер",
+            ),
         ),
     ]

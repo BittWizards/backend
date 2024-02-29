@@ -2,8 +2,11 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from ambassadors.choices import AmbassadorsClothesSizes, AmbassadorsFootsSizes
-from ambassadors.models import (AbstractAmbassador, AbstractAmbassadorAddress,
-                                Ambassador)
+from ambassadors.models import (
+    AbstractAmbassador,
+    AbstractAmbassadorAddress,
+    Ambassador,
+)
 
 
 class OrderStatus(models.TextChoices):
@@ -16,6 +19,7 @@ class OrderStatus(models.TextChoices):
 
 class Merch(models.Model):
     """Модель для мерча"""
+
     name = models.CharField(
         verbose_name="Название продукции", max_length=60, unique=True
     )
@@ -32,7 +36,7 @@ class Merch(models.Model):
         blank=True,
         choices=(
             AmbassadorsClothesSizes.choices + AmbassadorsFootsSizes.choices
-        )
+        ),
     )
 
     class Meta:
@@ -46,6 +50,7 @@ class Merch(models.Model):
 
 class Order(AbstractAmbassador, AbstractAmbassadorAddress):
     """Модель для заявки на мерч"""
+
     ambassador_id = models.ForeignKey(
         Ambassador,
         verbose_name="ID амбассадора",
@@ -62,25 +67,20 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
         default=OrderStatus.CREATED,
     )
     created_date = models.DateField(
-        verbose_name="Дата создания заявки",
-        auto_now_add=True
+        verbose_name="Дата создания заявки", auto_now_add=True
     )
     delivered_date = models.DateField(
-        verbose_name="Дата получения заказа",
-        null=True,
-        blank=True
+        verbose_name="Дата получения заказа", null=True, blank=True
     )
     track_number = models.CharField(
         verbose_name="Трек-номер",
         max_length=20,
         unique=True,
         null=True,
-        blank=True
+        blank=True,
     )
     comment = models.TextField(
-        verbose_name="Комментарий к заявке",
-        null=True,
-        blank=True
+        verbose_name="Комментарий к заявке", null=True, blank=True
     )
     total_cost = models.IntegerField(
         verbose_name="Полная стоимость продукции в заявке",
@@ -90,12 +90,8 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
         null=True,
         blank=True,
     )
-    email = models.CharField(
-        verbose_name="Электронная почта", max_length=200
-    )
-    tg_acc = models.CharField(
-        verbose_name="Телеграмм аккаунт", max_length=150
-    )
+    email = models.CharField(verbose_name="Электронная почта", max_length=200)
+    tg_acc = models.CharField(verbose_name="Телеграмм аккаунт", max_length=150)
 
     class Meta:
         verbose_name = "Заявка на отправку мерча"
@@ -104,6 +100,6 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
 
     @property
     def get_full_address(self):
-        return '{}:{}:{}:{}'.format(
+        return "{}:{}:{}:{}".format(
             self.country, self.city, self.street_home, self.post_index
         )
