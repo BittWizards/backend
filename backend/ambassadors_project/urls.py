@@ -5,11 +5,22 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
-from content.views import ContentViewSet
+from content.views import (
+    AllContentsViewSet,
+    AmbassadorContentsViewSet,
+    ContentDetailViewSet,
+    PromoCodeViewSet,
+)
 
 router_v1 = routers.DefaultRouter()
-router_v1.register("contents", ContentViewSet, basename="contents")
-
+router_v1.register("allcontents", AllContentsViewSet, basename="contents")
+router_v1.register("content", ContentDetailViewSet, basename="content_detail")
+router_v1.register(
+    r"ambassador/(?P<ambassador_id>\d+)/contents",
+    AmbassadorContentsViewSet,
+    basename="self_content",
+)
+router_v1.register("promocode", PromoCodeViewSet, basename="promo")
 
 v1_urlpatterns = [
     path("", include(router_v1.urls)),
