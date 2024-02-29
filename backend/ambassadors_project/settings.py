@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "ambassadors",
     "users",
     "content",
+    "bot",
 ]
 
 MIDDLEWARE = [
@@ -77,9 +78,7 @@ REST_FRAMEWORK = {
     "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
     "DATETIME_FORMAT": "%d.%m.%Y",
     "DATE_FORMAT": "%d.%m.%Y",
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly"
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
@@ -147,3 +146,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Using custom user model
 AUTH_USER_MODEL = "users.User"
+
+CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://redis:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get(
+    "RESULT_BACKEND", "redis://redis:6379/0"
+)
+CELERY_TIMEZONE = "UTC"
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+DOMAIN = os.getenv("DOMAIN")

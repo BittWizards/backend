@@ -5,6 +5,8 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
+from bot.views import bot_view
+
 router_v1 = routers.DefaultRouter()
 
 v1_urlpatterns = [
@@ -17,6 +19,7 @@ api_urlpatterns = [
     path(
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
+    path("tg", bot_view),
 ]
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
