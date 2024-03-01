@@ -69,6 +69,12 @@ class AmbassadorActionsViewSet(viewsets.ModelViewSet):
         )
         return ambassador.actions.all()
 
+    def perform_create(self, serializer):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        serializer.save(ambassador_id=ambassador)
+
 
 class AmbassadorAddressViewSet(viewsets.ModelViewSet):
     """
@@ -85,6 +91,12 @@ class AmbassadorAddressViewSet(viewsets.ModelViewSet):
         )
         return ambassador.address.all()
 
+    def perform_create(self, serializer):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        serializer.save(ambassador_id=ambassador)
+
 
 class AmbassadorSizeViewSet(viewsets.ModelViewSet):
     """
@@ -100,6 +112,12 @@ class AmbassadorSizeViewSet(viewsets.ModelViewSet):
             Ambassador, pk=self.kwargs.get("ambassador_id")
         )
         return ambassador.sizes.all()
+
+    def perform_create(self, serializer):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        serializer.save(ambassador_id=ambassador)
 
 
 class SendingMessageViewSet(viewsets.ModelViewSet):
@@ -126,3 +144,9 @@ class MessageToAmbassadorViewSet(viewsets.ModelViewSet):
             Ambassador, pk=self.kwargs.get("ambassador_id")
         )
         return ambassador.messages.all()
+
+    def perform_create(self, serializer):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        serializer.save(ambassador_id=ambassador)

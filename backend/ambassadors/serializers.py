@@ -62,7 +62,7 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AmbassadorActions
-        fields = "action"
+        fields = ("action",)
 
 
 class AmbassadorAddressSerializer(serializers.ModelSerializer):
