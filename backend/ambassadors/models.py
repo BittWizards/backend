@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 from users import custom_functions
+from users.models import AbstractUser
 
 from .choices import (
     AmbassadorsClothesSizes,
@@ -12,6 +13,32 @@ from .choices import (
 )
 
 User = get_user_model()
+
+
+class AbstractAmbassador(AbstractUser):
+    """Абстрактная модель амбассадора с полями Имя, Фамилия, Отечство,
+    Почта, Телефон, Телеграм."""
+
+    tg_acc = models.CharField(
+        verbose_name="Телеграмм аккаунт", max_length=150, unique=True
+    )
+
+    class Meta:
+        abstract = True
+
+
+class AbstractAmbassadorAddress(models.Model):
+    """Абстрактный класс для адреса амбассадора."""
+
+    country = models.CharField(verbose_name="Страна", max_length=100)
+    city = models.CharField(verbose_name="Город", max_length=100)
+    street_home = models.CharField(verbose_name="Улица", max_length=200)
+    post_index = models.IntegerField(
+        verbose_name="Индекс",
+    )
+
+    class Meta:
+        abstract = True
 
 
 class YandexProgramm(models.Model):
@@ -31,24 +58,11 @@ class YandexProgramm(models.Model):
         return str(self.title)
 
 
-class Ambassador(models.Model):
+class Ambassador(AbstractAmbassador):
     """
     Модель амбассадора.
     """
 
-    email = models.CharField(
-        verbose_name="Электронная почта",
-        max_length=200,
-        blank=False,
-        unique=True,
-    )
-    first_name = models.CharField(
-        verbose_name="Имя", max_length=100, blank=False
-    )
-    last_name = models.CharField(
-        verbose_name="Фамилия", max_length=100, blank=False
-    )
-    middle_name = models.CharField(verbose_name="Отчество", max_length=100)
     gender = models.CharField(
         verbose_name="Пол", max_length=20, choices=Gender.choices
     )
@@ -57,14 +71,6 @@ class Ambassador(models.Model):
         verbose_name="Текущий курс",
         on_delete=models.SET_NULL,
         null=True,
-    )
-    phone = models.CharField(
-        verbose_name="Номер телефона",
-        max_length=15,
-        blank=False,
-    )
-    tg_acc = models.CharField(
-        verbose_name="Телеграмм аккаунт", max_length=150, unique=True
     )
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work_now = models.BooleanField(verbose_name="Работает")
@@ -123,17 +129,11 @@ class AmbassadorActions(models.Model):
         ordering = ("id",)
 
 
-class AmbassadorAddress(models.Model):
+class AmbassadorAddress(AbstractAmbassadorAddress):
     """
     Модель адреса амбассадора.
     """
 
-    country = models.CharField(verbose_name="Страна", max_length=100)
-    city = models.CharField(verbose_name="Город", max_length=100)
-    street_home = models.CharField(verbose_name="Улица", max_length=200)
-    post_index = models.IntegerField(
-        verbose_name="Индекс",
-    )
     ambassador_id = models.ForeignKey(
         Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
     )

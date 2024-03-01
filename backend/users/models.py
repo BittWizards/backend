@@ -6,13 +6,9 @@ from .custom_functions import get_full_name
 from .manager import MyUserManager
 
 
-class User(AbstractBaseUser, PermissionsMixin):
-    """
-    Кастомная модель пользователя.
-    """
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ("first_name", "last_name", "phone")
+class AbstractUser(models.Model):
+    """Абстрактная модель User для наследования с полями Имя, Фамилия, Отечство,
+    Почта, Телефон."""
 
     email = models.CharField(
         verbose_name="Электронная почта",
@@ -34,6 +30,19 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=15,
         blank=False,
     )
+
+    class Meta:
+        abstract = True
+
+
+class User(AbstractBaseUser, AbstractUser, PermissionsMixin):
+    """
+    Кастомная модель пользователя.
+    """
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ("first_name", "last_name", "phone")
+
     is_staff = models.BooleanField(
         "Стафф статус",
         default=False,
