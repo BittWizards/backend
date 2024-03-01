@@ -41,9 +41,10 @@ services:
   #     - redis
 
   nginx:
-    image: nginx:1.25.1-alpine
+    build: ./nginx/
+    env_file: .env
     ports:
-      - 8000:80
+      - "8000:80"
     volumes:
       - static:/static/
       - media:/media/
