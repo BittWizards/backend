@@ -11,7 +11,6 @@ from content.views import (
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
-
 from orders.urls import urlpatterns as orders_url
 
 router_v1 = routers.DefaultRouter()
