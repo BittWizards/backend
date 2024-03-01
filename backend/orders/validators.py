@@ -13,7 +13,8 @@ def validate_merch_num(merch: list[dict]) -> None:
         )
     if len(merch) > MERCH_MAX_NUM_IN_ORDER:
         raise ValidationError(
-            "Нельзя выбрать больше 3-х видов мерча", code=HTTP_400_BAD_REQUEST
+            f"Нельзя выбрать больше {MERCH_MAX_NUM_IN_ORDER}-х видов мерча",
+            code=HTTP_400_BAD_REQUEST
         )
 
 
