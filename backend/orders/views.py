@@ -9,6 +9,7 @@ from rest_framework.status import HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
 from openapi.orders_schema import (
+    ambassador_orders_extend_schema_view,
     merch_extend_schema_view,
     orders_extend_schema_view,
 )
@@ -17,7 +18,7 @@ from orders.serializers import MerchSerializer, OrderSerializer
 from orders.utils import get_filtered_merch_objects
 
 
-@extend_schema_view(**orders_extend_schema_view)
+@extend_schema_view(**ambassador_orders_extend_schema_view)
 class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
 
@@ -51,6 +52,7 @@ class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
     # TODO: Если статус отправлен -> нельзя изменять заявку
 
 
+@extend_schema_view(**orders_extend_schema_view)
 class OrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
 
