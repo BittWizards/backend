@@ -99,7 +99,7 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
         ordering = ("id",)
 
     @property
-    def get_full_address(self):
-        return "{}:{}:{}:{}".format(
+    def full_address(self) -> str:
+        return '{}:{}:{}:{}'.format(
             self.country, self.city, self.street_home, self.post_index
         )

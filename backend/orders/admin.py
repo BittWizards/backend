@@ -14,7 +14,17 @@ class MerchAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         "id",
-        "get_full_address",
+        "first_name",
+        "last_name",
+        "middle_name",
+        "email",
+        "phone",
+        "tg_acc",
+        "country",
+        "city",
+        "street_home",
+        "post_index",
+        "full_address",
         "order_status",
         "created_date",
         "delivered_date",
@@ -22,14 +32,14 @@ class OrderAdmin(admin.ModelAdmin):
         "comment",
         "total_cost",
     )
-    search_fields = ("ambassador_id", "merch", "order_status")
-    list_filter = ("ambassador_id", "merch", "order_status")
+    search_fields = ("ambassador_id", "merch", "order_status", "city")
+    list_filter = ("ambassador_id", "merch", "order_status", "city")
     empty_value_display = "-пусто-"
 
-    def get_merch(self, obj):
+    def get_merch(self, obj: Order) -> str:
         return ", ".join([merch.name for merch in obj.merch.all()])
 
-    def get_ambassador(self, obj):
+    def get_ambassador_id(self, obj: Order) -> str:
         return Ambassador.objects.get(pk=obj.ambassador_id)
 
 
