@@ -15,6 +15,4 @@ DJANGO_SUPERUSER_LAST_NAME=admin \
 DJANGO_SUPERUSER_PHONE="8(999)adm-in-im" \
 python manage.py createsuperuser --noinput
 
-python manage.py loaddata */fixtures/*.json
-
 gunicorn --reload -b 0.0.0.0:8000 ambassadors_project.wsgi
