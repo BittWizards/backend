@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
@@ -30,7 +31,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
 
     queryset = Ambassador.objects.all()
     serializer_class = AmbassadorSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
 
 
 class YandexProgrammViewSet(viewsets.ModelViewSet):
@@ -40,7 +41,7 @@ class YandexProgrammViewSet(viewsets.ModelViewSet):
 
     queryset = YandexProgramm.objects.all()
     serializer_class = YandexProgrammSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
 
 
 class ActionsViewSet(viewsets.ModelViewSet):
@@ -50,7 +51,7 @@ class ActionsViewSet(viewsets.ModelViewSet):
 
     queryset = Actions.objects.all()
     serializer_class = ActionsSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
 
 
 class AmbassadorActionsViewSet(viewsets.ModelViewSet):
@@ -60,7 +61,13 @@ class AmbassadorActionsViewSet(viewsets.ModelViewSet):
 
     queryset = AmbassadorActions.objects.all()
     serializer_class = AmbassadorActionsSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        return ambassador.actions.all()
 
 
 class AmbassadorAddressViewSet(viewsets.ModelViewSet):
@@ -70,7 +77,13 @@ class AmbassadorAddressViewSet(viewsets.ModelViewSet):
 
     queryset = AmbassadorAddress.objects.all()
     serializer_class = AmbassadorAddressSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        return ambassador.address.all()
 
 
 class AmbassadorSizeViewSet(viewsets.ModelViewSet):
@@ -80,7 +93,13 @@ class AmbassadorSizeViewSet(viewsets.ModelViewSet):
 
     queryset = AmbassadorSize.objects.all()
     serializer_class = AmbassadorSizeSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        return ambassador.sizes.all()
 
 
 class SendingMessageViewSet(viewsets.ModelViewSet):
@@ -90,7 +109,7 @@ class SendingMessageViewSet(viewsets.ModelViewSet):
 
     queryset = SendingMessage.objects.all()
     serializer_class = SendingMessageSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
 
 
 class MessageToAmbassadorViewSet(viewsets.ModelViewSet):
@@ -100,4 +119,10 @@ class MessageToAmbassadorViewSet(viewsets.ModelViewSet):
 
     queryset = MessageToAmbassador.objects.all()
     serializer_class = MessageToAmbassadorSerializer
-    permission_classes = AllowAny
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs.get("ambassador_id")
+        )
+        return ambassador.messages.all()

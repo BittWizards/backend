@@ -62,7 +62,7 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AmbassadorActions
-        fields = ("ambassador_id", "action")
+        fields = "action"
 
 
 class AmbassadorAddressSerializer(serializers.ModelSerializer):
@@ -73,11 +73,10 @@ class AmbassadorAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = AmbassadorAddress
         fields = (
-            "county",
+            "country",
             "city",
             "street_home",
             "post_index",
-            "ambassador_id",
         )
 
 
@@ -88,7 +87,7 @@ class AmbassadorSizeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AmbassadorSize
-        fields = ("ambassador_id", "clothes_size", "foot_size")
+        fields = ("clothes_size", "foot_size")
 
 
 class SendingMessageSerializer(serializers.ModelSerializer):
