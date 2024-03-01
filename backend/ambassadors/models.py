@@ -111,7 +111,10 @@ class AmbassadorActions(models.Model):
     """
 
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
+        related_name="actions",
     )
     action = models.ForeignKey(
         Actions, verbose_name="Действие", on_delete=models.SET_NULL, null=True
@@ -135,7 +138,10 @@ class AmbassadorAddress(models.Model):
         verbose_name="Индекс",
     )
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
+        related_name="address",
     )
 
     class Meta:
@@ -153,16 +159,18 @@ class AmbassadorSize(models.Model):
     """
 
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
+        related_name="sizes",
     )
     clothes_size = models.CharField(
         verbose_name="Размер одежды",
         max_length=30,
         choices=AmbassadorsClothesSizes.choices,
     )
-    foot_size = models.CharField(
+    foot_size = models.IntegerField(
         verbose_name="Размер обуви",
-        max_length=30,
         choices=AmbassadorsFootsSizes.choices,
     )
 
@@ -207,6 +215,7 @@ class MessageToAmbassador(models.Model):
         verbose_name="Амбассадор",
         on_delete=models.SET_NULL,
         null=True,
+        related_name="messages",
     )
     sending_message_id = models.ForeignKey(
         SendingMessage,
