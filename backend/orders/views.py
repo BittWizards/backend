@@ -18,21 +18,16 @@ from orders.utils import get_filtered_merch_objects
 
 
 @extend_schema_view(**orders_extend_schema_view)
-class OrderViewSet(viewsets.ModelViewSet):
+class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    http_method_names = ["get", "post", "patch", "delete"]
+    http_method_names = ['get', 'post']
 
     def get_queryset(self) -> QuerySet[Order]:
-        ambassador_id = int(self.kwargs.get("pk"))
-        query = Order.objects.filter(ambassador_id=ambassador_id)
-        return query
-
-    def get_object(self) -> Order:
-        order = get_object_or_404(Order, pk=int(self.kwargs.get("pk")))
-        return order
+        ambassador_id = self.kwargs.get('ambassador_id')
+        return Order.objects.filter(ambassador_id=ambassador_id)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -46,17 +41,21 @@ class OrderViewSet(viewsets.ModelViewSet):
         )
 
     def perform_create(self, serializer: Serializer, merch: Merch) -> None:
-        ambassador = get_object_or_404(Ambassador, pk=self.kwargs["pk"])
-        serializer.validated_data["ambassador_id"] = ambassador
+        ambassador = get_object_or_404(
+            Ambassador, pk=self.kwargs['ambassador_id']
+        )
+        serializer.validated_data['ambassador_id'] = ambassador
         serializer.save(merch=merch)
-
-    def destroy(self, request: Request, *args, **kwargs) -> Response:
-        order = get_object_or_404(Order, pk=kwargs["pk"])
-        self.perform_destroy(order)
-        return Response(status=HTTP_204_NO_CONTENT)
 
     # TODO: Если добавить трек -> изменить статус
     # TODO: Если статус отправлен -> нельзя изменять заявку
+
+
+class OrdersViewSet(viewsets.ModelViewSet):
+    """ViewSet для заявок на мерч"""
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    http_method_names = ['get', 'patch', 'delete']
 
 
 @extend_schema_view(**merch_extend_schema_view)

@@ -34,6 +34,7 @@ class OrderSerializer(serializers.ModelSerializer):
         merch_data = validated_data.pop("merch", None)
         instance = super().update(instance, validated_data)
         if merch_data:
+            instance.merch.clear()
             merch = get_filtered_merch_objects(merch_data)
             for product in merch:
                 instance.merch.add(product.id)
