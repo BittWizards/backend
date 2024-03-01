@@ -49,9 +49,12 @@ services:
       - media:/media/
       - ./nginx/default:/etc/nginx/conf.d/
       - certs:/etc/letsencrypt
-    depends_on:
-      - db
-      - backend
+
+  bot:
+    build: ./webapp_bot/
+    # command: cp -r /app/build/. /frontend_static/
+    # volumes:
+    #   - static:/frontend_static
 
 volumes:
   postgres_data:
