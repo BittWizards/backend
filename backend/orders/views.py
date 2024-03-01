@@ -23,10 +23,10 @@ class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
 
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    http_method_names = ['get', 'post']
+    http_method_names = ["get", "post"]
 
     def get_queryset(self) -> QuerySet[Order]:
-        ambassador_id = self.kwargs.get('ambassador_id')
+        ambassador_id = self.kwargs.get("ambassador_id")
         return Order.objects.filter(ambassador_id=ambassador_id)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
@@ -42,9 +42,9 @@ class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer: Serializer, merch: Merch) -> None:
         ambassador = get_object_or_404(
-            Ambassador, pk=self.kwargs['ambassador_id']
+            Ambassador, pk=self.kwargs["ambassador_id"]
         )
-        serializer.validated_data['ambassador_id'] = ambassador
+        serializer.validated_data["ambassador_id"] = ambassador
         serializer.save(merch=merch)
 
     # TODO: Если добавить трек -> изменить статус
@@ -53,9 +53,10 @@ class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
 
 class OrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
+
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-    http_method_names = ['get', 'patch', 'delete']
+    http_method_names = ["get", "patch", "delete"]
 
 
 @extend_schema_view(**merch_extend_schema_view)

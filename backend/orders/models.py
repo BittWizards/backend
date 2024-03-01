@@ -100,6 +100,6 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
 
     @property
     def full_address(self) -> str:
-        return '{}:{}:{}:{}'.format(
+        return "{}:{}:{}:{}".format(
             self.country, self.city, self.street_home, self.post_index
         )
