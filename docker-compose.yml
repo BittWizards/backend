@@ -47,7 +47,6 @@ services:
     volumes:
       - static:/static/
       - media:/media/
-      - ./nginx/default:/etc/nginx/conf.d/
       - certs:/etc/letsencrypt
 
   bot:

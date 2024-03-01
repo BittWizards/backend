@@ -1,4 +1,7 @@
 FROM nginx:1.25.4
 
+COPY nginx.conf /etc/nginx/templates/default.conf.template
+COPY ./nginx_entrypoint.sh /docker-entrypoint.d/.
+COPY ./autorenew_hook.sh /etc/letsencrypt/renewal-hooks/deploy/.
 RUN apt update
 RUN apt install certbot python3-certbot-nginx -y

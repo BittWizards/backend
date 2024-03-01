@@ -15,7 +15,7 @@ class Platform(models.TextChoices):
     TG = ("telegram", "Телеграм")
     INSTAGRAM = ("instagram", "Инстаграм")
     LINKEDIN = ("linkedin", "lLinkedin")
-    PROJECT = ("project", "Участие в проекте")
+    # PROJECT = ("project", "Участие в проекте")
     OTHER = ("other", "Прочее")
 
 
@@ -40,7 +40,7 @@ class Content(models.Model):
         verbose_name="Дата отчета", auto_now_add=True, db_index=True
     )
     link = models.URLField(verbose_name="ссылка на контент")
-    start_guid = models.BooleanField(default=False, verbose_name="По гайду")
+    start_guide = models.BooleanField(default=False, verbose_name="По гайду")
     type = models.CharField(
         null=True,
         blank=True,
