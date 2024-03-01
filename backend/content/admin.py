@@ -29,7 +29,7 @@ class ContentAdmin(admin.ModelAdmin):
         "pk",
         "ambassador",
         "created_at",
-        "start_guid",
+        "start_guide",
         "type",
         "accepted",
         "platform",
@@ -45,7 +45,7 @@ class ContentAdmin(admin.ModelAdmin):
         "ambassador",
         "platform",
         "accepted",
-        "start_guid",
+        "start_guide",
     )
     empty_value_display = "-пусто-"
     inlines = (DocumentsAdmin,)
@@ -56,6 +56,7 @@ class PromocodeAdmin(admin.ModelAdmin):
     list_display = ("ambassador", "promocode", "is_active", "created_at")
     search_fields = ("ambassador",)
     list_filter = (
+        "id",
         "ambassador",
         "is_active",
     )
