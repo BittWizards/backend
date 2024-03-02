@@ -1,0 +1,1 @@
+[{"model": "orders.merch", "pk": 1, "fields": {"name": "Наклейки", "cost": 0, "size": null}}, {"model": "orders.merch", "pk": 2, "fields": {"name": "Кофе", "cost": 0, "size": null}}, {"model": "orders.merch", "pk": 3, "fields": {"name": "Футболка", "cost": 0, "size": "L"}}]

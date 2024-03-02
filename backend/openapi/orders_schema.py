@@ -28,9 +28,9 @@ order_request_example = {
 
 order_response_example = {"id": 0, "ambassador_id": 0, **order_request_example}
 
-orders_extend_schema_view = {
+ambassador_orders_extend_schema_view = {
     "create": extend_schema(
-        summary="Создание нового заказа",
+        summary="Создание новой заявки",
         description="Создает новый заказ в базе",
         examples=[
             OpenApiExample("post", order_request_example, request_only=True)
@@ -42,16 +42,7 @@ orders_extend_schema_view = {
             ),
             400: OpenApiResponse(description="Неправильные данные"),
         },
-    ),
-    "retrieve": extend_schema(
-        summary="Получение заявки по ID",
-        description="Возвращает заявку по ID",
-        responses={
-            200: OpenApiResponse(
-                description="Заявка по запрошенному ID",
-                response=OrderSerializer,
-            )
-        },
+        tags=["Заявки"],
     ),
     "list": extend_schema(
         summary="Получение всех заявок относящихся к амбассадору по его ID",
@@ -62,6 +53,32 @@ orders_extend_schema_view = {
                 response=OrderSerializer,
             )
         },
+        tags=["Заявки"],
+    ),
+}
+
+orders_extend_schema_view = {
+    "retrieve": extend_schema(
+        summary="Получение заявки по ID",
+        description="Возвращает заявку по ID",
+        responses={
+            200: OpenApiResponse(
+                description="Заявка по запрошенному ID",
+                response=OrderSerializer,
+            )
+        },
+        tags=["Заявки"],
+    ),
+    "list": extend_schema(
+        summary="Получение всех заявок",
+        description="Возращает список всех существующих заявок",
+        responses={
+            200: OpenApiResponse(
+                description="Список заявок на амбассадора",
+                response=OrderSerializer,
+            )
+        },
+        tags=["Заявки"],
     ),
     "partial_update": extend_schema(
         summary="Частичное обновление заявки",
@@ -75,6 +92,7 @@ orders_extend_schema_view = {
             ),
             400: OpenApiResponse(description="Неправильные данные"),
         },
+        tags=["Заявки"],
     ),
     "destroy": extend_schema(
         summary="Удаление заявки по ID",
@@ -82,6 +100,7 @@ orders_extend_schema_view = {
         responses={
             204: OpenApiResponse(description="Заявка удалена"),
         },
+        tags=["Заявки"],
     ),
 }
 
