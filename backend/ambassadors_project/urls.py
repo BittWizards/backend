@@ -5,6 +5,7 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
+from ambassadors.views import get_ambassador_by_tg_acc
 from bot.views import bot_view
 from content.views import (
     AllContentsViewSet,
@@ -25,6 +26,7 @@ router_v1.register("promocode", PromoCodeViewSet, basename="promo")
 
 v1_urlpatterns = [
     path("", include(router_v1.urls)),
+    path("ambassadors/<tg_acc>/", get_ambassador_by_tg_acc),
 ]
 api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),

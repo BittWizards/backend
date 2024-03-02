@@ -1,27 +1,48 @@
-import logo from './logo.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
-import { useEffect } from 'react'
-
-const webApp = window.Telegram.WebApp
+import { useTelegram } from './hooks/useTelegram'
+import ColorTabs from './components/Tabs/Tabs'
+import Profile from './pages/Profile'
+import Achievements from './pages/Achievements'
 
 export default function App() {
+  const {webApp, user} = useTelegram()
+  const [currentTab, setCurrentTab] = useState('profile')
+  const [ambassador, setAmbassador] = useState()
 
   useEffect(() => {
     webApp.ready()
   }, [])
 
-  const onClose = () => {
-    webApp.close()
+  useEffect(() => {
+    if (user) {
+      const fetchData = async () => {
+        try {
+          const response = await fetch('https://ambas-1.ddns.net/api/v1/ambassadors/' + user?.username)
+          const jsonData = await response.json()
+          setAmbassador(jsonData)
+        } catch (error) {
+          console.error('Ошибка при получении данных:', error)
+        }
+      }
+    fetchData()
+    }
+  }, [])
+
+  function onChangeTab (value) {
+    setCurrentTab(value)
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <script src="https://telegram.org/js/telegram-web-app.js"></script>
-      </header>
-      <body>
-        <button onClick={onClose}>Закрыть</button>
-      </body>
-    </div>
+    <>
+      {user && <>
+        <ColorTabs onClick={onChangeTab} currentTab={currentTab}/>
+        {/* <Header /> */}
+        {currentTab === "profile" && <Profile data={ambassador}/>}
+        {currentTab === "achievements" && <Achievements />}
+        {/* {currentTab === "statistic" && <Statistic />} */}
+        {/* <button onClick={onToogleButton}>toogle</button> */}
+      </>}
+    </>
   );
 }

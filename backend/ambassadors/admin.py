@@ -34,7 +34,7 @@ class AmbassdorAdmin(admin.ModelAdmin):
         "phone",
         "tg_acc",
         "education",
-        "work_now",
+        "work",
         "status",
         "created",
         "fio",

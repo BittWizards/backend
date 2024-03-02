@@ -51,9 +51,8 @@ services:
 
   bot:
     build: ./webapp_bot/
-    # command: cp -r /app/build/. /frontend_static/
-    # volumes:
-    #   - static:/frontend_static
+    volumes:
+      - static:/frontend_static
 
 volumes:
   postgres_data:

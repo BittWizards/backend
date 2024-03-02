@@ -67,12 +67,21 @@ class Ambassador(models.Model):
         verbose_name="Телеграмм аккаунт", max_length=150, unique=True
     )
     education = models.CharField(verbose_name="Образование", max_length=1500)
-    work_now = models.BooleanField(verbose_name="Работает")
+    work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
         verbose_name="Статус", max_length=50, choices=AmbassadorStatus.choices
     )
     created = models.DateTimeField(
         verbose_name="Дата и время создания", default=timezone.now
+    )
+    tg_id = models.CharField(
+        verbose_name="Телеграмм id", blank=True, null=True
+    )
+    image = models.ImageField(
+        "Фото",
+        upload_to="profiles/",
+        null=True,
+        default="profiles/default_pic.jpeg",
     )
 
     class Meta:

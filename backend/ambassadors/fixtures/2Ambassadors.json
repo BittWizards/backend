@@ -11,7 +11,6 @@
             "phone": "88005553535",
             "tg_acc": "t.me/dartanyun",
             "education": "Школа магии и волшебства Хогвартс",
-            "work_now": "False",
             "status": "Active"
         }
     },
@@ -28,7 +27,6 @@
             "phone": "88005553536",
             "tg_acc": "t.me/durov",
             "education": "Пермский техникум промышленных и информационных технологий",
-            "work_now": "True",
             "status": "Not active"
         }
     },
@@ -44,7 +42,6 @@
             "phone": "88005553537",
             "tg_acc": "t.me/anna",
             "education": "ПГНИУ",
-            "work_now": "True",
             "status": "Active"
         }
     }

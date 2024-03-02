@@ -63,14 +63,14 @@ if DEBUG:
 
     CORS_ALLOW_ALL_ORIGINS = True
     CSRF_TRUSTED_ORIGINS = (
-        [os.getenv("HOST_URL")] if os.getenv("HOST_URL") else []
+        [f'https://{os.getenv("DOMAIN")}'] if os.getenv("DOMAIN") else []
     )
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Ambassadors Project",
     "VERSION": "1.0.5",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVERS": [{"url": HOST_URL}],
+    "SERVERS": [{"url": f'https://{os.getenv("DOMAIN")}'}],
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
