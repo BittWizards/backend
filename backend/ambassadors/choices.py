@@ -33,12 +33,19 @@ class AmbassadorsClothesSizes(models.TextChoices):
     XL = "XL"
 
 
-class AmbassadorsFootsSizes(models.TextChoices):
+class AmbassadorsFootsSizes(models.IntegerChoices):
     """
     Выбор размера обуви.
     """
 
-    LOW = "Low", "35-39"
-    MEDIUM = "Medium", "39-41"
-    HIGH = "High", "41-44"
-    LARGE = "Large", "44-46"
+    SIZE35 = 35, "35"
+    SIZE36 = 36, "36"
+    SIZE37 = 37, "37"
+    SIZE38 = 38, "38"
+    SIZE39 = 39, "39"
+    SIZE40 = 40, "40"
+    SIZE41 = 41, "41"
+    SIZE42 = 42, "42"
+    SIZE43 = 43, "43"
+    SIZE44 = 44, "44"
+    SIZE45 = 45, "45"

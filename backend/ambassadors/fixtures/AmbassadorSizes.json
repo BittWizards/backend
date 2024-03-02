@@ -5,7 +5,7 @@
         "fields": {
             "ambassador_id": "1",
             "clothes_size": "M",
-            "foot_size": "High"
+            "foot_size": "43"
         }
     },
     {
@@ -14,7 +14,7 @@
         "fields": {
             "ambassador_id": "2",
             "clothes_size": "M",
-            "foot_size": "High"
+            "foot_size": "41"
         }
     },
     {
@@ -23,7 +23,7 @@
         "fields": {
             "ambassador_id": "3",
             "clothes_size": "S",
-            "foot_size": "Low"
+            "foot_size": "39"
         }
     }
 ]
