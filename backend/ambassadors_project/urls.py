@@ -13,6 +13,7 @@ from content.views import (
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
+from orders.urls import urlpatterns as orders_url
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontents", AllContentsViewSet, basename="contents")
@@ -27,6 +28,7 @@ router_v1.register("promocode", PromoCodeViewSet, basename="promo")
 v1_urlpatterns = [
     path("", include(router_v1.urls)),
     path("ambassadors/<tg_acc>/", get_ambassador_by_tg_acc),
+    path("", include(orders_url)),
 ]
 api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),
