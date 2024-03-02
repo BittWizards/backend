@@ -23,7 +23,7 @@ router_v1.register(
     basename="self_content",
 )
 router_v1.register("promocode", PromoCodeViewSet, basename="promo")
-router_v1.register("ambassador", AmbassadorViewSet, basename="ambassador")
+router_v1.register(r"ambassador", AmbassadorViewSet, basename="ambassador")
 
 v1_urlpatterns = [
     path("", include(router_v1.urls)),
