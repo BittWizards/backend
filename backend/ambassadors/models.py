@@ -73,10 +73,16 @@ class Ambassador(AbstractAmbassador):
         null=True,
     )
     size = models.ForeignKey(
-        "AmbassadorSize", verbose_name="Размеры", on_delete=models.CASCADE
+        "AmbassadorSize",
+        verbose_name="Размеры",
+        on_delete=models.SET_NULL,
+        null=True,
     )
     address = models.ForeignKey(
-        "AmbassadorAddress", verbose_name="Адресс", on_delete=models.CASCADE
+        "AmbassadorAddress",
+        verbose_name="Адресс",
+        on_delete=models.SET_NULL,
+        null=True,
     )
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work_now = models.BooleanField(verbose_name="Работает")
