@@ -8,12 +8,12 @@ make-migrations:
 
 up:
 	@echo "Starting service ..."
-	cd infra && sudo docker compose up --build -d
+	sudo docker compose up --build -d
 
 down:
 	@echo "Stopping service ..."
-	cd infra && sudo docker compose down
+	sudo docker compose down
 
 down-v:
 	@echo "Stopping service and removing all volumes ..."
-	cd infra && sudo docker compose down -v
+	sudo docker compose down -v
