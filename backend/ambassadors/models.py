@@ -164,7 +164,10 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
         ordering = ("id",)
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id} — {self.country} {self. city} {self.street_home} {self.post_index}"
+        return (
+            f"{self.ambassador_id} — {self.country} "
+            f"{self. city} {self.street_home} {self.post_index}"
+        )
 
 
 class AmbassadorSize(models.Model):
@@ -198,7 +201,10 @@ class AmbassadorSize(models.Model):
         ]
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id}. Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
+        return (
+            f"{self.ambassador_id}. Размер обуви:{self.foot_size},"
+            f" размер одежды:{self.clothes_size}"
+        )
 
 
 class SendingMessage(models.Model):
