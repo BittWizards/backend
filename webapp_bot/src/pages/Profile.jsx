@@ -13,7 +13,7 @@ export default function Profile ({data}) {
   return (
     <>
       <BadgeAvatars avatar={src}/>
-      {Object.keys(newData).map((key) => (<>
+      {Object.keys(newData).map(key => (<>
         <div key={key} style={{ marginLeft: 20, marginBottom: 2 }}>
           <strong>{key}:</strong> {newData[key]}
         </div>

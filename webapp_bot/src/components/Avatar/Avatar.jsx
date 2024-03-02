@@ -14,7 +14,7 @@ export default function BadgeAvatars({avatar, achiev}) {
     <Badge
     overlap="circular"
     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-    sx={{ marginTop: 3, marginBottom: 1 }}
+    sx={{ marginTop: 3, marginBottom: 1, marginLeft: 3}}
     badgeContent={
       <SmallAvatar src="/static/images/avatar/1.jpg" />
     }

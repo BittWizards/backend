@@ -69,7 +69,7 @@ export default function ColorTabs({onClick, currentTab}) {
     role="navigation"
     centered="true"
     >
-        {tabsList.map(tab => (<CustomTab {...tab} />))}
+        {tabsList.map((tab, index) => (<CustomTab key={index} {...tab} />))}
     </CustomTabs>
   );
 }

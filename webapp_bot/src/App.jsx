@@ -18,14 +18,14 @@ export default function App() {
     if (user) {
       const fetchData = async () => {
         try {
-          const response = await fetch('https://ambas-1.ddns.net/api/v1/ambassadors/' + user?.username)
+          const response = await fetch('https://ambas-1.ddns.net/api/v1/ambassadors/aleksey2299')
           const jsonData = await response.json()
           setAmbassador(jsonData)
         } catch (error) {
           console.error('Ошибка при получении данных:', error)
         }
       }
-    fetchData()
+      fetchData()
     }
   }, [])
 

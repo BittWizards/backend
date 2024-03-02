@@ -75,9 +75,6 @@ SPECTACULAR_SETTINGS = {
 }
 
 REST_FRAMEWORK = {
-    "DATE_INPUT_FORMATS": ["%d.%m.%Y"],
-    "DATETIME_FORMAT": "%d.%m.%Y",
-    "DATE_FORMAT": "%d.%m.%Y",
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }

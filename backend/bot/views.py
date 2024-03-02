@@ -22,7 +22,7 @@ download_file_url = f"https://api.telegram.org/file/bot{settings.BOT_TOKEN}/"
 
 
 def get_keyboard() -> InlineKeyboardMarkup:
-    webapp_info = WebAppInfo(f"https://{settings.DOMAIN}/bot/")
+    webapp_info = WebAppInfo(f"https://{settings.DOMAIN}/")
     url = "https://forms.yandex.ru/u/65dd3da6eb61461c0f8e3229/"
     keyboard = [
         [
@@ -88,8 +88,6 @@ def get_image_if_not_exists(ambassador: Ambassador, user: User) -> None:
 def bot_view(request: Request) -> Response:
     data = request.data
     update = Update.de_json(data)
-    print(update.message.from_user)
-    print(update.message)
     if update.message:
         try:
             user = update.message.from_user
