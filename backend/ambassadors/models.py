@@ -72,6 +72,12 @@ class Ambassador(AbstractAmbassador):
         on_delete=models.SET_NULL,
         null=True,
     )
+    size = models.ForeignKey(
+        "AmbassadorSize", verbose_name="Размеры", on_delete=models.CASCADE
+    )
+    address = models.ForeignKey(
+        "AmbassadorAddress", verbose_name="Адресс", on_delete=models.CASCADE
+    )
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work_now = models.BooleanField(verbose_name="Работает")
     status = models.CharField(
@@ -117,10 +123,16 @@ class AmbassadorActions(models.Model):
     """
 
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
+        related_name="actions",
     )
     action = models.ForeignKey(
-        Actions, verbose_name="Действие", on_delete=models.SET_NULL, null=True
+        Actions,
+        verbose_name="Действие",
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
     class Meta:
@@ -135,7 +147,9 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
     """
 
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
     )
 
     class Meta:
@@ -153,16 +167,17 @@ class AmbassadorSize(models.Model):
     """
 
     ambassador_id = models.ForeignKey(
-        Ambassador, verbose_name="Амбассадор", on_delete=models.CASCADE
+        Ambassador,
+        verbose_name="Амбассадор",
+        on_delete=models.CASCADE,
     )
     clothes_size = models.CharField(
         verbose_name="Размер одежды",
         max_length=30,
         choices=AmbassadorsClothesSizes.choices,
     )
-    foot_size = models.CharField(
+    foot_size = models.IntegerField(
         verbose_name="Размер обуви",
-        max_length=30,
         choices=AmbassadorsFootsSizes.choices,
     )
 
@@ -170,6 +185,11 @@ class AmbassadorSize(models.Model):
         verbose_name = "Размеры амбассадора"
         verbose_name_plural = "Размеры амбассадоров"
         ordering = ("id",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=["ambassador_id"], name="unique_ambassador_size"
+            )
+        ]
 
     def __str__(self) -> str:
         return f"{self.ambassador_id}. Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
