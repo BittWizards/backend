@@ -5,7 +5,7 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework import routers
 
-from ambassadors.views import AmbassadorViewSet
+from ambassadors.views import AmbassadorViewSet, YandexProgrammViewSet
 from content.views import (
     AllContentsViewSet,
     AmbassadorContentsViewSet,
@@ -24,6 +24,9 @@ router_v1.register(
 )
 router_v1.register("promocode", PromoCodeViewSet, basename="promo")
 router_v1.register(r"ambassadors", AmbassadorViewSet, basename="ambassador")
+router_v1.register(
+    r"yandexprogramms", YandexProgrammViewSet, basename="yandexprogramms"
+)
 
 v1_urlpatterns = [
     path("", include(router_v1.urls)),
