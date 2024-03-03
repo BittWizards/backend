@@ -30,7 +30,8 @@ def modification_of_response_dict(query: list[dict]) -> list[dict]:
             # Добавление мерча относящегося к амбассадору
             'merch': {
                 query[j]['merch_name']: query[j]['count'] for j in range(k)
-            }
+            },
+            'total': query[i]['total']
         })
         # Удаление всех записей относящихся к id
         for _ in range(k):

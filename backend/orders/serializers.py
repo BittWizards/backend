@@ -17,12 +17,13 @@ class MerchSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     """Сериалайзер для заявок на мерч"""
 
-    merch = MerchSerializer(many=True, read_only=True)
+    merch = MerchSerializer(many=True)
 
     class Meta:
         model = Order
         fields = "__all__"
-        read_only_fields = ("ambassador_id", "created_date", "order_status")
+        read_only_fields = ("ambassador_id", "created_date",
+                            "order_status", "merch")
 
     def validate(self, attrs: dict) -> dict:
         merch = self.initial_data.get("merch")
@@ -49,6 +50,7 @@ class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
 
     merch_name = serializers.CharField()
     count = serializers.IntegerField(default=0)
+    total = serializers.IntegerField()
 
     class Meta:
         model = Ambassador
@@ -57,5 +59,6 @@ class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
             "first_name",
             'last_name',
             'merch_name',
-            'count'
+            'count',
+            'total'
         )

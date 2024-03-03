@@ -1,4 +1,4 @@
-from django.db.models import Count, F, QuerySet
+from django.db.models import Count, F, QuerySet, Sum
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view
 from rest_framework import viewsets
@@ -81,8 +81,10 @@ class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self) -> QuerySet:
         query = Ambassador.objects.annotate(
             merch_name=F('order__merch__name'),
-            count=Count("order__merch__name")
+            count=Count("order__merch__name"),
+            total=Sum("order__total_cost")
         ).order_by('id')
+        print(query.values('total'))
         return query
 
     def finalize_response(self, request, response, *args, **kwargs) -> Response:
