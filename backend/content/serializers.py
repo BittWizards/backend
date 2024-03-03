@@ -1,8 +1,15 @@
+import re
+
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador, AmbassadorAddress
+from ambassadors_project.constants import (
+    ERROR_MESSAGE_PROMOCODE,
+    PATTERN_PROMO,
+)
 from content.models import Content, Documents, Promocode
 
 
@@ -38,7 +45,7 @@ class AllContentSerializer(serializers.ModelSerializer):
     youtube_count = serializers.IntegerField(default=0)
     tg_count = serializers.IntegerField(default=0)
     instagram_count = serializers.IntegerField(default=0)
-    linledin_count = serializers.IntegerField(default=0)
+    linkedin_count = serializers.IntegerField(default=0)
     other_count = serializers.IntegerField(default=0)
 
     class Meta:
@@ -55,7 +62,7 @@ class AllContentSerializer(serializers.ModelSerializer):
             "youtube_count",
             "tg_count",
             "instagram_count",
-            "linledin_count",
+            "linkedin_count",
             "other_count",
         )
 
@@ -71,31 +78,6 @@ class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
 
     def get_documents(self, obj) -> int:
         return obj.documents.count()
-
-
-class AmbassadorContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для контента конкретного амбассадора"""
-
-    my_content = ContentsForAmbassadorSerializer(many=True)
-    city = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Ambassador
-        fields = (
-            "last_name",
-            "first_name",
-            "middle_name",
-            "status",
-            "tg_acc",
-            "email",
-            "phone",
-            "city",
-            "my_content",
-        )
-
-    def get_city(self, obj) -> str:
-        city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
-        return city
 
 
 class AmbassadorForContentSerializer(serializers.ModelSerializer):
@@ -169,20 +151,39 @@ class PostContentSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data) -> Content:
-        fio = validated_data.pop("name")
+        fio = validated_data.pop("name")  # noqa: F841
         tg_acc = validated_data.pop("tg_acc")
-        documents = validated_data.pop("files").split(",")
+        documents = None
+        if "files" in validated_data:
+            documents = validated_data.pop("files").split(",")
         ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
         with transaction.atomic():
             content = Content.objects.create(
                 **validated_data, ambassador=ambassador
             )
-            docs_to_create = [
-                Documents(content=content, document=docs) for docs in documents
-            ]
-            Documents.objects.bulk_create(docs_to_create)
+            if documents:
+                docs_to_create = [
+                    Documents(content=content, document=docs)
+                    for docs in documents
+                ]
+                Documents.objects.bulk_create(docs_to_create)
 
         return content
+
+    def update(self, instance, validated_data):
+        super().update()
+        if not validated_data.get("accepted"):
+            return instance
+
+    # функция подсчета контента и присвоения достижений
+
+    def validate(self, data):
+        tg_acc = data.get("tg_acc")
+        if "@" or "t.me/" in tg_acc:
+            tg_acc = re.sub(r"@|t.me/", "", tg_acc)
+
+        data["tg_acc"] = tg_acc
+        return data
 
     def to_representation(self, instance):
         return ContentSerializers(
@@ -222,7 +223,21 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         new_promo = Promocode.objects.create(**validated_data)
         return new_promo
 
+    def validate(self, data):
+        promocode = data.get("promocode")
+        if not re.fullmatch(PATTERN_PROMO, promocode):
+            raise ValidationError(ERROR_MESSAGE_PROMOCODE)
+        return data
+
     def to_representation(self, instance):
         return PromocodeSerializer(
             instance, context={"request": self.context.get("request")}
         ).data
+
+
+class PromocodeForAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериализатор для промокодов"""
+
+    class Meta:
+        model = Promocode
+        fields = ("id", "promocode", "is_active", "created_at")

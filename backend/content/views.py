@@ -1,18 +1,17 @@
-from django.db.models import Count, OuterRef, Prefetch, Subquery
+from django.db.models import Count, OuterRef, Subquery
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ambassadors.models import Ambassador
 from content.mixins import (
-    CreateRetrieveViewSet,
+    CreateRetrieveUpdateDeleteViewSet,
     ListCreateDestroyViewSet,
     ListViewSet,
 )
 from content.models import Content, ContentType, Platform, Promocode
 from content.serializers import (
     AllContentSerializer,
-    AmbassadorContentSerializer,
     ContentSerializers,
     NewContentSerializer,
     PostContentSerializer,
@@ -107,7 +106,7 @@ class AllContentsViewSet(ListViewSet):
                 .annotate(count=Count("pk"))
                 .values("count")
             ),
-            linledin_count=Subquery(
+            linkedin_count=Subquery(
                 Content.objects.filter(
                     ambassador=OuterRef("pk"),
                     accepted=True,
@@ -142,27 +141,27 @@ class AllContentsViewSet(ListViewSet):
         return Response(serializer.data)
 
 
+# @extend_schema(tags=["Контент"])
+# class AmbassadorContentsViewSet(ListViewSet):
+#     """Просмотр всего контента конкретного амбассадора"""
+#
+#     serializer_class = AmbassadorContentSerializer
+#
+#     def get_queryset(self):
+#         return Ambassador.objects.filter(
+#             id=self.kwargs.get("ambassador_id")
+#         ).prefetch_related(
+#             Prefetch(
+#                 "my_content",
+#                 queryset=Content.objects.filter(
+#                     accepted=True
+#                 ).prefetch_related("documents"),
+#             )
+#         )
+
+
 @extend_schema(tags=["Контент"])
-class AmbassadorContentsViewSet(ListViewSet):
-    """Просмотр всего контента конкретного амбассадора"""
-
-    serializer_class = AmbassadorContentSerializer
-
-    def get_queryset(self):
-        return Ambassador.objects.filter(
-            id=self.kwargs.get("ambassador_id")
-        ).prefetch_related(
-            Prefetch(
-                "my_content",
-                queryset=Content.objects.filter(
-                    accepted=True
-                ).prefetch_related("documents"),
-            )
-        )
-
-
-@extend_schema(tags=["Контент"])
-class ContentDetailViewSet(CreateRetrieveViewSet):
+class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     """Просмотр, создание, изменение, удаление карточки контента"""
 
     queryset = Content.objects.all().select_related("ambassador")

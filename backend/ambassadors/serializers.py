@@ -1,5 +1,11 @@
 from rest_framework import serializers
 
+from content.serializers import (
+    ContentsForAmbassadorSerializer,
+    PromocodeForAmbassadorSerializer,
+)
+from orders.models import Order
+
 from .models import (
     Actions,
     Ambassador,
@@ -161,10 +167,10 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         size = validated_data.pop("size")
         actions_data = validated_data.pop("actions")
 
-        address_data = AmbassadorAddress.objects.get_or_create(
+        address_data = AmbassadorAddress.objects.get_or_create(  # noqa
             **address, ambassador_id=instance
         )
-        size_data = AmbassadorSize.objects.get_or_create(
+        size_data = AmbassadorSize.objects.get_or_create(  # noqa
             ambassador_id=instance,
             **size,
         )
@@ -183,3 +189,67 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
+    city = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ambassador
+        fields = [
+            "last_name",
+            "first_name",
+            "middle_name",
+            "status",
+            "tg_acc",
+            "email",
+            "phone",
+            "city",
+        ]
+
+    def get_city(self, obj) -> str:
+        city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
+        return city
+
+
+class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
+    """Сериализатор для контента конкретного амбассадора"""
+
+    my_content = ContentsForAmbassadorSerializer(many=True)
+
+    class Meta(AmbassadorContentPromoSerializer.Meta):
+        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_content"]
+
+
+class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
+    """Сериализатор для промокодов конкретного амбассадора"""
+
+    my_promocode = PromocodeForAmbassadorSerializer(many=True)
+
+    class Meta(AmbassadorContentPromoSerializer.Meta):
+        fields = AmbassadorContentPromoSerializer.Meta.fields + [
+            "my_promocode"
+        ]
+
+
+class MerchForAmbassadorSerializer(serializers.ModelSerializer):
+    # merch = serializers.CharField(source="merch.name")
+
+    class Meta:
+        model = Order
+        fields = (
+            "created_date",
+            "merch",
+            # "size",
+            # "count",
+            # "summ"
+        )
+
+
+class AmbassadorMerchSerializer(AmbassadorContentPromoSerializer):
+    """Сериализатор для мерча конкретного амбассадора"""
+
+    my_merch = MerchForAmbassadorSerializer(many=True, source="order")
+
+    class Meta(AmbassadorContentPromoSerializer.Meta):
+        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_merch"]
