@@ -3,7 +3,7 @@ from rest_framework import serializers
 from ambassadors.models import Ambassador
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
-from orders.validators import validate_merch_num
+from orders.validators import validate_merch_num, validate_editing_order
 
 
 class MerchSerializer(serializers.ModelSerializer):
@@ -37,6 +37,7 @@ class OrderSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance: Order, validated_data: dict) -> Order:
+        validate_editing_order(instance.order_status)
         merch_data = validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
         if validated_data.get('track_number') and not instance.track_number:

@@ -56,8 +56,6 @@ class AmbassadorOrdersViewSet(CreateListMixin):
         serializer.validated_data["ambassador_id"] = ambassador
         serializer.save(merch=merch)
 
-    # TODO: Если добавить трек -> изменить статус
-    # TODO: Если статус отправлен -> нельзя изменять заявку
     # TODO: Добавить итоговую сумму по мерчу у амбасадора
 
 

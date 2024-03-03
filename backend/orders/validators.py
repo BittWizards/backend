@@ -18,9 +18,10 @@ def validate_merch_num(merch: list[dict]) -> None:
         )
 
 
-def validate_editing_order(order_status: OrderStatus) -> None:
-    """Проверка что заявку можно изменить"""
-    if order_status != OrderStatus.CREATED:
+def validate_editing_order(order_status: str) -> None:
+    """Проверка что заявка не в статусе Delivered"""
+    if order_status == OrderStatus.DELIVERED:
         raise PermissionDenied(
-            "Поля заявки уже нельзя изменить", code=HTTP_403_FORBIDDEN
+            "Заявка выполнена и поля заявки уже нельзя изменить",
+            code=HTTP_403_FORBIDDEN
         )
