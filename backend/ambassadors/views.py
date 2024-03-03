@@ -5,13 +5,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from content.models import Content, Promocode
-from orders.models import Order
 
 from .models import Ambassador
 from .serializers import (
     AmbassadorContentSerializer,
     AmbassadorListSerializer,
-    AmbassadorMerchSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
 )
@@ -40,10 +38,11 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         else:
             return AmbassadorSerializer
 
+    @extend_schema(tags=["Контент"])
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/contents")
     def contents(self, request, ambassador_id):
         queryset = Ambassador.objects.filter(
-            id=self.kwargs.get("ambassador_id")
+            id=ambassador_id
         ).prefetch_related(
             Prefetch(
                 "my_content",
@@ -57,29 +56,15 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
+    @extend_schema(tags=["Промокоды"])
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/promocodes")
     def promocodes(self, request, ambassador_id):
         queryset = Ambassador.objects.filter(
-            id=self.kwargs.get("ambassador_id")
+            id=ambassador_id
         ).prefetch_related(
             Prefetch("my_promocode", queryset=Promocode.objects.all())
         )
         serializer = AmbassadorPromocodeSerializer(
-            queryset, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
-
-    @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/merch")
-    def merch(self, request, ambassador_id):
-        queryset = Ambassador.objects.filter(
-            id=self.kwargs.get("ambassador_id")
-        ).prefetch_related(
-            Prefetch(
-                "order",
-                queryset=Order.objects.filter(ambassador_id=ambassador_id),
-            )
-        )
-        serializer = AmbassadorMerchSerializer(
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)

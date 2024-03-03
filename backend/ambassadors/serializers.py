@@ -4,7 +4,6 @@ from content.serializers import (
     ContentsForAmbassadorSerializer,
     PromocodeForAmbassadorSerializer,
 )
-from orders.models import Order
 
 from .models import (
     Actions,
@@ -192,6 +191,8 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
+    """Родительский сериалайзер для контента промокодов"""
+
     city = serializers.SerializerMethodField()
 
     class Meta:
@@ -204,6 +205,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
             "tg_acc",
             "email",
             "phone",
+            "",
             "city",
         ]
 
@@ -230,26 +232,3 @@ class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
         fields = AmbassadorContentPromoSerializer.Meta.fields + [
             "my_promocode"
         ]
-
-
-class MerchForAmbassadorSerializer(serializers.ModelSerializer):
-    # merch = serializers.CharField(source="merch.name")
-
-    class Meta:
-        model = Order
-        fields = (
-            "created_date",
-            "merch",
-            # "size",
-            # "count",
-            # "summ"
-        )
-
-
-class AmbassadorMerchSerializer(AmbassadorContentPromoSerializer):
-    """Сериализатор для мерча конкретного амбассадора"""
-
-    my_merch = MerchForAmbassadorSerializer(many=True, source="order")
-
-    class Meta(AmbassadorContentPromoSerializer.Meta):
-        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_merch"]
