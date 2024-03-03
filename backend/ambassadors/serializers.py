@@ -191,7 +191,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
-    """Родительский сериалайзер для контента промокодов"""
+    """Родительский сериалайзер для контента промокодов."""
 
     city = serializers.SerializerMethodField()
 
@@ -215,7 +215,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
-    """Сериализатор для контента конкретного амбассадора"""
+    """Сериализатор для контента конкретного амбассадора."""
 
     my_content = ContentsForAmbassadorSerializer(many=True)
 
@@ -224,7 +224,7 @@ class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
 
 
 class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
-    """Сериализатор для промокодов конкретного амбассадора"""
+    """Сериализатор для промокодов конкретного амбассадора."""
 
     my_promocode = PromocodeForAmbassadorSerializer(many=True)
 

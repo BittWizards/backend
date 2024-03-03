@@ -41,6 +41,8 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     @extend_schema(tags=["Контент"])
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/contents")
     def contents(self, request, ambassador_id):
+        """Весь контент амбассадора."""
+
         queryset = Ambassador.objects.filter(
             id=ambassador_id
         ).prefetch_related(
@@ -59,6 +61,8 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     @extend_schema(tags=["Промокоды"])
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/promocodes")
     def promocodes(self, request, ambassador_id):
+        """Все промокоды амбассадора."""
+
         queryset = Ambassador.objects.filter(
             id=ambassador_id
         ).prefetch_related(

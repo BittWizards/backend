@@ -13,18 +13,18 @@ from ambassadors_project.constants import (
 from content.models import Content, Documents, Promocode
 
 
-class AmbassadorForNewContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для амбассадора в новой заявке на контент"""
+class ShortAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериализатор для амбассадора в новой заявке на контент."""
 
     class Meta:
         model = Ambassador
-        fields = ("last_name", "first_name", "tg_acc", "status")
+        fields = ("last_name", "first_name", "ya_programm", "tg_acc", "status")
 
 
 class NewContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения заявок на контент"""
+    """Сериализатор для отображения заявок на контент."""
 
-    ambassador = AmbassadorForNewContentSerializer(read_only=True)
+    ambassador = ShortAmbassadorSerializer(read_only=True)
 
     class Meta:
         model = Content
@@ -36,7 +36,7 @@ class NewContentSerializer(serializers.ModelSerializer):
 
 
 class AllContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для просмотра всех пользователей с их контентом"""
+    """Сериализатор для просмотра всех пользователей с их контентом."""
 
     review_count = serializers.IntegerField(default=0)
     habr_count = serializers.IntegerField(default=0)
@@ -68,7 +68,7 @@ class AllContentSerializer(serializers.ModelSerializer):
 
 
 class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения контента конкретного амбассадора"""
+    """Сериализатор для отображения контента конкретного амбассадора."""
 
     documents = serializers.SerializerMethodField()
 
@@ -80,8 +80,11 @@ class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
         return obj.documents.count()
 
 
-class AmbassadorForContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения данных амбассадора в карточке контента"""
+class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для отображения данных амбассадора
+     в карточках контента и промокодов.
+    """
 
     city = serializers.SerializerMethodField()
     email = serializers.CharField(read_only=True)
@@ -98,6 +101,7 @@ class AmbassadorForContentSerializer(serializers.ModelSerializer):
             "tg_acc",
             "email",
             "phone",
+            "ya_programm",
             "city",
         )
 
@@ -107,9 +111,9 @@ class AmbassadorForContentSerializer(serializers.ModelSerializer):
 
 
 class ContentSerializers(serializers.ModelSerializer):
-    """Сериализатор для карточек контента"""
+    """Сериализатор для карточек контента."""
 
-    ambassador = AmbassadorForContentSerializer()
+    ambassador = AmbassadorForContentPromoCardSerializer()
     id = serializers.IntegerField(required=False)
 
     class Meta:
@@ -128,7 +132,7 @@ class ContentSerializers(serializers.ModelSerializer):
 
 
 class PostContentSerializer(serializers.ModelSerializer):
-    """Сериализатор для POST, PATCH запросов карточек контента"""
+    """Сериализатор для создания и изменения контента."""
 
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(required=False)
@@ -181,7 +185,6 @@ class PostContentSerializer(serializers.ModelSerializer):
         tg_acc = data.get("tg_acc")
         if "@" or "t.me/" in tg_acc:
             tg_acc = re.sub(r"@|t.me/", "", tg_acc)
-
         data["tg_acc"] = tg_acc
         return data
 
@@ -192,9 +195,9 @@ class PostContentSerializer(serializers.ModelSerializer):
 
 
 class PromocodeSerializer(serializers.ModelSerializer):
-    """Сериализатор для промокодов"""
+    """Сериализатор для промокодов."""
 
-    ambassador = AmbassadorForNewContentSerializer(read_only=True)
+    ambassador = ShortAmbassadorSerializer(read_only=True)
 
     class Meta:
         model = Promocode
@@ -202,7 +205,7 @@ class PromocodeSerializer(serializers.ModelSerializer):
 
 
 class PostPromocodeSerializer(serializers.ModelSerializer):
-    """Сериализатор для промокодов"""
+    """Сериализатор для создания промокодов."""
 
     class Meta:
         model = Promocode
@@ -236,7 +239,7 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
 
 
 class PromocodeForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для промокодов"""
+    """Сериализатор для промокодов."""
 
     class Meta:
         model = Promocode

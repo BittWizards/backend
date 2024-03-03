@@ -141,25 +141,6 @@ class AllContentsViewSet(ListViewSet):
         return Response(serializer.data)
 
 
-# @extend_schema(tags=["Контент"])
-# class AmbassadorContentsViewSet(ListViewSet):
-#     """Просмотр всего контента конкретного амбассадора"""
-#
-#     serializer_class = AmbassadorContentSerializer
-#
-#     def get_queryset(self):
-#         return Ambassador.objects.filter(
-#             id=self.kwargs.get("ambassador_id")
-#         ).prefetch_related(
-#             Prefetch(
-#                 "my_content",
-#                 queryset=Content.objects.filter(
-#                     accepted=True
-#                 ).prefetch_related("documents"),
-#             )
-#         )
-
-
 @extend_schema(tags=["Контент"])
 class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     """Просмотр, создание, изменение, удаление карточки контента"""
