@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from ambassadors.models import Ambassador
-from orders.models import Merch, Order
+from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_merch_num
 
@@ -38,6 +38,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Order, validated_data: dict) -> Order:
         merch_data = validated_data.pop("merch", None)
+        # Проверка отсутствие трек-номера у заказа
+        if validated_data.get('track_number') and not instance.track_number:
+            validated_data['order_status'] = OrderStatus.SHIPPED
         instance = super().update(instance, validated_data)
         if merch_data:
             instance.merch.clear()
