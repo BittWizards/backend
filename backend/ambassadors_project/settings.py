@@ -16,7 +16,7 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 
-DOMAIN = os.getenv("DOMAIN", "localhost")
+DOMAIN = os.getenv("DOMAIN", "localhost:8000")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -68,7 +68,7 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Ambassadors Project",
     "VERSION": "1.0.5",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVERS": [{"url": f"https://{DOMAIN}"}],
+    "SERVERS": [{"url": f"https://{DOMAIN}"}, {"url": f"http://{DOMAIN}"}],
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
