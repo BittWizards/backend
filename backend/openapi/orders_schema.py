@@ -74,7 +74,7 @@ orders_extend_schema_view = {
         description="Возращает список всех существующих заявок",
         responses={
             200: OpenApiResponse(
-                description="Список заявок на амбассадора",
+                description="Список всех заявок",
                 response=OrderSerializer,
             )
         },
