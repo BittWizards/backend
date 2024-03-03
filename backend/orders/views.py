@@ -1,4 +1,4 @@
-from django.db.models import QuerySet, Count, F
+from django.db.models import Count, F, QuerySet
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view
 from rest_framework import viewsets
@@ -8,14 +8,13 @@ from rest_framework.serializers import Serializer
 from rest_framework.status import HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
-from openapi.orders_schema import (
-    ambassador_orders_extend_schema_view,
-    merch_extend_schema_view,
-    orders_extend_schema_view,
-)
+from openapi.orders_schema import (all_merch_to_ambassador_schema_view,
+                                   ambassador_orders_extend_schema_view,
+                                   merch_extend_schema_view,
+                                   orders_extend_schema_view)
 from orders.models import Merch, Order
-from orders.serializers import (MerchSerializer, OrderSerializer,
-                                AllMerchToAmbassadorSerializer)
+from orders.serializers import (AllMerchToAmbassadorSerializer,
+                                MerchSerializer, OrderSerializer)
 from orders.utils import (get_filtered_merch_objects,
                           modification_of_response_dict)
 
@@ -72,6 +71,7 @@ class MerchViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MerchSerializer
 
 
+@extend_schema_view(**all_merch_to_ambassador_schema_view)
 class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для отображения всех амбассадоров
     и мерча который был им отправлен"""

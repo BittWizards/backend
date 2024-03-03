@@ -4,10 +4,10 @@ from drf_spectacular.utils import (
     extend_schema,
 )
 
-from orders.serializers import OrderSerializer
+from orders.serializers import (OrderSerializer, MerchSerializer,
+                                AllMerchToAmbassadorSerializer)
 
 merch_example = {"name": "string", "size": "XS"}
-
 order_request_example = {
     "first_name": "string",
     "last_name": "string",
@@ -25,8 +25,17 @@ order_request_example = {
     "tg_acc": "string",
     "merch": [merch_example],
 }
-
 order_response_example = {"id": 0, "ambassador_id": 0, **order_request_example}
+all_merch_to_ambassador_example = {
+    "id": 2147483647,
+    "first_name": "string",
+    "last_name": "string",
+    "merch": {
+        "string": 2147483647,
+        "string": 2147483647,
+        "string": 2147483647
+    }
+}
 
 ambassador_orders_extend_schema_view = {
     "create": extend_schema(
@@ -105,10 +114,45 @@ orders_extend_schema_view = {
 }
 
 merch_extend_schema_view = {
-    "create": extend_schema(),
-    "retrieve": extend_schema(),
-    "list": extend_schema(),
-    "update": extend_schema(),
-    "partial_update": extend_schema(),
-    "destroy": extend_schema(),
+    "retrieve": extend_schema(
+        summary="Получение мерча по ID",
+        description="Возвращает мерч с размером",
+        responses={
+            200: OpenApiResponse(
+                description="Мерч",
+                response=MerchSerializer
+            )
+        },
+        tags=["Мерч"],
+    ),
+    "list": extend_schema(
+        summary="Получение всех видов мерча",
+        description="Возвращает список всего мерча с размерами",
+        responses={
+            200: OpenApiResponse(
+                description="Список всего мерча",
+                response=MerchSerializer
+            )
+        },
+        tags=["Мерч"],
+    )
+}
+
+all_merch_to_ambassador_schema_view = {
+    "list": extend_schema(
+        summary="Список всего мерча относящегося к каждому амбассадору",
+        description="Возращает информацию мерча по каждому амбассадору",
+        responses={
+            200: OpenApiResponse(
+                description="Список всего мерча по кадому амбассадору",
+                response=AllMerchToAmbassadorSerializer
+            )
+        },
+        tags=["Мерч"],
+        examples=[OpenApiExample(
+            "200",
+            all_merch_to_ambassador_example,
+            response_only=True
+        )]
+    ),
 }
