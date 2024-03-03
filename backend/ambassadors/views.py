@@ -39,6 +39,7 @@ class AmbassadorViewSet(CreateRetrieveListViewSet):
 @extend_schema(exclude=True)
 @api_view(["GET"])
 def get_ambassador_by_tg_acc(request: Request, tg_acc: str) -> Response:
+    """Возвращаем данные амбассадора по его username в telegram."""
     ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
     serializer = AmbassadorSerializer(instance=ambassador)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
