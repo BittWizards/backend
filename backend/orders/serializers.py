@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from ambassadors.models import Ambassador
 from orders.models import Merch, Order
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_merch_num
@@ -40,3 +41,21 @@ class OrderSerializer(serializers.ModelSerializer):
                 instance.merch.add(product.id)
             instance.save()
         return instance
+
+
+class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериалайзер для обработки всего мерча,
+    который относится к конкертному амбассадору"""
+
+    merch_name = serializers.CharField()
+    count = serializers.IntegerField(default=0)
+
+    class Meta:
+        model = Ambassador
+        fields = (
+            "id",
+            "first_name",
+            'last_name',
+            'merch_name',
+            'count'
+        )

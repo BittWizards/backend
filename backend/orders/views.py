@@ -1,4 +1,4 @@
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Count, F
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view
 from rest_framework import viewsets
@@ -14,8 +14,10 @@ from openapi.orders_schema import (
     orders_extend_schema_view,
 )
 from orders.models import Merch, Order
-from orders.serializers import MerchSerializer, OrderSerializer
-from orders.utils import get_filtered_merch_objects
+from orders.serializers import (MerchSerializer, OrderSerializer,
+                                AllMerchToAmbassadorSerializer)
+from orders.utils import (get_filtered_merch_objects,
+                          modification_of_response_dict)
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
@@ -50,6 +52,7 @@ class AmbassadorOrdersViewSet(viewsets.ModelViewSet):
 
     # TODO: Если добавить трек -> изменить статус
     # TODO: Если статус отправлен -> нельзя изменять заявку
+    # TODO: Добавить итоговую сумму по мерчу у амбасадора
 
 
 @extend_schema_view(**orders_extend_schema_view)
@@ -62,9 +65,26 @@ class OrdersViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema_view(**merch_extend_schema_view)
-class MerchViewSet(viewsets.ModelViewSet):
+class MerchViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для мерча"""
 
     queryset = Merch.objects.all()
     serializer_class = MerchSerializer
-    http_method_names = ["get"]
+
+
+class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
+    """ViewSet для отображения всех амбассадоров
+    и мерча который был им отправлен"""
+
+    serializer_class = AllMerchToAmbassadorSerializer
+
+    def get_queryset(self) -> QuerySet:
+        query = Ambassador.objects.annotate(
+            merch_name=F('order__merch__name'),
+            count=Count("order__merch__name")
+        ).order_by('id')
+        return query
+
+    def finalize_response(self, request, response, *args, **kwargs) -> Response:
+        response.data = modification_of_response_dict(response.data)
+        return super().finalize_response(request, response, *args, **kwargs)
