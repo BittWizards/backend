@@ -23,16 +23,18 @@ def modification_of_response_dict(query: list[dict]) -> list[dict]:
     for id in uniq:
         # Вычисление количествbа таких же id в словаре
         k = sum(1 for q in query if q["id"] == id)
-        result.append({
-            "id": query[i]["id"],
-            "first_name": query[i]["first_name"],
-            "last_name": query[i]["last_name"],
-            # Добавление мерча относящегося к амбассадору
-            "merch": {
-                query[j]["merch_name"]: query[j]["count"] for j in range(k)
-            },
-            "total": query[i]["total"]
-        })
+        result.append(
+            {
+                "id": query[i]["id"],
+                "first_name": query[i]["first_name"],
+                "last_name": query[i]["last_name"],
+                # Добавление мерча относящегося к амбассадору
+                "merch": {
+                    query[j]["merch_name"]: query[j]["count"] for j in range(k)
+                },
+                "total": query[i]["total"],
+            }
+        )
         # Удаление всех записей относящихся к id
         for _ in range(k):
             query.pop(0)

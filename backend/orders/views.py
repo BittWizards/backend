@@ -87,10 +87,10 @@ class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self) -> QuerySet:
         query = Ambassador.objects.annotate(
-            merch_name=F('order__merch__name'),
+            merch_name=F("order__merch__name"),
             count=Count("order__merch__name"),
-            total=Sum("order__total_cost")
-        ).order_by('id')
+            total=Sum("order__total_cost"),
+        ).order_by("id")
         return query
 
     def finalize_response(

@@ -22,8 +22,12 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
-        read_only_fields = ("ambassador_id", "created_date",
-                            "order_status", "merch")
+        read_only_fields = (
+            "ambassador_id",
+            "created_date",
+            "order_status",
+            "merch",
+        )
 
     def validate(self, attrs: dict) -> dict:
         merch = self.initial_data.get("merch")
@@ -57,8 +61,8 @@ class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "first_name",
-            'last_name',
-            'merch_name',
-            'count',
-            'total'
+            "last_name",
+            "merch_name",
+            "count",
+            "total",
         )
