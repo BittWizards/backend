@@ -71,6 +71,8 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
             "last_name",
             "middle_name",
             "ya_programm",
+            "tg_acc",
+            "status",
             "created",
         )
 
