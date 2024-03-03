@@ -1,5 +1,3 @@
-from collections import defaultdict
-
 from django.db.models import Q, QuerySet
 
 from orders.models import Merch
@@ -20,7 +18,7 @@ def modification_of_response_dict(query: list[dict]) -> list[dict]:
     """Агрегация по id амбассадора данных о мерче на выходе.
     Берет все данные, и соединяет мерч по id амбассадора"""
     uniq = set(obj['id'] for obj in query)
-    result = list(defaultdict(list))
+    result = []
     i = 0
     for id in uniq:
         # Вычисление количествbа таких же id в словаре
@@ -30,9 +28,9 @@ def modification_of_response_dict(query: list[dict]) -> list[dict]:
             'first_name': query[i]['first_name'],
             'last_name': query[i]['last_name'],
             # Добавление мерча относящегося к этому id
-            'merch': [
-                {query[j]['merch_name']: query[j]['count']} for j in range(k)
-            ]
+            'merch': {
+                query[j]['merch_name']: query[j]['count'] for j in range(k)
+            }
         })
         # Удаление всех записей относящихся к id
         for _ in range(k):
