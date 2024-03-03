@@ -8,15 +8,22 @@ from rest_framework.serializers import Serializer
 from rest_framework.status import HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
-from openapi.orders_schema import (all_merch_to_ambassador_schema_view,
-                                   ambassador_orders_extend_schema_view,
-                                   merch_extend_schema_view,
-                                   orders_extend_schema_view)
+from openapi.orders_schema import (
+    all_merch_to_ambassador_schema_view,
+    ambassador_orders_extend_schema_view,
+    merch_extend_schema_view,
+    orders_extend_schema_view,
+)
 from orders.models import Merch, Order
-from orders.serializers import (AllMerchToAmbassadorSerializer,
-                                MerchSerializer, OrderSerializer)
-from orders.utils import (get_filtered_merch_objects,
-                          modification_of_response_dict)
+from orders.serializers import (
+    AllMerchToAmbassadorSerializer,
+    MerchSerializer,
+    OrderSerializer,
+)
+from orders.utils import (
+    get_filtered_merch_objects,
+    modification_of_response_dict,
+)
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
@@ -84,9 +91,10 @@ class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
             count=Count("order__merch__name"),
             total=Sum("order__total_cost")
         ).order_by('id')
-        print(query.values('total'))
         return query
 
-    def finalize_response(self, request, response, *args, **kwargs) -> Response:
+    def finalize_response(
+        self, request, response, *args, **kwargs
+    ) -> Response:
         response.data = modification_of_response_dict(response.data)
         return super().finalize_response(request, response, *args, **kwargs)

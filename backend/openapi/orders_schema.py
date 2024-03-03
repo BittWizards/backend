@@ -4,8 +4,11 @@ from drf_spectacular.utils import (
     extend_schema,
 )
 
-from orders.serializers import (OrderSerializer, MerchSerializer,
-                                AllMerchToAmbassadorSerializer)
+from orders.serializers import (
+    AllMerchToAmbassadorSerializer,
+    MerchSerializer,
+    OrderSerializer,
+)
 
 merch_example = {"name": "string", "size": "XS"}
 order_request_example = {
@@ -33,8 +36,8 @@ all_merch_to_ambassador_example = {
     "merch": {
         "string": 2147483647,
         "string": 2147483647,
-        "string": 2147483647
-    }
+        "string": 2147483647,
+    },
 }
 
 ambassador_orders_extend_schema_view = {
@@ -118,10 +121,7 @@ merch_extend_schema_view = {
         summary="Получение мерча по ID",
         description="Возвращает мерч с размером",
         responses={
-            200: OpenApiResponse(
-                description="Мерч",
-                response=MerchSerializer
-            )
+            200: OpenApiResponse(description="Мерч", response=MerchSerializer)
         },
         tags=["Мерч"],
     ),
@@ -130,12 +130,11 @@ merch_extend_schema_view = {
         description="Возвращает список всего мерча с размерами",
         responses={
             200: OpenApiResponse(
-                description="Список всего мерча",
-                response=MerchSerializer
+                description="Список всего мерча", response=MerchSerializer
             )
         },
         tags=["Мерч"],
-    )
+    ),
 }
 
 all_merch_to_ambassador_schema_view = {
@@ -145,14 +144,14 @@ all_merch_to_ambassador_schema_view = {
         responses={
             200: OpenApiResponse(
                 description="Список всего мерча по кадому амбассадору",
-                response=AllMerchToAmbassadorSerializer
+                response=AllMerchToAmbassadorSerializer,
             )
         },
         tags=["Мерч"],
-        examples=[OpenApiExample(
-            "200",
-            all_merch_to_ambassador_example,
-            response_only=True
-        )]
+        examples=[
+            OpenApiExample(
+                "200", all_merch_to_ambassador_example, response_only=True
+            )
+        ],
     ),
 }
