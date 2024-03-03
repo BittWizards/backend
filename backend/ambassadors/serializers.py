@@ -12,7 +12,7 @@ from .models import (
 
 class YandexProgrammSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели YandexProgramm
+    Сериализатор модели YandexProgramm.
     """
 
     class Meta:
@@ -22,7 +22,7 @@ class YandexProgrammSerializer(serializers.ModelSerializer):
 
 class AmbassadorAddressSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели YandexProgramm
+    Сериализатор модели AmbassadorAddress.
     """
 
     class Meta:
@@ -45,7 +45,7 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
 
 class AmbassadorSizeSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели AmbassadorSize
+    Сериализатор модели AmbassadorSize.
     """
 
     class Meta:
@@ -58,7 +58,7 @@ class AmbassadorSizeSerializer(serializers.ModelSerializer):
 
 class AmbassadorListSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для выдачи списка объектов модели Ambassador
+    Сериализатор для выдачи списка объектов модели Ambassador.
     """
 
     ya_programm = YandexProgrammSerializer()
@@ -71,6 +71,8 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
             "last_name",
             "middle_name",
             "ya_programm",
+            "tg_acc",
+            "status",
             "created",
         )
 
