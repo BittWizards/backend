@@ -52,10 +52,4 @@ class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ambassador
-        fields = (
-            "id",
-            "first_name",
-            'last_name',
-            'merch_name',
-            'count'
-        )
+        fields = ("id", "first_name", "last_name", "merch_name", "count")
