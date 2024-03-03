@@ -80,7 +80,7 @@ class Ambassador(AbstractAmbassador):
     created = models.DateTimeField(
         verbose_name="Дата и время создания", default=timezone.now
     )
-    tg_id = models.CharField(
+    tg_id = models.IntegerField(
         verbose_name="Телеграмм id", blank=True, null=True
     )
     image = models.ImageField(
