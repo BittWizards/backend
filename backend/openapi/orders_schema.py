@@ -6,6 +6,7 @@ from drf_spectacular.utils import (
 
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
+    AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
 )
@@ -30,7 +31,7 @@ order_request_example = {
 }
 order_response_example = {"id": 0, "ambassador_id": 0, **order_request_example}
 all_merch_to_ambassador_example = {
-    "id": 2147483647,
+    "id": 0,
     "first_name": "string",
     "last_name": "string",
     "merch": {
@@ -45,7 +46,8 @@ ambassador_orders_extend_schema_view = {
         summary="Создание новой заявки",
         description="Создает новый заказ в базе",
         examples=[
-            OpenApiExample("post", order_request_example, request_only=True)
+            OpenApiExample("post", order_request_example, request_only=True),
+            OpenApiExample("201", order_response_example, response_only=True)
         ],
         responses={
             201: OpenApiResponse(
@@ -56,13 +58,13 @@ ambassador_orders_extend_schema_view = {
         },
         tags=["Заявки"],
     ),
-    "list": extend_schema(
+    "retrieve": extend_schema(
         summary="Получение всех заявок относящихся к амбассадору по его ID",
         description="Возращает список всех заявок относящихся к амбассадору",
         responses={
             200: OpenApiResponse(
                 description="Список заявок на амбассадора",
-                response=OrderSerializer,
+                response=AmbassadorOrderListSerializer,
             )
         },
         tags=["Заявки"],
@@ -73,6 +75,9 @@ orders_extend_schema_view = {
     "retrieve": extend_schema(
         summary="Получение заявки по ID",
         description="Возвращает заявку по ID",
+        examples=[
+            OpenApiExample("200", order_response_example, response_only=True),
+        ],
         responses={
             200: OpenApiResponse(
                 description="Заявка по запрошенному ID",
@@ -82,11 +87,14 @@ orders_extend_schema_view = {
         tags=["Заявки"],
     ),
     "list": extend_schema(
-        summary="Получение всех заявок",
+        summary="Получение всех существующих заявок",
         description="Возращает список всех существующих заявок",
+        examples=[
+            OpenApiExample("200", order_response_example, response_only=True),
+        ],
         responses={
             200: OpenApiResponse(
-                description="Список всех заявок",
+                description="Список всех существующих заявок",
                 response=OrderSerializer,
             )
         },
@@ -96,7 +104,11 @@ orders_extend_schema_view = {
         summary="Частичное обновление заявки",
         description="Изменение одного или нескольких полей существующей заявки",
         examples=[
-            OpenApiExample("patch", order_request_example, request_only=True)
+            OpenApiExample(
+                "patch", order_request_example, request_only=True,
+                description="Можно изменить одно или несколько полей из списка"
+            ),
+            OpenApiExample("201", order_response_example, response_only=True),
         ],
         responses={
             201: OpenApiResponse(
@@ -143,14 +155,16 @@ all_merch_to_ambassador_schema_view = {
         description="Возращает информацию мерча по каждому амбассадору",
         responses={
             200: OpenApiResponse(
-                description="Список всего мерча по кадому амбассадору",
+                description="Список всего мерча по каждому амбассадору",
                 response=AllMerchToAmbassadorSerializer,
             )
         },
         tags=["Мерч"],
         examples=[
             OpenApiExample(
-                "200", all_merch_to_ambassador_example, response_only=True
+                "200", all_merch_to_ambassador_example, response_only=True,
+                description=("В мерче возвращается название мерча и его\
+                              количество (Толстовка: 1)")
             )
         ],
     ),
