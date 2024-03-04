@@ -1,9 +1,11 @@
 from django.db.models import Prefetch
+from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework import status, viewsets
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.request import Request
 from rest_framework.response import Response
 
 from content.models import Content, Promocode
@@ -27,6 +29,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["status"]
+    http_method_names = ["get", "post", "patch", "delete"]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -79,3 +82,12 @@ class YandexProgrammViewSet(viewsets.ModelViewSet):
     queryset = YandexProgramm.objects.all()
     serializer_class = YandexProgrammSerializer
     permission_classes = (AllowAny,)
+
+
+@extend_schema(exclude=True)
+@api_view(["GET"])
+def get_ambassador_by_tg_acc(request: Request, tg_acc: str) -> Response:
+    """Возвращаем данные амбассадора по его username в telegram."""
+    ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
+    serializer = AmbassadorSerializer(instance=ambassador)
+    return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -41,11 +41,11 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
     """
 
     title = serializers.CharField(source="action.title")
-    description = serializers.CharField(source="action.description")
+    # description = serializers.CharField(source="action.description")
 
     class Meta:
         model = AmbassadorActions
-        fields = ("title", "description")
+        fields = ("title",)
 
 
 class AmbassadorSizeSerializer(serializers.ModelSerializer):
@@ -126,7 +126,8 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             **validated_data,
         )
         address_data = AmbassadorAddress.objects.create(
-            **address, ambassador_id=ambassador
+            **address,
+            ambassador_id=ambassador,
         )
         size_data = AmbassadorSize.objects.create(
             ambassador_id=ambassador,
@@ -134,10 +135,11 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         )
         for action_data in actions_data:
             current_action = Actions.objects.get_or_create(
-                **action_data["action"]
+                **action_data["action"],
             )
             AmbassadorActions.objects.create(
-                action=current_action[0], ambassador_id=ambassador
+                action=current_action[0],
+                ambassador_id=ambassador,
             )
 
         ambassador.address = address_data
@@ -146,51 +148,33 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         return ambassador
 
     def update(self, instance, validated_data):
-        instance.first_name = validated_data.get(
-            "first_name", instance.first_name
-        )
-        instance.last_name = validated_data.get(
-            "last_name", instance.last_name
-        )
-        instance.middle_name = validated_data.get(
-            "middle_name", instance.middle_name
-        )
-        instance.email = validated_data.get("email", instance.email)
-        instance.phone = validated_data.get("phone", instance.phone)
-        instance.tg_acc = validated_data.get("tg_acc", instance.tg_acc)
-        instance.gender = validated_data.get("gender", instance.gender)
-        instance.education = validated_data.get(
-            "education", instance.education
-        )
-        instance.work = validated_data.get("work", instance.work)
-        instance.status = validated_data.get("status", instance.status)
-
-        ya_programm = validated_data.pop("ya_programm")
-        address = validated_data.pop("address")
-        size = validated_data.pop("size")
-        actions_data = validated_data.pop("actions")
-
-        address_data = AmbassadorAddress.objects.get_or_create(  # noqa
-            **address, ambassador_id=instance
-        )
-        size_data = AmbassadorSize.objects.get_or_create(  # noqa
-            ambassador_id=instance,
-            **size,
-        )
-        for action_data in actions_data:
-            current_action = Actions.objects.get_or_create(
-                **action_data["action"]
+        if "ya_programm" in validated_data:
+            ya_programm = validated_data.pop("ya_programm")
+            instance.ya_programm = YandexProgramm.objects.get_or_create(
+                **ya_programm
+            )[0]
+        if "address" in validated_data:
+            address = validated_data.pop("address")
+            AmbassadorAddress.objects.get_or_create(
+                **address, ambassador_id=instance
             )
-            AmbassadorActions.objects.create(
-                action=current_action[0], ambassador_id=instance
+        if "size" in validated_data:
+            size = validated_data.pop("size")
+            AmbassadorSize.objects.get_or_create(
+                ambassador_id=instance,
+                **size,
             )
-
-        instance.ya_programm = YandexProgramm.objects.get_or_create(
-            **ya_programm
-        )[0]
+        if "actions" in validated_data:
+            actions_data = validated_data.pop("actions")
+            for action_data in actions_data:
+                current_action = Actions.objects.get_or_create(
+                    **action_data["action"]
+                )
+                AmbassadorActions.objects.create(
+                    action=current_action[0], ambassador_id=instance
+                )
 
         instance.save()
-
         return instance
 
 

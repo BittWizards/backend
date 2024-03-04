@@ -77,13 +77,12 @@ class AmbassadorAddressAdmin(admin.ModelAdmin):
         "city",
         "street_home",
         "post_index",
-        "ambassador_id",
     )
 
 
 @admin.register(AmbassadorSize)
 class AmbassadorSizeAdmin(admin.ModelAdmin):
-    list_display = ("ambassador_id", "clothes_size", "foot_size")
+    list_display = ("clothes_size", "foot_size")
 
 
 @admin.register(SendingMessage)
