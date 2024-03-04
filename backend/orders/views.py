@@ -18,6 +18,7 @@ from orders.mixins import CreateListMixin
 from orders.models import Merch, Order
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
+    AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
 )
@@ -32,11 +33,10 @@ class AmbassadorOrdersViewSet(CreateListMixin):
     """ViewSet для заявок на мерч"""
 
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
 
     def get_queryset(self) -> QuerySet[Order]:
         ambassador_id = self.kwargs.get("ambassador_id")
-        return Order.objects.filter(ambassador_id=ambassador_id)
+        return Ambassador.objects.filter(id=ambassador_id)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -56,7 +56,10 @@ class AmbassadorOrdersViewSet(CreateListMixin):
         serializer.validated_data["ambassador_id"] = ambassador
         serializer.save(merch=merch)
 
-    # TODO: Добавить итоговую сумму по мерчу у амбасадора
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return OrderSerializer
+        return AmbassadorOrderListSerializer
 
 
 @extend_schema_view(**orders_extend_schema_view)
@@ -85,14 +88,14 @@ class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self) -> QuerySet:
         query = Ambassador.objects.annotate(
-            merch_name=F("order__merch__name"),
-            count=Count("order__merch__name"),
-            total=Sum("order__total_cost"),
+            merch_name=F("orders__merch__name"),
+            count=Count("orders__merch__name"),
+            total=Sum("orders__total_cost"),
         ).order_by("id")
         return query
 
     def finalize_response(
-        self, request, response, *args, **kwargs
+        self, request: Request, response: Response, *args, **kwargs
     ) -> Response:
         response.data = modification_of_response_dict(response.data)
         return super().finalize_response(request, response, *args, **kwargs)
