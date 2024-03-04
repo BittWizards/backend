@@ -105,10 +105,10 @@ orders_extend_schema_view = {
 }
 
 merch_extend_schema_view = {
-    "create": extend_schema(),
-    "retrieve": extend_schema(),
-    "list": extend_schema(),
-    "update": extend_schema(),
-    "partial_update": extend_schema(),
-    "destroy": extend_schema(),
+    "create": extend_schema(tags=["Мерч"]),
+    "retrieve": extend_schema(tags=["Мерч"]),
+    "list": extend_schema(tags=["Мерч"]),
+    "update": extend_schema(tags=["Мерч"]),
+    "partial_update": extend_schema(tags=["Мерч"]),
+    "destroy": extend_schema(tags=["Мерч"]),
 }
