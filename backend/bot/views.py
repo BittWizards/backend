@@ -24,7 +24,7 @@ download_file_url = f"https://api.telegram.org/file/bot{settings.BOT_TOKEN}/"
 
 def get_keyboard() -> InlineKeyboardMarkup:
     """Кнопочки для уже существуещего амбассадора."""
-    webapp_info = WebAppInfo(f"https://{settings.DOMAIN}/")
+    webapp_info = WebAppInfo(f"https://{settings.DOMAIN}/bot/")
     url = "https://forms.yandex.ru/u/65dd3da6eb61461c0f8e3229/"
     keyboard = [
         [

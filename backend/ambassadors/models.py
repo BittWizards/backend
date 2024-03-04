@@ -72,18 +72,10 @@ class Ambassador(AbstractAmbassador):
         on_delete=models.SET_NULL,
         null=True,
     )
-    size = models.ForeignKey(
-        "AmbassadorSize",
-        verbose_name="Размеры",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    address = models.ForeignKey(
-        "AmbassadorAddress",
-        verbose_name="Адресс",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+    # address = models.ForeignKey("AmbassadorAddress", verbose_name="Адрес", on_delete=models.SET_NULL,
+    #     null=True,)
+    # size = models.ForeignKey("AmbassadorSize", verbose_name="Размеры", on_delete=models.SET_NULL,
+    #     null=True,)
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
@@ -161,10 +153,11 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
     Модель адреса амбассадора.
     """
 
-    ambassador_id = models.ForeignKey(
+    ambassador_id = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
+        related_name="address",
     )
 
     class Meta:
@@ -173,7 +166,9 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
         ordering = ("id",)
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id} — {self.country} {self. city} {self.street_home} {self.post_index}"
+        return (
+            f"{self.country} {self. city} {self.street_home} {self.post_index}"
+        )
 
 
 class AmbassadorSize(models.Model):
@@ -181,11 +176,13 @@ class AmbassadorSize(models.Model):
     Таблица размеров амбассадоров.
     """
 
-    ambassador_id = models.ForeignKey(
+    ambassador_id = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
+        related_name="size",
     )
+
     clothes_size = models.CharField(
         verbose_name="Размер одежды",
         max_length=30,
@@ -200,14 +197,11 @@ class AmbassadorSize(models.Model):
         verbose_name = "Размеры амбассадора"
         verbose_name_plural = "Размеры амбассадоров"
         ordering = ("id",)
-        constraints = [
-            models.UniqueConstraint(
-                fields=["ambassador_id"], name="unique_ambassador_size"
-            )
-        ]
 
     def __str__(self) -> str:
-        return f"{self.ambassador_id}. Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
+        return (
+            f"Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
+        )
 
 
 class SendingMessage(models.Model):

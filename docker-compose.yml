@@ -48,6 +48,7 @@ services:
       - 443:443
     volumes:
       - static:/static/
+      - bot_static:/bot_static/
       - media:/media/
       - certs:/etc/letsencrypt
 
@@ -55,9 +56,12 @@ services:
     build: ./webapp_bot/
     volumes:
       - static:/frontend_static
+    env_file:
+      - .env
 
 volumes:
   postgres_data:
   static:
+  bot_static:
   media:
   certs:

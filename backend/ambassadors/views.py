@@ -26,6 +26,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["status"]
+    http_method_names = ["get", "post", "patch", "delete"]
 
     def get_serializer_class(self):
         if self.action == "list":

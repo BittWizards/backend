@@ -18,7 +18,7 @@ export default function App() {
     if (user) {
       const fetchData = async () => {
         try {
-          const response = await fetch('https://ambas-1.ddns.net/api/v1/ambassadors/aleksey2299')
+          const response = await fetch('/api/v1/ambassador_by_tg_username/' + user.username)
           const jsonData = await response.json()
           setAmbassador(jsonData)
         } catch (error) {
