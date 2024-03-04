@@ -2,7 +2,7 @@ from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 
 from ambassadors_project.constants import MERCH_MAX_NUM_IN_ORDER
-from orders.models import OrderStatus
+from orders.models import Merch, OrderStatus
 
 
 def validate_merch_num(merch: list[dict]) -> None:
@@ -24,4 +24,13 @@ def validate_editing_order(order_status: str) -> None:
         raise PermissionDenied(
             "Заявка выполнена и поля заявки уже нельзя изменить",
             code=HTTP_403_FORBIDDEN
+        )
+
+
+def validate_exsisting_merch(merch: Merch | None) -> None:
+    """Проверка что есть такой мерч"""
+    if not merch:
+        raise ValidationError(
+            "Добавлен несуществующий мерч",
+            code=HTTP_400_BAD_REQUEST
         )
