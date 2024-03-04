@@ -6,6 +6,10 @@ make-migrations:
 	@echo "Make migrations ..."
 	cd backend && python manage.py makemigrations
 
+loaddata:
+	@echo "Input data to db ..."
+	cd backend && python manage.py loaddata */fixtures/*.json
+
 up:
 	@echo "Starting service ..."
 	sudo docker compose up --build -d

@@ -16,7 +16,7 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 
-HOST_URL = os.getenv("HOST_URL", "http://localhost:8000")
+DOMAIN = os.getenv("DOMAIN", "localhost:8000")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -63,15 +63,13 @@ if DEBUG:
     MIDDLEWARE.insert(2, "corsheaders.middleware.CorsMiddleware")
 
     CORS_ALLOW_ALL_ORIGINS = True
-    CSRF_TRUSTED_ORIGINS = (
-        [f'https://{os.getenv("DOMAIN")}'] if os.getenv("DOMAIN") else []
-    )
+    CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}", f"http://{DOMAIN}"]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Ambassadors Project",
     "VERSION": "1.0.5",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVERS": [{"url": f'https://{os.getenv("DOMAIN")}'}],
+    "SERVERS": [{"url": f"https://{DOMAIN}"}, {"url": f"http://{DOMAIN}"}],
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
@@ -154,4 +152,3 @@ CELERY_RESULT_BACKEND = os.environ.get(
 CELERY_TIMEZONE = "UTC"
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-DOMAIN = os.getenv("DOMAIN")
