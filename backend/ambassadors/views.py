@@ -20,9 +20,7 @@ from .serializers import (
 
 @extend_schema(tags=["Амбассадоры"])
 class AmbassadorViewSet(viewsets.ModelViewSet):
-    """
-    Viewset модели Ambassador.
-    """
+    """Viewset модели Ambassador."""
 
     queryset = Ambassador.objects.all()
     serializer_class = AmbassadorListSerializer
