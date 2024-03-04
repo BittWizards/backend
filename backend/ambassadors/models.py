@@ -2,15 +2,14 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
-from users import custom_functions
-from users.models import AbstractUser
-
-from .choices import (
+from ambassadors.choices import (
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
     Gender,
 )
+from users import custom_functions
+from users.models import AbstractUser
 
 User = get_user_model()
 
@@ -72,25 +71,22 @@ class Ambassador(AbstractAmbassador):
         on_delete=models.SET_NULL,
         null=True,
     )
-    size = models.ForeignKey(
-        "AmbassadorSize",
-        verbose_name="Размеры",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    address = models.ForeignKey(
-        "AmbassadorAddress",
-        verbose_name="Адресс",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
     education = models.CharField(verbose_name="Образование", max_length=1500)
-    work_now = models.BooleanField(verbose_name="Работает")
+    work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
         verbose_name="Статус", max_length=50, choices=AmbassadorStatus.choices
     )
     created = models.DateTimeField(
         verbose_name="Дата и время создания", default=timezone.now
+    )
+    tg_id = models.IntegerField(
+        verbose_name="Телеграмм id", blank=True, null=True
+    )
+    image = models.ImageField(
+        "Фото",
+        upload_to="profiles/",
+        null=True,
+        default="profiles/default_pic.jpeg",
     )
 
     class Meta:
@@ -152,10 +148,11 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
     Модель адреса амбассадора.
     """
 
-    ambassador_id = models.ForeignKey(
+    ambassador_id = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
+        related_name="address",
     )
 
     class Meta:
@@ -165,8 +162,7 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
 
     def __str__(self) -> str:
         return (
-            f"{self.ambassador_id} — {self.country} "
-            f"{self. city} {self.street_home} {self.post_index}"
+            f"{self.country} {self. city} {self.street_home} {self.post_index}"
         )
 
 
@@ -175,11 +171,13 @@ class AmbassadorSize(models.Model):
     Таблица размеров амбассадоров.
     """
 
-    ambassador_id = models.ForeignKey(
+    ambassador_id = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
+        related_name="size",
     )
+
     clothes_size = models.CharField(
         verbose_name="Размер одежды",
         max_length=30,
@@ -194,16 +192,10 @@ class AmbassadorSize(models.Model):
         verbose_name = "Размеры амбассадора"
         verbose_name_plural = "Размеры амбассадоров"
         ordering = ("id",)
-        constraints = [
-            models.UniqueConstraint(
-                fields=["ambassador_id"], name="unique_ambassador_size"
-            )
-        ]
 
     def __str__(self) -> str:
         return (
-            f"{self.ambassador_id}. Размер обуви:{self.foot_size},"
-            f" размер одежды:{self.clothes_size}"
+            f"Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
         )
 
 
