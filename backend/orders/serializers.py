@@ -74,7 +74,6 @@ class OrderListSerializer(serializers.ModelSerializer):
     конкретному амбассадору. Работает только на чтение.
     """
 
-
     merch = MerchSerializer(many=True)
 
     class Meta:

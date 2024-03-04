@@ -162,9 +162,7 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
 
     def __str__(self) -> str:
         return (
-
             f"{self.country} {self.city} {self.street_home} {self.post_index}"
-
         )
 
 

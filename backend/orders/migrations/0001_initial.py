@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("ambassadors", "0001_initial"),
-
     ]
 
     operations = [
@@ -198,9 +197,7 @@ class Migration(migrations.Migration):
                     "ambassador_id",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
-
                         related_name="orders",
-
                         to="ambassadors.ambassador",
                         verbose_name="ID амбассадора",
                     ),
