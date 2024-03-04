@@ -110,7 +110,10 @@ def bot_view(request: Request) -> Response:
             keyboard = get_new_ambassador_keyboard()
             params = {
                 "chat_id": user.id,
-                "text": "Кажется, мы еще не знакомы, заполни пожалуйста эту анкету:",
+                "text": (
+                    "Кажется, мы еще не знакомы, "
+                    "заполни пожалуйста эту анкету:"
+                ),
                 "reply_markup": keyboard.to_dict(),
             }
             requests.post(url, json=params)

@@ -61,4 +61,3 @@ virtualenv==20.25.1
 redis==5.0.1
 celery==5.3.6
 pyTelegramBotAPI==4.16.1
-Pillow==10.2.0
