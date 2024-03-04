@@ -16,7 +16,7 @@ DEBUG = os.getenv("DEBUG", "True").lower() == "true"
 
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost 127.0.0.1").split(" ")
 
-HOST_URL = os.getenv("HOST_URL", "http://localhost:8000")
+DOMAIN = os.getenv("DOMAIN", "localhost:8000")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -62,15 +62,13 @@ if DEBUG:
     MIDDLEWARE.insert(2, "corsheaders.middleware.CorsMiddleware")
 
     CORS_ALLOW_ALL_ORIGINS = True
-    CSRF_TRUSTED_ORIGINS = (
-        [os.getenv("HOST_URL")] if os.getenv("HOST_URL") else []
-    )
+    CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}", f"http://{DOMAIN}"]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Ambassadors Project",
     "VERSION": "1.0.5",
     "SERVE_INCLUDE_SCHEMA": False,
-    "SERVERS": [{"url": HOST_URL}],
+    "SERVERS": [{"url": f"https://{DOMAIN}"}, {"url": f"http://{DOMAIN}"}],
     "COMPONENT_SPLIT_REQUEST": True,
 }
 
