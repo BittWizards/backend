@@ -63,8 +63,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: Order):
         instance = super().to_representation(instance)
-        merch = instance['merch']
-        instance['merch'] = MerchSerializer(merch, many=True).data
+        instance['merch'] = MerchSerializer(instance['merch'], many=True).data
         return instance
 
 
@@ -89,7 +88,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
     конкретному амбассадору. Работает только на чтение"""
 
     orders = OrderListSerializer(many=True)
-    total_order_cost = serializers.SerializerMethodField()
+    total_orders_cost = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
 
     class Meta:
@@ -105,13 +104,13 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "email",
             "phone",
             "orders",
-            "total_order_cost"
+            "total_orders_cost"
         )
 
-    def get_city(self, obj: Ambassador):
+    def get_city(self, obj: Ambassador) -> str:
         return obj.address.city
 
-    def get_total_order_cost(self, obj: Ambassador):
+    def get_total_orders_cost(self, obj: Ambassador) -> int:
         return sum(order['total_cost'] or 0 for order in obj.orders.values())
 
 

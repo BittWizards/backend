@@ -14,7 +14,7 @@ from openapi.orders_schema import (
     merch_extend_schema_view,
     orders_extend_schema_view,
 )
-from orders.mixins import CreateListMixin
+from orders.mixins import CreateRetrieveMixin
 from orders.models import Merch, Order
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
@@ -29,14 +29,14 @@ from orders.utils import (
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
-class AmbassadorOrdersViewSet(CreateListMixin):
+class AmbassadorOrdersViewSet(CreateRetrieveMixin):
     """ViewSet для заявок на мерч"""
 
     queryset = Order.objects.all()
 
-    def get_queryset(self) -> QuerySet[Order]:
+    def get_object(self) -> Order:
         ambassador_id = self.kwargs.get("ambassador_id")
-        return Ambassador.objects.filter(id=ambassador_id)
+        return Ambassador.objects.get(id=ambassador_id)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
