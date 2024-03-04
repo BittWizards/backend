@@ -53,10 +53,9 @@ class ContentAdmin(admin.ModelAdmin):
 
 @admin.register(Promocode)
 class PromocodeAdmin(admin.ModelAdmin):
-    list_display = ("ambassador", "promocode", "is_active", "created_at")
+    list_display = ("id", "ambassador", "promocode", "is_active", "created_at")
     search_fields = ("ambassador",)
     list_filter = (
-        "id",
         "ambassador",
         "is_active",
     )

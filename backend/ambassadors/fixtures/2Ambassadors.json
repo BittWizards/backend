@@ -1,57 +1,62 @@
 [
-    {
-        "model": "ambassadors.Ambassador",
-        "pk": 1,
-        "fields": {
-            "email": "test_ambassador@test.ru",
-            "first_name": "Andrey",
-            "last_name": "Test",
-            "middle_name": "Testovich",
-            "gender": "Male",
-            "size": 1,
-            "address": 1,
-            "phone": "88005553535",
-            "tg_acc": "t.me/dartanyun",
-            "education": "Школа магии и волшебства Хогвартс",
-            "work_now": "False",
-            "status": "Active"
-        }
-    },
-    {
-        "model": "ambassadors.Ambassador",
-        "pk": 2,
-        "fields": {
-            "email": "test_ambassador2@test.ru",
-            "first_name": "Pavel",
-            "last_name": "Durov",
-            "middle_name": "Andreevich",
-            "gender": "Male",
-            "size": 2,
-            "address": 2,
-            "ya_programm": "2",
-            "phone": "88005553536",
-            "tg_acc": "t.me/durov",
-            "education": "Пермский техникум промышленных и информационных технологий",
-            "work_now": "True",
-            "status": "Not_active"
-        }
-    },
-    {
-        "model": "ambassadors.Ambassador",
-        "pk": 3,
-        "fields": {
-            "email": "test_ambassador3@test.ru",
-            "first_name": "Anna",
-            "last_name": "Varacheva",
-            "middle_name": "Aleksandrovna",
-            "gender": "Female",
-            "size": 3,
-            "address": 3,
-            "phone": "88005553537",
-            "tg_acc": "t.me/anna",
-            "education": "ПГНИУ",
-            "work_now": "True",
-            "status": "Active"
-        }
+{
+    "model": "ambassadors.ambassador",
+    "pk": 1,
+    "fields": {
+        "email": "test_ambassador@test.ru",
+        "first_name": "Андрей",
+        "last_name": "Тестовый",
+        "middle_name": "Testovich",
+        "phone": "88005553535",
+        "tg_acc": "t.me/dartanyun",
+        "gender": "Male",
+        "ya_programm": 3,
+        "education": "Школа магии и волшебства Хогвартс",
+        "work": "False",
+        "status": "Active",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706673683083.png"
     }
+},
+{
+    "model": "ambassadors.ambassador",
+    "pk": 2,
+    "fields": {
+        "email": "test_ambassador2@test.ru",
+        "first_name": "Павел",
+        "last_name": "Дуров",
+        "middle_name": "Andreevich",
+        "phone": "88005553536",
+        "tg_acc": "t.me/durov",
+        "gender": "Male",
+        "ya_programm": 2,
+        "education": "Пермский техникум промышленных и информационных технологий",
+        "work": "True",
+        "status": "Clarify",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706542648092.png"
+    }
+},
+{
+    "model": "ambassadors.ambassador",
+    "pk": 3,
+    "fields": {
+        "email": "test_ambassador3@test.ru",
+        "first_name": "Анна",
+        "last_name": "Варачева",
+        "middle_name": "Aleksandrovna",
+        "phone": "88005553537",
+        "tg_acc": "t.me/anna",
+        "gender": "Female",
+        "ya_programm": 1,
+        "education": "ПГНИУ",
+        "work": "True",
+        "status": "Active",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706543920006.png"
+    }
+}
 ]

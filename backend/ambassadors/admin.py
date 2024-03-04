@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 
 from users.custom_functions import get_full_name
 
@@ -24,20 +25,29 @@ class MessageToAmbassadorTabularInline(admin.TabularInline):
 
 @admin.register(Ambassador)
 class AmbassdorAdmin(admin.ModelAdmin):
+    @admin.display(description="Фото")
+    def take_image(self, obj):
+        if obj.image:
+            return mark_safe(
+                f'<img src={obj.image.url} width="80" height="60">'
+            )
+        return None
+
     list_display = (
-        "email",
-        "first_name",
         "last_name",
+        "first_name",
         "middle_name",
+        "id",
+        "email",
         "gender",
         "ya_programm",
         "phone",
         "tg_acc",
         "education",
-        "work_now",
+        "work",
         "status",
         "created",
-        "fio",
+        "take_image",
     )
     inlines = [
         AmbassadorActionsTabularInline,

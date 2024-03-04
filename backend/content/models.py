@@ -3,7 +3,11 @@ from django.core.validators import RegexValidator
 from django.db import models
 
 from ambassadors.models import Ambassador
-from ambassadors_project.constants import PROMOSIZE
+from ambassadors_project.constants import (
+    ERROR_MESSAGE_PROMOCODE,
+    PATTERN_PROMO,
+    PROMOSIZE,
+)
 
 
 class Platform(models.TextChoices):
@@ -15,7 +19,6 @@ class Platform(models.TextChoices):
     TG = ("telegram", "Телеграм")
     INSTAGRAM = ("instagram", "Инстаграм")
     LINKEDIN = ("linkedin", "lLinkedin")
-    # PROJECT = ("project", "Участие в проекте")
     OTHER = ("other", "Прочее")
 
 
@@ -108,8 +111,8 @@ class Promocode(models.Model):
         verbose_name="промокод",
         validators=[
             RegexValidator(
-                regex="[А-ЯA-Z0-9]+",
-                message="Промокод должен состоять из заглавных букв и цифр",
+                regex=PATTERN_PROMO,
+                message=ERROR_MESSAGE_PROMOCODE,
             )
         ],
     )

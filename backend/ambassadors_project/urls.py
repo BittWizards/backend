@@ -8,7 +8,6 @@ from rest_framework import routers
 from ambassadors.views import AmbassadorViewSet, YandexProgrammViewSet
 from content.views import (
     AllContentsViewSet,
-    AmbassadorContentsViewSet,
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
@@ -17,11 +16,6 @@ from orders.urls import urlpatterns as orders_url
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontents", AllContentsViewSet, basename="contents")
 router_v1.register("content", ContentDetailViewSet, basename="content_detail")
-router_v1.register(
-    r"ambassador/(?P<ambassador_id>\d+)/contents",
-    AmbassadorContentsViewSet,
-    basename="self_content",
-)
 router_v1.register("promocode", PromoCodeViewSet, basename="promo")
 router_v1.register(r"ambassadors", AmbassadorViewSet, basename="ambassador")
 router_v1.register(
@@ -48,6 +42,8 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT,
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
+    urlpatterns += static(
+        settings.STATIC_URL, document_root=settings.STATIC_ROOT
     )
