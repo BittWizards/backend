@@ -17,7 +17,7 @@ from .models import (
 
 class YandexProgrammSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели YandexProgramm
+    Сериализатор модели YandexProgramm.
     """
 
     class Meta:
@@ -27,7 +27,7 @@ class YandexProgrammSerializer(serializers.ModelSerializer):
 
 class AmbassadorAddressSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели YandexProgramm
+    Сериализатор модели AmbassadorAddress.
     """
 
     class Meta:
@@ -50,7 +50,7 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
 
 class AmbassadorSizeSerializer(serializers.ModelSerializer):
     """
-    Сериализатор модели AmbassadorSize
+    Сериализатор модели AmbassadorSize.
     """
 
     class Meta:
@@ -63,7 +63,7 @@ class AmbassadorSizeSerializer(serializers.ModelSerializer):
 
 class AmbassadorListSerializer(serializers.ModelSerializer):
     """
-    Сериализатор для выдачи списка объектов модели Ambassador
+    Сериализатор для выдачи списка объектов модели Ambassador.
     """
 
     ya_programm = YandexProgrammSerializer()
@@ -72,10 +72,13 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "first_name",
             "last_name",
             "middle_name",
             "ya_programm",
+            "tg_acc",
+            "status",
             "created",
         )
 
@@ -95,6 +98,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "first_name",
             "last_name",
             "middle_name",
@@ -104,7 +108,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "tg_acc",
             "ya_programm",
             "education",
-            "work_now",
+            "work",
             "address",
             "size",
             "actions",
@@ -158,7 +162,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         instance.education = validated_data.get(
             "education", instance.education
         )
-        instance.work_now = validated_data.get("work_now", instance.work_now)
+        instance.work = validated_data.get("work", instance.work)
         instance.status = validated_data.get("status", instance.status)
 
         ya_programm = validated_data.pop("ya_programm")
@@ -191,13 +195,15 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
-    """Родительский сериалайзер для контента промокодов."""
+    """Родительский сериализатор для контента промокодов."""
 
     city = serializers.SerializerMethodField()
 
     class Meta:
         model = Ambassador
         fields = [
+            "id",
+            "image",
             "last_name",
             "first_name",
             "middle_name",
@@ -205,7 +211,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
             "tg_acc",
             "email",
             "phone",
-            "",
+            "ya_programm",
             "city",
         ]
 

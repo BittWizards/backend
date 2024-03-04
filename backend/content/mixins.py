@@ -15,17 +15,6 @@ class CreateRetrieveUpdateDeleteViewSet(
     pass
 
 
-class CreateRetrieveListViewSet(
-    mixins.CreateModelMixin,
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
-    viewsets.GenericViewSet,
-):
-    pass
-
-
 class ListCreateDestroyViewSet(
     mixins.CreateModelMixin,
     mixins.ListModelMixin,

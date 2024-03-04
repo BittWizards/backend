@@ -6,6 +6,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador, AmbassadorAddress
+from ambassadors.validators import tg_acc_validator
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
     PATTERN_PROMO,
@@ -18,7 +19,15 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ambassador
-        fields = ("last_name", "first_name", "ya_programm", "tg_acc", "status")
+        fields = (
+            "id",
+            "image",
+            "last_name",
+            "first_name",
+            "ya_programm",
+            "tg_acc",
+            "status",
+        )
 
 
 class NewContentSerializer(serializers.ModelSerializer):
@@ -52,6 +61,7 @@ class AllContentSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "last_name",
             "first_name",
             "tg_acc",
@@ -94,6 +104,8 @@ class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ambassador
         fields = (
+            "id",
+            "image",
             "last_name",
             "first_name",
             "middle_name",
@@ -136,7 +148,7 @@ class PostContentSerializer(serializers.ModelSerializer):
 
     id = serializers.IntegerField(required=False)
     name = serializers.CharField(required=False)
-    tg_acc = serializers.CharField()
+    tg_acc = serializers.CharField(validators=(tg_acc_validator,))
     files = serializers.CharField(required=False)
 
     class Meta:
@@ -180,13 +192,6 @@ class PostContentSerializer(serializers.ModelSerializer):
             return instance
 
     # функция подсчета контента и присвоения достижений
-
-    def validate(self, data):
-        tg_acc = data.get("tg_acc")
-        if "@" or "t.me/" in tg_acc:
-            tg_acc = re.sub(r"@|t.me/", "", tg_acc)
-        data["tg_acc"] = tg_acc
-        return data
 
     def to_representation(self, instance):
         return ContentSerializers(

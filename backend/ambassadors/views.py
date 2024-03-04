@@ -1,17 +1,20 @@
 from django.db.models import Prefetch
+from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 from content.models import Content, Promocode
 
-from .models import Ambassador
+from .models import Ambassador, YandexProgramm
 from .serializers import (
     AmbassadorContentSerializer,
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
+    YandexProgrammSerializer,
 )
 
 
@@ -22,15 +25,10 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Ambassador.objects.all()
-
-    # serializer_class = AmbassadorListSerializer
-    # permission_classes = (AllowAny,)
-    #
-    # def retrieve(self, request, pk):
-    #     queryset = Ambassador.objects.all()
-    #     ambassador = get_object_or_404(queryset, pk=pk)
-    #     serializer = AmbassadorSerializer(ambassador)
-    #     return Response(serializer.data)
+    serializer_class = AmbassadorListSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["status"]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -72,3 +70,14 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
+
+@extend_schema(tags=["Программы Яндекса"])
+class YandexProgrammViewSet(viewsets.ModelViewSet):
+    """
+    Viewset модели YandexProgramm.
+    """
+
+    queryset = YandexProgramm.objects.all()
+    serializer_class = YandexProgrammSerializer
+    permission_classes = (AllowAny,)

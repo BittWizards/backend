@@ -53,7 +53,7 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
 
     ambassador_id = models.ForeignKey(
         Ambassador,
-        related_name="order",
+        related_name="orders",
         verbose_name="ID амбассадора",
         on_delete=models.CASCADE,
     )
