@@ -56,8 +56,6 @@ services:
     build: ./webapp_bot/
     volumes:
       - static:/frontend_static
-    env_file:
-      - .env
 
 volumes:
   postgres_data:
