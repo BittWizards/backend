@@ -8,12 +8,12 @@
             "last_name": "Test",
             "middle_name": "Testovich",
             "gender": "Male",
-            "clothes_size": "XL",
-            "foot_size": "45",
+            "size": 1,
             "address": 1,
             "phone": "88005553535",
             "tg_acc": "t.me/dartanyun",
             "education": "Школа магии и волшебства Хогвартс",
+            "work_now": "False",
             "status": "Active"
         }
     },
@@ -26,14 +26,14 @@
             "last_name": "Durov",
             "middle_name": "Andreevich",
             "gender": "Male",
-            "clothes_size": "M",
-            "foot_size": "43",
+            "size": 2,
             "address": 2,
             "ya_programm": "2",
             "phone": "88005553536",
             "tg_acc": "t.me/durov",
             "education": "Пермский техникум промышленных и информационных технологий",
-            "status": "Not active"
+            "work_now": "True",
+            "status": "Not_active"
         }
     },
     {
@@ -45,12 +45,12 @@
             "last_name": "Varacheva",
             "middle_name": "Aleksandrovna",
             "gender": "Female",
-            "clothes_size": "L",
-            "foot_size": "41",
+            "size": 3,
             "address": 3,
             "phone": "88005553537",
             "tg_acc": "t.me/anna",
             "education": "ПГНИУ",
+            "work_now": "True",
             "status": "Active"
         }
     }
