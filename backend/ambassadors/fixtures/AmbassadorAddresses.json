@@ -1,0 +1,35 @@
+[
+    {
+        "model": "ambassadors.AmbassadorAddress",
+        "pk": 1,
+        "fields": {
+            "country": "Россия",
+            "city": "Челябинск",
+            "street_home": "Ленина 43",
+            "post_index": "432798",
+            "ambassador_id": "1"
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorAddress",
+        "pk": 2,
+        "fields": {
+            "country": "Объединенные Арабские Эмираты",
+            "city": "Дубай",
+            "street_home": "Al Quoz Industrial Area 3",
+            "post_index": "123035",
+            "ambassador_id": "2"
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorAddress",
+        "pk": 3,
+        "fields": {
+            "country": "Россия",
+            "city": "Москва",
+            "street_home": "Екатерининская 127",
+            "post_index": "879001",
+            "ambassador_id": "3"
+        }
+    }
+]

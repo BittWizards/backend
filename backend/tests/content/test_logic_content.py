@@ -6,7 +6,7 @@ from rest_framework.test import APIClient
 
 @pytest.mark.django_db
 def test_post_and_patch_content(client: APIClient, create_ambassadors):
-    url = "api/v1/content"
+    url = "/api/v1/content/"
     data = {
         "ambassador_id": 1,
         "telegram": "example",
@@ -20,14 +20,14 @@ def test_post_and_patch_content(client: APIClient, create_ambassadors):
     data["status"] == "in pending"
     assert response.json() == data
 
-    url = "api/v1/ambassador/1/content/1"
+    url = "/api/v1/ambassador/1/content/1/"
     response = client.patch(url, {"status": "accepted"}, "application/json")
     assert response.status_code == HTTPStatus.OK
 
 
 @pytest.mark.django_db
 def test_post_incorrect_content(client: APIClient, create_ambassadors):
-    url = "api/v1/content"
+    url = "/api/v1/content/"
     data = {
         "ambassador_id": 1,
         "telegram": "example",
@@ -41,7 +41,7 @@ def test_post_incorrect_content(client: APIClient, create_ambassadors):
 
 @pytest.mark.django_db
 def test_post_and_delete_promocode(client: APIClient, create_ambassadors):
-    url = "api/v1/promocodes"
+    url = "/api/v1/promocodes/"
     data = {
         "ambassador_id": 1,
         "name": "example",
@@ -51,14 +51,14 @@ def test_post_and_delete_promocode(client: APIClient, create_ambassadors):
     assert response.status_code == HTTPStatus.OK
     assert response.json() == data
 
-    url = "api/v1/promocodes/example"
+    url = "/api/v1/promocodes/example/"
     response = client.delete(url)
     assert response.status_code == HTTPStatus.NO_CONTENT
 
 
 @pytest.mark.django_db
 def test_post_duplicate_promocode(client: APIClient, create_ambassadors):
-    url = "api/v1/promocodes"
+    url = "/api/v1/promocodes/"
     data = {
         "ambassador_id": 1,
         "name": "example",

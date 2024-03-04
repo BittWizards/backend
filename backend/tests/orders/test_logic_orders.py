@@ -24,8 +24,8 @@ create_data = {
 
 
 @pytest.mark.django_db
-def test_post_and_patch_merch(client: APIClient, create_ambassadors):
-    url = "api/v1/merch"
+def test_post_and_patch_merch(client: APIClient, create_orders):
+    url = "/api/v1/orders/"
     data = create_data
 
     response = client.post(url, data, "application/json")
@@ -35,7 +35,7 @@ def test_post_and_patch_merch(client: APIClient, create_ambassadors):
     data["track_number"] = None
     assert response.json() == data
 
-    url = "api/v1/ambassador/1/content/1"
+    url = "/api/v1/ambassador/1/content/1/"
     response = client.patch(
         url,
         {"status": "delivered", "track_number": "123h"},
@@ -47,8 +47,8 @@ def test_post_and_patch_merch(client: APIClient, create_ambassadors):
 
 
 @pytest.mark.django_db
-def test_post_incorrect_merch(client: APIClient, create_ambassadors):
-    url = "api/v1/merch"
+def test_post_incorrect_merch(client: APIClient, create_orders):
+    url = "/api/v1/orders/"
     data = create_data
     data.pop("address")
 

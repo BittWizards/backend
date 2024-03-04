@@ -1,0 +1,62 @@
+[
+{
+    "model": "ambassadors.ambassador",
+    "pk": 1,
+    "fields": {
+        "email": "test_ambassador@test.ru",
+        "first_name": "Андрей",
+        "last_name": "Тестовый",
+        "middle_name": "Testovich",
+        "phone": "88005553535",
+        "tg_acc": "t.me/dartanyun",
+        "gender": "Male",
+        "ya_programm": 3,
+        "education": "Школа магии и волшебства Хогвартс",
+        "work": "False",
+        "status": "Active",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706673683083.png"
+    }
+},
+{
+    "model": "ambassadors.ambassador",
+    "pk": 2,
+    "fields": {
+        "email": "test_ambassador2@test.ru",
+        "first_name": "Павел",
+        "last_name": "Дуров",
+        "middle_name": "Andreevich",
+        "phone": "88005553536",
+        "tg_acc": "t.me/durov",
+        "gender": "Male",
+        "ya_programm": 2,
+        "education": "Пермский техникум промышленных и информационных технологий",
+        "work": "True",
+        "status": "Clarify",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706542648092.png"
+    }
+},
+{
+    "model": "ambassadors.ambassador",
+    "pk": 3,
+    "fields": {
+        "email": "test_ambassador3@test.ru",
+        "first_name": "Анна",
+        "last_name": "Варачева",
+        "middle_name": "Aleksandrovna",
+        "phone": "88005553537",
+        "tg_acc": "t.me/anna",
+        "gender": "Female",
+        "ya_programm": 1,
+        "education": "ПГНИУ",
+        "work": "True",
+        "status": "Active",
+        "created": "2024-03-04T06:12:07Z",
+        "tg_id": null,
+        "image": "profiles/kandinsky-download-1706543920006.png"
+    }
+}
+]

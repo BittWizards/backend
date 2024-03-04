@@ -5,7 +5,7 @@ from rest_framework.test import APIClient
 
 
 @pytest.mark.django_db
-def test_track_merch(client: APIClient, create_merch):
+def test_track_merch(client: APIClient, create_orders):
     def assert_instances(instances):
         for element, index in enumerate(instances):
             assert element["id"] == 5 - index
@@ -20,7 +20,7 @@ def test_track_merch(client: APIClient, create_merch):
             )
             assert "created" in element["merch"]
 
-    url = "api/v1/merch/track"
+    url = "/api/v1/orders/"
 
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
@@ -28,7 +28,7 @@ def test_track_merch(client: APIClient, create_merch):
 
 
 @pytest.mark.django_db
-def test_single_merch(client: APIClient, create_merch):
+def test_single_merch(client: APIClient, create_orders):
     def assert_instance(instance):
         assert instance["id"] == 1
         assert "user_pic" in instance
@@ -52,7 +52,7 @@ def test_single_merch(client: APIClient, create_merch):
 
         assert isinstance(instance["merch_type"], list)
 
-    url = "api/v1/merch/1"
+    url = "/api/v1/orders/1/"
 
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
@@ -60,7 +60,7 @@ def test_single_merch(client: APIClient, create_merch):
 
 
 @pytest.mark.django_db
-def test_all_merch(client: APIClient, create_merch):
+def test_all_merch(client: APIClient, create_orders):
     def assert_instances(instances):
         for element, index in enumerate(instances):
             assert element["id"] == 5 - index
@@ -72,7 +72,7 @@ def test_all_merch(client: APIClient, create_merch):
                 assert type["coount"] == 1
             assert "summ" in element
 
-    url = "api/v1/merch"
+    url = "/api/v1/orders/"
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
     assert_instances(response.json())

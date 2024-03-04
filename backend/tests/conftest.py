@@ -1,17 +1,20 @@
 # flake8: noqa
-import datetime as dt
-
 import pytest
-from ambassadors.models import (Actions, Ambassador, AmbassadorAddress,
-                                AmbassadorsActions, AmbassadorSize,
-                                YandexProgramm)
-from content.models import Content, Promocode
-from merch.models import Merch
+
+from ambassadors.models import (
+    Actions,
+    Ambassador,
+    AmbassadorActions,
+    AmbassadorAddress,
+    AmbassadorSize,
+    YandexProgramm,
+)
+from content.models import Content, Documents, Promocode
+from orders.models import Merch, Order
 
 
 @pytest.fixture
 def create_ambassadors():
-    now = dt.datetime.utcnow()
     programms = [
         YandexProgramm.objects.create(title=f"Programm{i}", description=f"{i}")
         for i in range(1, 6)
@@ -22,59 +25,87 @@ def create_ambassadors():
     ]
     for i in range(1, 6):
         ambassador = Ambassador.objects.create(
+            id=i,
             email=f"ivan.ivanov{i}@example.com",
             first_name=f"Иван{i}",
             last_name=f"Иванов{i}",
             middle_name=f"Иванович{i}",
-            gender="male",
-            ya_programm=programms[i],
-            phone=f"7 (917) 123-45-6{i}",
+            gender="Male",
+            ya_programm=programms[i - 1],
+            phone=f"7(917)123-45-6{i}",
             tg_acc=f"ivanov{i}",
-            goal="Закончить",
+            # purpose="Закончить",
             education="9 классов",
-            work_now="Беллинсгаузен",
-            status="active",
-            created=now,
+            work="Беллинсгаузен",
+            status="Active",
         )
 
-        AmbassadorsActions.objects.create(
+        AmbassadorActions.objects.create(
+            ambassador_id=ambassador,
+            action=actions[i - 1],
+        )
+        AmbassadorActions.objects.create(
             ambassador_id=ambassador,
             action=actions[i],
         )
-        AmbassadorsActions.objects.create(
-            ambassador_id=ambassador,
-            action=actions[i + 1],
-        )
         AmbassadorAddress.objects.create(
+            ambassador_id=ambassador,
             country="Страна",
             city=f"Город{i}",
             street_home=f"Улица{i}",
             post_index=f"10000{i}",
-            ambassador_id=ambassador,
         )
         AmbassadorSize.objects.create(
             ambassador_id=ambassador,
             clothes_size="M",
-            foot_size="35-39",
+            foot_size="37",
         )
 
 
 @pytest.fixture
 def create_content(create_ambassadors):
-    ...
+    for i in range(1, 6):
+        content = Content.objects.create(
+            ambassador_id=i,
+            link=f"http://localhost/{i}",
+            accepted=True,
+        )
+        Documents.objects.create(
+            content=content,
+            document=f"http://localhost:1/{i}",
+        )
+        Documents.objects.create(
+            content=content,
+            document=f"http://localhost:2/{i}",
+        )
 
 
 @pytest.fixture
-def create_merch():
-    Merch.objects.create(
-        type="Толстовка",
-        price=100,
+def create_promocodes(create_ambassadors):
+    for i in range(1, 6):
+        Promocode.objects.create(
+            ambassador_id=i,
+            promocode=f"PROMO{i}",
+        )
+
+
+@pytest.fixture
+def create_orders(create_ambassadors):
+    hoodie = Merch.objects.create(
+        name="Толстовка",
+        size="XL",
     )
-    Merch.objecrs.create(
-        type="plus",
-        price=0,
+    plus = Merch.objects.create(
+        name="plus",
     )
-    Merch.objecrs.create(
-        type="backpack",
-        price=200,
+    socks = Merch.objects.create(
+        name="Носки",
+        size=37,
     )
+    for i in range(1, 6):
+        Order.objects.create(
+            ambassador_id=i,
+            merch=[hoodie, plus, socks],
+            email=f"example{i}@example.com",
+            tg_acc=f"acc{i}",
+        )
