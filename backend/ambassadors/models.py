@@ -2,15 +2,14 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
-from users import custom_functions
-from users.models import AbstractUser
-
-from .choices import (
+from ambassadors.choices import (
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
     Gender,
 )
+from users import custom_functions
+from users.models import AbstractUser
 
 User = get_user_model()
 
@@ -72,10 +71,6 @@ class Ambassador(AbstractAmbassador):
         on_delete=models.SET_NULL,
         null=True,
     )
-    # address = models.ForeignKey("AmbassadorAddress", verbose_name="Адрес", on_delete=models.SET_NULL,
-    #     null=True,)
-    # size = models.ForeignKey("AmbassadorSize", verbose_name="Размеры", on_delete=models.SET_NULL,
-    #     null=True,)
     education = models.CharField(verbose_name="Образование", max_length=1500)
     work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
