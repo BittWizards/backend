@@ -6,6 +6,8 @@ services:
     env_file: .env
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
 
   backend:
     restart: always
@@ -42,15 +44,22 @@ services:
     build: ./nginx/
     env_file: .env
     ports:
-      - "8000:80"
+      - 8000:80
+      - 443:443
     volumes:
       - static:/static/
+      - bot_static:/bot_static/
       - media:/media/
-    depends_on:
-      - db
-      - backend
+      - certs:/etc/letsencrypt
+
+  bot:
+    build: ./webapp_bot/
+    volumes:
+      - static:/frontend_static
 
 volumes:
   postgres_data:
   static:
+  bot_static:
   media:
+  certs:

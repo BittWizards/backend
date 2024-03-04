@@ -1,0 +1,50 @@
+[
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 1,
+        "fields": {
+            "ambassador_id": 1,
+            "action": 1
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 2,
+        "fields": {
+            "ambassador_id": 2,
+            "action": 1
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 3,
+        "fields": {
+            "ambassador_id": 2,
+            "action": 2
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 4,
+        "fields": {
+            "ambassador_id": 2,
+            "action": 3
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 5,
+        "fields": {
+            "ambassador_id": 1,
+            "action": 2
+        }
+    },
+    {
+        "model": "ambassadors.AmbassadorActions",
+        "pk": 6,
+        "fields": {
+            "ambassador_id": 3,
+            "action": 1
+        }
+    }
+]
