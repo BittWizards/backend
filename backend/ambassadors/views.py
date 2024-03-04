@@ -1,10 +1,11 @@
+
 from django.db.models import Prefetch
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.decorators import action
+
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 
 from content.models import Content, Promocode
 
@@ -16,6 +17,7 @@ from .serializers import (
     AmbassadorSerializer,
     YandexProgrammSerializer,
 )
+
 
 
 @extend_schema(tags=["Амбассадоры"])
@@ -70,6 +72,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
 
 
 @extend_schema(tags=["Программы Яндекса"])

@@ -68,10 +68,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
+
     """
     Сериалайзер для всех заявок на мерч по
     конкретному амбассадору. Работает только на чтение.
     """
+
 
     merch = MerchSerializer(many=True)
 
