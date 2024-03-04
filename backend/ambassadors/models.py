@@ -2,14 +2,15 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
-from ambassadors.choices import (
+from users import custom_functions
+from users.models import AbstractUser
+
+from .choices import (
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
     Gender,
 )
-from users import custom_functions
-from users.models import AbstractUser
 
 User = get_user_model()
 
@@ -162,7 +163,7 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
 
     def __str__(self) -> str:
         return (
-            f"{self.country} {self.city} {self.street_home} {self.post_index}"
+            f"{self.country} {self. city} {self.street_home} {self.post_index}"
         )
 
 
