@@ -15,7 +15,7 @@ router_merch.register("orders", OrdersViewSet, basename="orders")
 urlpatterns = [
     path(
         "ambassadors/<ambassador_id>/orders/",
-        AmbassadorOrdersViewSet.as_view({"get": "list", "post": "create"}),
+        AmbassadorOrdersViewSet.as_view({"get": "retrieve", "post": "create"}),
         name="ambassador_orders",
     ),
     path("", include(router_merch.urls)),
