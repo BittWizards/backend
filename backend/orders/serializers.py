@@ -50,8 +50,8 @@ class OrderSerializer(serializers.ModelSerializer):
         validate_editing_order(instance.order_status)
         merch_data = validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
-        if validated_data.get('track_number') and not instance.track_number:
-            validated_data['order_status'] = OrderStatus.SHIPPED
+        if validated_data.get("track_number") and not instance.track_number:
+            validated_data["order_status"] = OrderStatus.SHIPPED
         instance = super().update(instance, validated_data)
         if merch_data:
             instance.merch.clear()
@@ -63,7 +63,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance: Order):
         instance = super().to_representation(instance)
-        instance['merch'] = MerchSerializer(instance['merch'], many=True).data
+        instance["merch"] = MerchSerializer(instance["merch"], many=True).data
         return instance
 
 
@@ -75,12 +75,7 @@ class OrderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = (
-            "id",
-            "created_date",
-            "merch",
-            "total_cost"
-        )
+        fields = ("id", "created_date", "merch", "total_cost")
 
 
 class AmbassadorOrderListSerializer(serializers.ModelSerializer):
@@ -104,14 +99,14 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "email",
             "phone",
             "orders",
-            "total_orders_cost"
+            "total_orders_cost",
         )
 
     def get_city(self, obj: Ambassador) -> str:
         return obj.address.city
 
     def get_total_orders_cost(self, obj: Ambassador) -> int:
-        return sum(order['total_cost'] or 0 for order in obj.orders.values())
+        return sum(order["total_cost"] or 0 for order in obj.orders.values())
 
 
 class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):

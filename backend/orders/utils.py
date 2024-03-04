@@ -8,10 +8,7 @@ def get_filtered_merch_objects(merch_data: list[dict]) -> list[Merch]:
     существующие объекты мерча в базе"""
     query = []
     for data in merch_data:
-        merch = Merch.objects.get(
-            name=data.get('name'),
-            size=data.get('size')
-        )
+        merch = Merch.objects.get(name=data.get("name"), size=data.get("size"))
         validate_exsisting_merch(merch)
         query.append(merch)
     return query

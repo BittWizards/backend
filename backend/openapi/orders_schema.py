@@ -47,7 +47,7 @@ ambassador_orders_extend_schema_view = {
         description="Создает новый заказ в базе",
         examples=[
             OpenApiExample("post", order_request_example, request_only=True),
-            OpenApiExample("201", order_response_example, response_only=True)
+            OpenApiExample("201", order_response_example, response_only=True),
         ],
         responses={
             201: OpenApiResponse(
@@ -105,8 +105,10 @@ orders_extend_schema_view = {
         description="Изменение одного или нескольких полей существующей заявки",
         examples=[
             OpenApiExample(
-                "patch", order_request_example, request_only=True,
-                description="Можно изменить одно или несколько полей из списка"
+                "patch",
+                order_request_example,
+                request_only=True,
+                description="Можно изменить одно или несколько полей из списка",
             ),
             OpenApiExample("201", order_response_example, response_only=True),
         ],
@@ -162,9 +164,13 @@ all_merch_to_ambassador_schema_view = {
         tags=["Мерч"],
         examples=[
             OpenApiExample(
-                "200", all_merch_to_ambassador_example, response_only=True,
-                description=("В мерче возвращается название мерча и его\
-                              количество (Толстовка: 1)")
+                "200",
+                all_merch_to_ambassador_example,
+                response_only=True,
+                description=(
+                    "В мерче возвращается название мерча и его\
+                              количество (Толстовка: 1)"
+                ),
             )
         ],
     ),

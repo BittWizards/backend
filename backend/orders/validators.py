@@ -23,7 +23,7 @@ def validate_editing_order(order_status: str) -> None:
     if order_status == OrderStatus.DELIVERED:
         raise PermissionDenied(
             "Заявка выполнена и поля заявки уже нельзя изменить",
-            code=HTTP_403_FORBIDDEN
+            code=HTTP_403_FORBIDDEN,
         )
 
 
@@ -31,6 +31,5 @@ def validate_exsisting_merch(merch: Merch | None) -> None:
     """Проверка что есть такой мерч"""
     if not merch:
         raise ValidationError(
-            "Добавлен несуществующий мерч",
-            code=HTTP_400_BAD_REQUEST
+            "Добавлен несуществующий мерч", code=HTTP_400_BAD_REQUEST
         )
