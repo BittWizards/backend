@@ -1,6 +1,11 @@
 from rest_framework import serializers
 
-from ambassadors.models import (
+from content.serializers import (
+    ContentsForAmbassadorSerializer,
+    PromocodeForAmbassadorSerializer,
+)
+
+from .models import (
     Actions,
     Ambassador,
     AmbassadorActions,
@@ -67,6 +72,7 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "first_name",
             "last_name",
             "middle_name",
@@ -147,18 +153,18 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             instance.ya_programm = YandexProgramm.objects.get_or_create(
                 **ya_programm
             )[0]
-        if "ya_programm" in validated_data:
+        if "address" in validated_data:
             address = validated_data.pop("address")
             AmbassadorAddress.objects.get_or_create(
                 **address, ambassador_id=instance
             )
-        if "ya_programm" in validated_data:
+        if "size" in validated_data:
             size = validated_data.pop("size")
             AmbassadorSize.objects.get_or_create(
                 ambassador_id=instance,
                 **size,
             )
-        if "ya_programm" in validated_data:
+        if "actions" in validated_data:
             actions_data = validated_data.pop("actions")
             for action_data in actions_data:
                 current_action = Actions.objects.get_or_create(
@@ -170,3 +176,49 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+
+class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
+    """Родительский сериализатор для контента промокодов."""
+
+    city = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ambassador
+        fields = [
+            "id",
+            "image",
+            "last_name",
+            "first_name",
+            "middle_name",
+            "status",
+            "tg_acc",
+            "email",
+            "phone",
+            "ya_programm",
+            "city",
+        ]
+
+    def get_city(self, obj) -> str:
+        city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
+        return city
+
+
+class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
+    """Сериализатор для контента конкретного амбассадора."""
+
+    my_content = ContentsForAmbassadorSerializer(many=True)
+
+    class Meta(AmbassadorContentPromoSerializer.Meta):
+        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_content"]
+
+
+class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
+    """Сериализатор для промокодов конкретного амбассадора."""
+
+    my_promocode = PromocodeForAmbassadorSerializer(many=True)
+
+    class Meta(AmbassadorContentPromoSerializer.Meta):
+        fields = AmbassadorContentPromoSerializer.Meta.fields + [
+            "my_promocode"
+        ]

@@ -1,6 +1,6 @@
 from django.db.models import Count, F, QuerySet, Sum
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema_view
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -71,6 +71,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
     http_method_names = ["get", "patch", "delete"]
 
 
+@extend_schema(tags=["Мерч"])
 @extend_schema_view(**merch_extend_schema_view)
 class MerchViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для мерча"""

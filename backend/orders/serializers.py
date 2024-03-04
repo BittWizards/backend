@@ -68,8 +68,10 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderListSerializer(serializers.ModelSerializer):
-    """Сериалайзер для всех заявок на мерч по
-    конкретному амбассадору. Работает только на чтение"""
+    """
+    Сериалайзер для всех заявок на мерч по
+    конкретному амбассадору. Работает только на чтение.
+    """
 
     merch = MerchSerializer(many=True)
 
@@ -90,6 +92,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "first_name",
             "last_name",
             "middle_name",
@@ -121,6 +124,7 @@ class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
         model = Ambassador
         fields = (
             "id",
+            "image",
             "first_name",
             "last_name",
             "merch_name",
