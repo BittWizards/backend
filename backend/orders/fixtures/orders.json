@@ -1,1 +1,68 @@
-[{"model": "orders.order", "pk": 1, "fields": {"first_name": "Павел", "last_name": "Павлов", "middle_name": "", "phone": "8823473284", "country": "Россия", "city": "Пермь", "street_home": "Ленина 128", "post_index": 177999, "ambassador_id": 1, "order_status": "создано", "created_date": "2024-03-01", "delivered_date": null, "track_number": null, "comment": "", "total_cost": null, "email": "test@t.ru", "tg_acc": "@asdasd", "merch": [2, 1]}}, {"model": "orders.order", "pk": 2, "fields": {"first_name": "Стас", "last_name": "Михайлов", "middle_name": "", "phone": "836234732", "country": "Россия", "city": "Москва", "street_home": "Красная площадь 1", "post_index": 100000, "ambassador_id": 2, "order_status": "доставлено", "created_date": "2024-03-01", "delivered_date": "2024-03-01", "track_number": "7732488942", "comment": "", "total_cost": 1000, "email": "stas@mihailov.ru", "tg_acc": "@stas", "merch": [3]}}, {"model": "orders.order", "pk": 3, "fields": {"first_name": "Anna", "last_name": "Varacheva", "middle_name": "Aleksandrovna", "phone": "88005553537", "country": "Россия", "city": "Москва", "street_home": "Екатерининская 127", "post_index": 879001, "ambassador_id": 3, "order_status": "доставлено", "created_date": "2024-03-01", "delivered_date": null, "track_number": "11111123124", "comment": "", "total_cost": 100, "email": "test_ambassador3@test.ru", "tg_acc": "t.me/anna", "merch": [1]}}]
+[
+    {
+        "model": "orders.order",
+        "pk": 1,
+        "fields": {
+            "first_name": "Павел",
+            "last_name": "Павлов",
+            "middle_name": "",
+            "phone": "8823473284",
+            "country": "Россия",
+            "city": "Пермь",
+            "street_home": "Ленина 128",
+            "post_index": 177999,
+            "ambassador_id": 1,
+            "status": "создано",
+            "created_date": "2024-03-01",
+            "delivered_date": null,
+            "track_number": null,
+            "comment": "",
+            "total_cost": null,
+            "merch": [2, 1]
+        }
+    },
+    {
+        "model": "orders.order",
+        "pk": 2,
+        "fields": {
+            "first_name": "Стас",
+            "last_name": "Михайлов",
+            "middle_name": "",
+            "phone": "836234732",
+            "country": "Россия",
+            "city": "Москва",
+            "street_home": "Красная площадь 1",
+            "post_index": 100000,
+            "ambassador_id": 2,
+            "status": "доставлено",
+            "created_date": "2024-03-01",
+            "delivered_date": "2024-03-01",
+            "track_number": "7732488942",
+            "comment": "",
+            "total_cost": 1000,
+            "merch": [3]
+        }
+    },
+        {
+        "model": "orders.order",
+        "pk": 3,
+        "fields": {
+            "first_name": "Anna",
+            "last_name": "Varacheva",
+            "middle_name": "Aleksandrovna",
+            "phone": "88005553537",
+            "country": "Россия",
+            "city": "Москва",
+            "street_home": "Екатерининская 127",
+            "post_index": 879001,
+            "ambassador_id": 3,
+            "status": "доставлено",
+            "created_date": "2024-03-01",
+            "delivered_date": null,
+            "track_number": "11111123124",
+            "comment": "",
+            "total_cost": 100,
+            "merch": [1]
+        }
+    }
+]
