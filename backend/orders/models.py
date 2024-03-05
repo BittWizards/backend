@@ -51,7 +51,7 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
     ambassador = models.ForeignKey(
         Ambassador,
         related_name="orders",
-        verbose_name="ID амбассадора",
+        verbose_name="Амбассадор в заказе",
         on_delete=models.CASCADE,
     )
     merch = models.ManyToManyField(
