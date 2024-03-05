@@ -43,7 +43,7 @@
             "merch": [3]
         }
     },
-        {
+    {
         "model": "orders.order",
         "pk": 3,
         "fields": {
