@@ -1,6 +1,7 @@
 from django.db.models import Count, F, QuerySet, Sum
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, extend_schema_view
+from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema_view
 from rest_framework import viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -18,6 +19,7 @@ from orders.mixins import CreateRetrieveMixin
 from orders.models import Merch, Order
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
+    AllOrdersListSerialiazer,
     AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
@@ -53,7 +55,7 @@ class AmbassadorOrdersViewSet(CreateRetrieveMixin):
         ambassador = get_object_or_404(
             Ambassador, pk=self.kwargs["ambassador_id"]
         )
-        serializer.validated_data["ambassador_id"] = ambassador
+        serializer.validated_data["ambassador"] = ambassador
         serializer.save(merch=merch)
 
     def get_serializer_class(self):
@@ -69,9 +71,15 @@ class OrdersViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     http_method_names = ["get", "patch", "delete"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["ambassador__id", "status"]
+
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = AllOrdersListSerialiazer(queryset, many=True)
+        return Response(serializer.data)
 
 
-@extend_schema(tags=["Мерч"])
 @extend_schema_view(**merch_extend_schema_view)
 class MerchViewSet(viewsets.ReadOnlyModelViewSet):
     """ViewSet для мерча"""

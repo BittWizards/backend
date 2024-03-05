@@ -8,14 +8,9 @@ from .manager import MyUserManager
 
 class AbstractUser(models.Model):
     """Абстрактная модель User для наследования с полями Имя, Фамилия, Отечство,
-    Почта, Телефон."""
+    Телефон.
+    Поля абстракта: first_name, last_name, middle_name, phone"""
 
-    email = models.CharField(
-        verbose_name="Электронная почта",
-        max_length=200,
-        blank=False,
-        unique=True,
-    )
     first_name = models.CharField(
         verbose_name="Имя", max_length=100, blank=False
     )
@@ -43,6 +38,12 @@ class User(AbstractBaseUser, AbstractUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ("first_name", "last_name", "phone")
 
+    email = models.CharField(
+        verbose_name="Электронная почта",
+        max_length=200,
+        blank=False,
+        unique=True,
+    )
     is_staff = models.BooleanField(
         "Стафф статус",
         default=False,

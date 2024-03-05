@@ -178,6 +178,28 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ShortAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериалайзер для отображения короткого списка полей амбассадора
+    Поля: id, image, first_name, last_name, status, tg_acc, ya_programm"""
+
+    ya_programm = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ambassador
+        fields = (
+            "id",
+            "image",
+            "first_name",
+            "last_name",
+            "status",
+            "tg_acc",
+            "ya_programm",
+        )
+
+    def get_ya_programm(self, obj):
+        return obj.ya_programm.title
+
+
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
     """Родительский сериализатор для контента промокодов."""
 
