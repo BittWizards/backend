@@ -2,7 +2,7 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from orders.views import (
-    AllMerchToAmbassadorViewSet,
+    AllMerchToAmbassadorView,
     AmbassadorOrdersViewSet,
     MerchViewSet,
     OrdersViewSet,
@@ -21,7 +21,7 @@ urlpatterns = [
     path("", include(router_merch.urls)),
     path(
         "merch_to_ambassador/",
-        AllMerchToAmbassadorViewSet.as_view({"get": "list"}),
+        AllMerchToAmbassadorView.as_view(),
         name="merch_to_ambassador",
     ),
 ]

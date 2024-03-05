@@ -5,7 +5,6 @@ from drf_spectacular.utils import (
 )
 
 from orders.serializers import (
-    AllMerchToAmbassadorSerializer,
     AllOrdersListSerialiazer,
     AmbassadorOrderListSerializer,
     MerchSerializer,
@@ -58,11 +57,16 @@ all_merch_to_ambassador_example = {
     "id": 0,
     "first_name": "string",
     "last_name": "string",
-    "merch": {
-        "string": 2147483647,
-        "string": 2147483647,
-        "string": 2147483647,
-    },
+    "image": "string",
+    "tg_acc": "string",
+    "merch": [
+        {
+            "name": "string",
+            "count": 2147483647,
+        }
+    ],
+    "total": 2147483647,
+    "last_delivery_date": "2024-03-05",
 }
 
 ambassador_orders_extend_schema_view = {
@@ -181,26 +185,20 @@ merch_extend_schema_view = {
 }
 
 all_merch_to_ambassador_schema_view = {
-    "list": extend_schema(
-        summary="Список всего мерча относящегося к каждому амбассадору",
-        description="Возращает информацию мерча по каждому амбассадору",
-        responses={
-            200: OpenApiResponse(
-                description="Список всего мерча по каждому амбассадору",
-                response=AllMerchToAmbassadorSerializer,
-            )
-        },
-        tags=["Мерч"],
-        examples=[
-            OpenApiExample(
-                "200",
-                all_merch_to_ambassador_example,
-                response_only=True,
-                description=(
-                    "В мерче возвращается название мерча и его\
-                              количество (Толстовка: 1)"
+    "summary": "Список всего мерча относящегося к каждому амбассадору",
+    "description": "Возращает информацию мерча по каждому амбассадору",
+    "responses": {
+        200: OpenApiResponse(
+            description="Список всего мерча по каждому амбассадору",
+            response=MerchSerializer,
+            examples=[
+                OpenApiExample(
+                    "200",
+                    all_merch_to_ambassador_example,
+                    response_only=True
                 ),
-            )
-        ],
-    ),
+            ]
+        ),
+    },
+    "tags": ["Мерч"],
 }

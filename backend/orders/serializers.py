@@ -136,7 +136,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "total_orders_cost",
         )
 
-    def get_ya_programm(self, obj: Ambassador):
+    def get_ya_programm(self, obj: Ambassador) -> str:
         return obj.ya_programm.title
 
     def get_city(self, obj: Ambassador) -> str:
@@ -144,24 +144,3 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
 
     def get_total_orders_cost(self, obj: Ambassador) -> int:
         return sum(order["total_cost"] or 0 for order in obj.orders.values())
-
-
-class AllMerchToAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериалайзер для обработки всего мерча,
-    который относится к конкертному амбассадору"""
-
-    merch_name = serializers.CharField()
-    count = serializers.IntegerField(default=0)
-    total = serializers.IntegerField()
-
-    class Meta:
-        model = Ambassador
-        fields = (
-            "id",
-            "image",
-            "first_name",
-            "last_name",
-            "merch_name",
-            "count",
-            "total",
-        )
