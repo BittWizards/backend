@@ -62,19 +62,6 @@ class AllContentSerializer(serializers.ModelSerializer):
         )
 
 
-class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения контента конкретного амбассадора."""
-
-    documents = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Content
-        fields = ("id", "created_at", "platform", "link", "documents")
-
-    def get_documents(self, obj) -> int:
-        return obj.documents.count()
-
-
 class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
     """
     Сериализатор для отображения данных амбассадора
@@ -226,11 +213,3 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         return PromocodeSerializer(
             instance, context={"request": self.context.get("request")}
         ).data
-
-
-class PromocodeForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для промокодов."""
-
-    class Meta:
-        model = Promocode
-        fields = ("id", "promocode", "is_active", "created_at")

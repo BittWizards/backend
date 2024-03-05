@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from content.serializers import (
-    ContentsForAmbassadorSerializer,
-    PromocodeForAmbassadorSerializer,
-)
+from content.models import Content, Promocode
 
 from .models import (
     Actions,
@@ -224,6 +221,27 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
     def get_city(self, obj) -> str:
         city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
         return city
+
+
+class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериализатор для отображения контента конкретного амбассадора."""
+
+    documents = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Content
+        fields = ("id", "created_at", "platform", "link", "documents")
+
+    def get_documents(self, obj) -> int:
+        return obj.documents.count()
+
+
+class PromocodeForAmbassadorSerializer(serializers.ModelSerializer):
+    """Сериализатор для промокодов."""
+
+    class Meta:
+        model = Promocode
+        fields = ("id", "promocode", "is_active", "created_at")
 
 
 class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
