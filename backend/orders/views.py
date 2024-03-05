@@ -102,9 +102,10 @@ class AllMerchToAmbassadorView(views.APIView):
         query = Ambassador.objects.annotate(
             merch=ArraySubquery(subsuery),
             last_delivery_date=Max("orders__delivered_date"),
+            merch_count=Count("merch", distinct=True)
         ).filter(
-            orders__status=OrderStatus.DELIVERED
-        ).order_by("id").annotate(
+            orders__status=OrderStatus.CREATED
+        ).order_by("merch_count").annotate(
             total=Sum("orders__total_cost", distinct=True)
         ).values(
             "id",
