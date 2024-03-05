@@ -1,3 +1,4 @@
+from ambassadors.models import Ambassador
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
     PATTERN_PROMO,
@@ -6,8 +7,6 @@ from ambassadors_project.constants import (
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
-
-from ambassadors.models import Ambassador
 
 
 class Platform(models.TextChoices):

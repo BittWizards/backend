@@ -1,5 +1,8 @@
 import re
 
+from ambassadors.models import Ambassador, AmbassadorAddress
+from ambassadors.serializers import ShortAmbassadorSerializer
+from ambassadors.validators import tg_acc_validator
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
     PATTERN_PROMO,
@@ -9,10 +12,6 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-
-from ambassadors.models import Ambassador, AmbassadorAddress
-from ambassadors.serializers import ShortAmbassadorSerializer
-from ambassadors.validators import tg_acc_validator
 
 
 class NewContentSerializer(serializers.ModelSerializer):

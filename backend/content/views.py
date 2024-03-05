@@ -1,3 +1,4 @@
+from ambassadors.models import Ambassador
 from content.mixins import (
     CreateRetrieveUpdateDeleteViewSet,
     ListCreateDestroyViewSet,
@@ -16,8 +17,6 @@ from django.db.models import Count, OuterRef, Subquery
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
-
-from ambassadors.models import Ambassador
 
 
 @extend_schema(tags=["Промокоды"])

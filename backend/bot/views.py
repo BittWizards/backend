@@ -1,6 +1,7 @@
 import os
 
 import requests
+from ambassadors.models import Ambassador
 from django.conf import settings
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import api_view
@@ -15,8 +16,6 @@ from telebot.types import (
     UserProfilePhotos,
     WebAppInfo,
 )
-
-from ambassadors.models import Ambassador
 
 start_url = f"https://api.telegram.org/bot{settings.BOT_TOKEN}/"
 download_file_url = f"https://api.telegram.org/file/bot{settings.BOT_TOKEN}/"

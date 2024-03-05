@@ -1,3 +1,8 @@
+from ambassadors.views import (
+    AmbassadorViewSet,
+    YandexProgrammViewSet,
+    get_ambassador_by_tg_acc,
+)
 from bot.views import bot_view
 from content.views import (
     AllContentsViewSet,
@@ -12,12 +17,6 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from orders.urls import urlpatterns as orders_url
 from rest_framework import routers
 from websocket.views import index, room
-
-from ambassadors.views import (
-    AmbassadorViewSet,
-    YandexProgrammViewSet,
-    get_ambassador_by_tg_acc,
-)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")

@@ -1,3 +1,4 @@
+from ambassadors.models import Ambassador
 from django.db.models import Count, F, QuerySet, Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -26,8 +27,6 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
 from rest_framework.status import HTTP_201_CREATED
-
-from ambassadors.models import Ambassador
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
