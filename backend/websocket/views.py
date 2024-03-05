@@ -1,3 +1,4 @@
+# Файл для тестирования работоспособности
 from django.shortcuts import render
 
 

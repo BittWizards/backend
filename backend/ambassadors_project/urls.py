@@ -9,9 +9,9 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from live.views import index, room
 from orders.urls import urlpatterns as orders_url
 from rest_framework import routers
+from websocket.views import index, room
 
 from ambassadors.views import (
     AmbassadorViewSet,

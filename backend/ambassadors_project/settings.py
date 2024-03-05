@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "orders",
     "content",
     "bot",
+    "websocket",
 ]
 
 MIDDLEWARE = [
