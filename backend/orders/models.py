@@ -3,18 +3,18 @@ from django.db import models
 
 from ambassadors.choices import AmbassadorsClothesSizes, AmbassadorsFootsSizes
 from ambassadors.models import (
-    AbstractAmbassador,
     AbstractAmbassadorAddress,
     Ambassador,
 )
+from users.models import AbstractUser
 
 
 class OrderStatus(models.TextChoices):
     """Список статусов заказа"""
 
-    CREATED = "создано", "created"
-    DELIVERED = "доставлено", "delivered"
-    SHIPPED = "отправлено", "shipped"
+    CREATED = "created", "Создано"
+    DELIVERED = "delivered", "Доставлено"
+    SHIPPED = "shipped", "Отправлено"
 
 
 class Merch(models.Model):
@@ -48,10 +48,10 @@ class Merch(models.Model):
         return f"{self.name} ({self.size})"
 
 
-class Order(AbstractAmbassador, AbstractAmbassadorAddress):
+class Order(AbstractUser, AbstractAmbassadorAddress):
     """Модель для заявки на мерч"""
 
-    ambassador_id = models.ForeignKey(
+    ambassador = models.ForeignKey(
         Ambassador,
         related_name="orders",
         verbose_name="ID амбассадора",
@@ -62,7 +62,7 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
         related_name="order",
         verbose_name="Мерч в заявке",
     )
-    order_status = models.CharField(
+    status = models.CharField(
         verbose_name="Статус заявки",
         choices=OrderStatus.choices,
         default=OrderStatus.CREATED,
@@ -72,6 +72,9 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
     )
     delivered_date = models.DateField(
         verbose_name="Дата получения заказа", null=True, blank=True
+    )
+    post_index = models.IntegerField(
+        verbose_name="Индекс", blank=True, null=True
     )
     track_number = models.CharField(
         verbose_name="Трек-номер",
@@ -89,10 +92,8 @@ class Order(AbstractAmbassador, AbstractAmbassadorAddress):
             MinValueValidator(0, "Стоимость не может быть отрицательной")
         ],
         null=True,
-        blank=True,
+        default=0
     )
-    email = models.CharField(verbose_name="Электронная почта", max_length=200)
-    tg_acc = models.CharField(verbose_name="Телеграмм аккаунт", max_length=150)
 
     class Meta:
         verbose_name = "Заявка на отправку мерча"
