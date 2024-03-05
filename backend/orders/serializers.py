@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ambassadors.models import Ambassador
+from ambassadors.serializers import ShortAmbassadorSerializer
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_editing_order, validate_merch_num
@@ -21,12 +22,26 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = "__all__"
-        read_only_fields = (
-            "ambassador_id",
-            "created_date",
-            "order_status",
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "middle_name",
+            "phone",
             "merch",
+            "status",
+            "created_date",
+            "track_number",
+            "city",
+            "street_home",
+            "post_index",
+            "comment",
+        )
+        read_only_fields = (
+            "ambassador",
+            "created_date",
+            "merch",
+            "total_cost",
         )
 
     def get_merch(self, obj: Order):
@@ -47,11 +62,11 @@ class OrderSerializer(serializers.ModelSerializer):
         return order
 
     def update(self, instance: Order, validated_data: dict) -> Order:
-        validate_editing_order(instance.order_status)
+        validate_editing_order(instance.status)
         merch_data = validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
         if validated_data.get("track_number") and not instance.track_number:
-            validated_data["order_status"] = OrderStatus.SHIPPED
+            validated_data["status"] = OrderStatus.SHIPPED
         instance = super().update(instance, validated_data)
         if merch_data:
             instance.merch.clear()
@@ -65,6 +80,22 @@ class OrderSerializer(serializers.ModelSerializer):
         instance = super().to_representation(instance)
         instance["merch"] = MerchSerializer(instance["merch"], many=True).data
         return instance
+
+
+class AllOrdersListSerialiazer(serializers.ModelSerializer):
+    """Сериалайзер для отображения всех существующих заявок"""
+
+    ambassador = ShortAmbassadorSerializer()
+
+    class Meta:
+        model = Order
+        fields = (
+            "id",
+            "ambassador",
+            "track_number",
+            "created_date",
+            "status",
+        )
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -87,6 +118,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
     orders = OrderListSerializer(many=True)
     total_orders_cost = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
+    ya_programm = serializers.SerializerMethodField()
 
     class Meta:
         model = Ambassador
@@ -97,13 +129,15 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "last_name",
             "middle_name",
             "city",
-            "education",
-            "tg_acc",
+            "ya_programm",
             "email",
             "phone",
             "orders",
             "total_orders_cost",
         )
+
+    def get_ya_programm(self, obj: Ambassador):
+        return obj.ya_programm.title
 
     def get_city(self, obj: Ambassador) -> str:
         return obj.address.city

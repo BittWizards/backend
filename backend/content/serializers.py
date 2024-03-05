@@ -6,28 +6,13 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador, AmbassadorAddress
+from ambassadors.serializers import ShortAmbassadorSerializer
 from ambassadors.validators import tg_acc_validator
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
     PATTERN_PROMO,
 )
 from content.models import Content, Documents, Promocode
-
-
-class ShortAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для амбассадора в новой заявке на контент."""
-
-    class Meta:
-        model = Ambassador
-        fields = (
-            "id",
-            "image",
-            "last_name",
-            "first_name",
-            "ya_programm",
-            "tg_acc",
-            "status",
-        )
 
 
 class NewContentSerializer(serializers.ModelSerializer):
@@ -75,19 +60,6 @@ class AllContentSerializer(serializers.ModelSerializer):
             "linkedin_count",
             "other_count",
         )
-
-
-class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для отображения контента конкретного амбассадора."""
-
-    documents = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Content
-        fields = ("id", "created_at", "platform", "link", "documents")
-
-    def get_documents(self, obj) -> int:
-        return obj.documents.count()
 
 
 class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
@@ -241,11 +213,3 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         return PromocodeSerializer(
             instance, context={"request": self.context.get("request")}
         ).data
-
-
-class PromocodeForAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для промокодов."""
-
-    class Meta:
-        model = Promocode
-        fields = ("id", "promocode", "is_active", "created_at")
