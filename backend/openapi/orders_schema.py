@@ -193,11 +193,9 @@ all_merch_to_ambassador_schema_view = {
             response=MerchSerializer,
             examples=[
                 OpenApiExample(
-                    "200",
-                    all_merch_to_ambassador_example,
-                    response_only=True
+                    "200", all_merch_to_ambassador_example, response_only=True
                 ),
-            ]
+            ],
         ),
     },
     "tags": ["Мерч"],

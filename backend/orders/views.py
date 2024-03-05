@@ -1,14 +1,14 @@
-from django.db.models import Count, F, Sum, Max, OuterRef
-from django.db.models.functions import JSONObject
 from django.contrib.postgres.expressions import ArraySubquery
+from django.db.models import Count, F, Max, OuterRef, Sum
+from django.db.models.functions import JSONObject
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view, extend_schema
-from rest_framework import viewsets, views
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import views, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
-from rest_framework.status import HTTP_201_CREATED, HTTP_200_OK
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
 from openapi.orders_schema import (
@@ -92,29 +92,34 @@ class AllMerchToAmbassadorView(views.APIView):
     и мерча который был им отправлен"""
 
     def get(self, request: Request) -> Response:
-        subsuery = Order.objects.filter(
-            ambassador=OuterRef("pk")
-        ).values("merch").annotate(
-            data=JSONObject(
-                merch_name=F("merch__name"), count=Count("merch__name")
+        subsuery = (
+            Order.objects.filter(ambassador=OuterRef("pk"))
+            .values("merch")
+            .annotate(
+                data=JSONObject(
+                    merch_name=F("merch__name"), count=Count("merch__name")
+                )
             )
-        ).values_list("data")
-        query = Ambassador.objects.annotate(
-            merch=ArraySubquery(subsuery),
-            last_delivery_date=Max("orders__delivered_date"),
-            merch_count=Count("merch", distinct=True)
-        ).filter(
-            orders__status=OrderStatus.CREATED
-        ).order_by("merch_count").annotate(
-            total=Sum("orders__total_cost", distinct=True)
-        ).values(
-            "id",
-            "first_name",
-            "last_name",
-            "image",
-            "tg_acc",
-            "merch",
-            "last_delivery_date",
-            "total"
+            .values_list("data")
+        )
+        query = (
+            Ambassador.objects.annotate(
+                merch=ArraySubquery(subsuery),
+                last_delivery_date=Max("orders__delivered_date"),
+                merch_count=Count("merch", distinct=True),
+            )
+            .filter(orders__status=OrderStatus.CREATED)
+            .order_by("merch_count")
+            .annotate(total=Sum("orders__total_cost", distinct=True))
+            .values(
+                "id",
+                "first_name",
+                "last_name",
+                "image",
+                "tg_acc",
+                "merch",
+                "last_delivery_date",
+                "total",
+            )
         )
         return Response(list(query), status=HTTP_200_OK)
