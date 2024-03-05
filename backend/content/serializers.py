@@ -6,28 +6,13 @@ from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador, AmbassadorAddress
+from ambassadors.serializers import ShortAmbassadorSerializer
 from ambassadors.validators import tg_acc_validator
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
     PATTERN_PROMO,
 )
 from content.models import Content, Documents, Promocode
-
-
-class ShortAmbassadorSerializer(serializers.ModelSerializer):
-    """Сериализатор для амбассадора в новой заявке на контент."""
-
-    class Meta:
-        model = Ambassador
-        fields = (
-            "id",
-            "image",
-            "last_name",
-            "first_name",
-            "ya_programm",
-            "tg_acc",
-            "status",
-        )
 
 
 class NewContentSerializer(serializers.ModelSerializer):

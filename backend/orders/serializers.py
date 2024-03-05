@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from ambassadors.models import Ambassador
+from ambassadors.serializers import ShortAmbassadorSerializer
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_editing_order, validate_merch_num
@@ -81,32 +82,10 @@ class OrderSerializer(serializers.ModelSerializer):
         return instance
 
 
-class AmbassadorShortSerializer(serializers.ModelSerializer):
-    """Сериалайзер для отображения короткого списка полей амбассадора"""
-
-    ya_programm = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Ambassador
-        fields = (
-            "id",
-            "image",
-            "first_name",
-            "last_name",
-            "middle_name",
-            "status",
-            "tg_acc",
-            "ya_programm"
-        )
-
-    def get_ya_programm(self, obj):
-        return obj.ya_programm.title
-
-
 class AllOrdersListSerialiazer(serializers.ModelSerializer):
     """Сериалайзер для отображения всех существующих заявок"""
 
-    ambassador = AmbassadorShortSerializer()
+    ambassador = ShortAmbassadorSerializer()
 
     class Meta:
         model = Order
