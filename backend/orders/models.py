@@ -89,7 +89,7 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
             MinValueValidator(0, "Стоимость не может быть отрицательной")
         ],
         null=True,
-        default=0
+        default=0,
     )
 
     class Meta:

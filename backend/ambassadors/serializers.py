@@ -193,7 +193,7 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
             "last_name",
             "status",
             "tg_acc",
-            "ya_programm"
+            "ya_programm",
         )
 
     def get_ya_programm(self, obj):

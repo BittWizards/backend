@@ -6,10 +6,10 @@ from drf_spectacular.utils import (
 
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
+    AllOrdersListSerialiazer,
     AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
-    AllOrdersListSerialiazer
 )
 
 merch_example = {"name": "string", "size": "XS"}
@@ -36,7 +36,7 @@ order_response_example = {
     "created_date": "2024-02-29",
     "status": "string",
     "total_cost": 2147483647,
-    **order_two_request_example
+    **order_two_request_example,
 }
 orders_response_list_example = {
     "id": 0,
@@ -48,11 +48,11 @@ orders_response_list_example = {
         "middle_name": "string",
         "status": "string",
         "tg_acc": "string",
-        "ya_programm": "string"
+        "ya_programm": "string",
     },
     "track_number": 2147483647,
     "created_date": "2024-03-01",
-    "status": "string"
+    "status": "string",
 }
 all_merch_to_ambassador_example = {
     "id": 0,
@@ -70,7 +70,9 @@ ambassador_orders_extend_schema_view = {
         summary="Создание новой заявки",
         description="Создает новый заказ в базе",
         examples=[
-            OpenApiExample("post", order_one_request_example, request_only=True),
+            OpenApiExample(
+                "post", order_one_request_example, request_only=True
+            ),
             OpenApiExample("201", order_response_example, response_only=True),
         ],
         responses={
@@ -116,9 +118,7 @@ orders_extend_schema_view = {
             доступна фильтрации по status и ambassador__id (2 нижних)",
         examples=[
             OpenApiExample(
-                "200",
-                orders_response_list_example,
-                response_only=True
+                "200", orders_response_list_example, response_only=True
             ),
         ],
         responses={

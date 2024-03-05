@@ -30,7 +30,7 @@ class OrderAdmin(admin.ModelAdmin):
         "comment",
         "total_cost",
         "ambassador",
-        "get_merch"
+        "get_merch",
     )
     search_fields = ("ambassador", "merch", "status", "city")
     list_filter = ("ambassador", "merch", "status", "city")

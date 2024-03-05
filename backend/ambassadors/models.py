@@ -51,6 +51,7 @@ class Ambassador(AbstractUser):
     Модель амбассадора.
     Поля абстракта: first_name, last_name, middle_name, phone
     """
+
     email = models.CharField(
         verbose_name="Электронная почта",
         max_length=200,
