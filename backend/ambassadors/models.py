@@ -14,20 +14,9 @@ from users.models import AbstractUser
 User = get_user_model()
 
 
-class AbstractAmbassador(AbstractUser):
-    """Абстрактная модель амбассадора с полями Имя, Фамилия, Отечство,
-    Почта, Телефон, Телеграм."""
-
-    tg_acc = models.CharField(
-        verbose_name="Телеграмм аккаунт", max_length=150, unique=True
-    )
-
-    class Meta:
-        abstract = True
-
-
 class AbstractAmbassadorAddress(models.Model):
-    """Абстрактный класс для адреса амбассадора."""
+    """Абстрактный класс для адреса амбассадора.
+    Поля: country, city, street_home, post_index"""
 
     country = models.CharField(verbose_name="Страна", max_length=100)
     city = models.CharField(verbose_name="Город", max_length=100)
@@ -57,11 +46,17 @@ class YandexProgramm(models.Model):
         return str(self.title)
 
 
-class Ambassador(AbstractAmbassador):
+class Ambassador(AbstractUser):
     """
     Модель амбассадора.
+    Поля абстракта: first_name, last_name, middle_name, phone
     """
-
+    email = models.CharField(
+        verbose_name="Электронная почта",
+        max_length=200,
+        blank=False,
+        unique=True,
+    )
     gender = models.CharField(
         verbose_name="Пол", max_length=20, choices=Gender.choices
     )
@@ -78,6 +73,9 @@ class Ambassador(AbstractAmbassador):
     )
     created = models.DateTimeField(
         verbose_name="Дата и время создания", default=timezone.now
+    )
+    tg_acc = models.CharField(
+        verbose_name="Телеграмм аккаунт", max_length=150, unique=True
     )
     tg_id = models.IntegerField(
         verbose_name="Телеграмм id", blank=True, null=True
@@ -162,7 +160,7 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
 
     def __str__(self) -> str:
         return (
-            f"{self.country} {self.city} {self.street_home} {self.post_index}"
+            f"{self.country} {self. city} {self.street_home} {self.post_index}"
         )
 
 
