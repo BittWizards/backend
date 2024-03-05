@@ -17,30 +17,30 @@ class OrderAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "middle_name",
-        "email",
         "phone",
-        "tg_acc",
         "country",
         "city",
         "street_home",
         "post_index",
         "full_address",
-        "order_status",
+        "status",
         "created_date",
         "delivered_date",
         "track_number",
         "comment",
         "total_cost",
+        "ambassador",
+        "get_merch",
     )
-    search_fields = ("ambassador_id", "merch", "order_status", "city")
-    list_filter = ("ambassador_id", "merch", "order_status", "city")
+    search_fields = ("ambassador", "merch", "status", "city")
+    list_filter = ("ambassador", "merch", "status", "city")
     empty_value_display = "-пусто-"
 
     def get_merch(self, obj: Order) -> str:
         return ", ".join([merch.name for merch in obj.merch.all()])
 
-    def get_ambassador_id(self, obj: Order) -> str:
-        return Ambassador.objects.get(pk=obj.ambassador_id)
+    def get_ambassador(self, obj: Order) -> str:
+        return Ambassador.objects.get(pk=obj.ambassador)
 
 
 admin.site.register(Merch, MerchAdmin)

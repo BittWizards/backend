@@ -36,8 +36,8 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         else:
             return AmbassadorSerializer
 
-    @extend_schema(tags=["Контент"])
-    @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/contents")
+    @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
+    @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")
     def contents(self, request, ambassador_id):
         """Весь контент амбассадора."""
 
@@ -50,13 +50,17 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
                     accepted=True
                 ).prefetch_related("documents"),
             )
-        )
+        )[
+            0
+        ]
         serializer = AmbassadorContentSerializer(
-            queryset, many=True, context={"request": request}
+            queryset, many=False, context={"request": request}
         )
         return Response(serializer.data)
 
-    @extend_schema(tags=["Промокоды"])
+    @extend_schema(
+        tags=["Промокоды"], responses=AmbassadorPromocodeSerializer()
+    )
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/promocodes")
     def promocodes(self, request, ambassador_id):
         """Все промокоды амбассадора."""
@@ -65,9 +69,11 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
             id=ambassador_id
         ).prefetch_related(
             Prefetch("my_promocode", queryset=Promocode.objects.all())
-        )
+        )[
+            0
+        ]
         serializer = AmbassadorPromocodeSerializer(
-            queryset, many=True, context={"request": request}
+            queryset, many=False, context={"request": request}
         )
         return Response(serializer.data)
 

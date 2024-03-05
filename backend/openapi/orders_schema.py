@@ -5,13 +5,14 @@ from drf_spectacular.utils import (
 )
 from orders.serializers import (
     AllMerchToAmbassadorSerializer,
+    AllOrdersListSerialiazer,
     AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
 )
 
 merch_example = {"name": "string", "size": "XS"}
-order_request_example = {
+order_one_request_example = {
     "first_name": "string",
     "last_name": "string",
     "middle_name": "string",
@@ -20,15 +21,38 @@ order_request_example = {
     "city": "string",
     "street_home": "string",
     "post_index": 2147483647,
+    "merch": [merch_example],
+    "comment": "string",
+}
+order_two_request_example = {
+    **order_one_request_example,
     "delivered_date": "2024-02-29",
     "track_number": "string",
-    "comment": "string",
-    "total_cost": 2147483647,
-    "email": "string",
-    "tg_acc": "string",
-    "merch": [merch_example],
 }
-order_response_example = {"id": 0, "ambassador_id": 0, **order_request_example}
+order_response_example = {
+    "id": 0,
+    "ambassador": 0,
+    "created_date": "2024-02-29",
+    "status": "string",
+    "total_cost": 2147483647,
+    **order_two_request_example,
+}
+orders_response_list_example = {
+    "id": 0,
+    "ambassador": {
+        "id": 0,
+        "image": "string",
+        "first_name": "string",
+        "last_name": "string",
+        "middle_name": "string",
+        "status": "string",
+        "tg_acc": "string",
+        "ya_programm": "string",
+    },
+    "track_number": 2147483647,
+    "created_date": "2024-03-01",
+    "status": "string",
+}
 all_merch_to_ambassador_example = {
     "id": 0,
     "first_name": "string",
@@ -45,7 +69,9 @@ ambassador_orders_extend_schema_view = {
         summary="Создание новой заявки",
         description="Создает новый заказ в базе",
         examples=[
-            OpenApiExample("post", order_request_example, request_only=True),
+            OpenApiExample(
+                "post", order_one_request_example, request_only=True
+            ),
             OpenApiExample("201", order_response_example, response_only=True),
         ],
         responses={
@@ -87,14 +113,17 @@ orders_extend_schema_view = {
     ),
     "list": extend_schema(
         summary="Получение всех существующих заявок",
-        description="Возращает список всех существующих заявок",
+        description="Возращает список всех существующих заявок,\
+            доступна фильтрации по status и ambassador__id (2 нижних)",
         examples=[
-            OpenApiExample("200", order_response_example, response_only=True),
+            OpenApiExample(
+                "200", orders_response_list_example, response_only=True
+            ),
         ],
         responses={
             200: OpenApiResponse(
                 description="Список всех существующих заявок",
-                response=OrderSerializer,
+                response=AllOrdersListSerialiazer,
             )
         },
         tags=["Заявки"],
@@ -105,7 +134,7 @@ orders_extend_schema_view = {
         examples=[
             OpenApiExample(
                 "patch",
-                order_request_example,
+                order_two_request_example,
                 request_only=True,
                 description="Можно изменить одно или несколько полей из списка",
             ),
