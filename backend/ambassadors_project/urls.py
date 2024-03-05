@@ -40,9 +40,9 @@ api_urlpatterns = [
     path(
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
-    path("", index, name="index"),
     path("<str:room_name>/", room, name="room"),
     path("tg", bot_view),
+    path("", index, name="index"),
 ]
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
