@@ -2,10 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 from ambassadors.choices import AmbassadorsClothesSizes, AmbassadorsFootsSizes
-from ambassadors.models import (
-    AbstractAmbassadorAddress,
-    Ambassador,
-)
+from ambassadors.models import AbstractAmbassadorAddress, Ambassador
 from users.models import AbstractUser
 
 
