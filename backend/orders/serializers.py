@@ -136,7 +136,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "total_orders_cost",
         )
 
-    def get_ya_programm(self, obj):
+    def get_ya_programm(self, obj: Ambassador):
         return obj.ya_programm.title
 
     def get_city(self, obj: Ambassador) -> str:
