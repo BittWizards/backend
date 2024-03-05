@@ -1,3 +1,10 @@
+from django.conf import settings
+from django.conf.urls.static import static
+from django.contrib import admin
+from django.urls import include, path
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework import routers
+
 from ambassadors.views import (
     AmbassadorViewSet,
     YandexProgrammViewSet,
@@ -9,13 +16,7 @@ from content.views import (
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
-from django.conf import settings
-from django.conf.urls.static import static
-from django.contrib import admin
-from django.urls import include, path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from orders.urls import urlpatterns as orders_url
-from rest_framework import routers
 from websocket.views import index, room
 
 router_v1 = routers.DefaultRouter()

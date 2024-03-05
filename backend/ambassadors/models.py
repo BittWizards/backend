@@ -1,12 +1,13 @@
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils import timezone
+
 from ambassadors.choices import (
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
     Gender,
 )
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.utils import timezone
 from users import custom_functions
 from users.models import AbstractUser
 

@@ -1,7 +1,8 @@
-from ambassadors_project.constants import MERCH_MAX_NUM_IN_ORDER
-from orders.models import Merch, OrderStatus
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
+
+from ambassadors_project.constants import MERCH_MAX_NUM_IN_ORDER
+from orders.models import Merch, OrderStatus
 
 
 def validate_merch_num(merch: list[dict]) -> None:

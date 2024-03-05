@@ -1,5 +1,6 @@
-from ambassadors.models import Ambassador
 from django.contrib import admin
+
+from ambassadors.models import Ambassador
 from orders.models import Merch, Order
 
 

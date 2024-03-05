@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
+
 from users.custom_functions import get_full_name
 
 from .models import (

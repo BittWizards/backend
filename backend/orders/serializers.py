@@ -1,9 +1,10 @@
+from rest_framework import serializers
+
 from ambassadors.models import Ambassador
 from ambassadors.serializers import ShortAmbassadorSerializer
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_editing_order, validate_merch_num
-from rest_framework import serializers
 
 
 class MerchSerializer(serializers.ModelSerializer):

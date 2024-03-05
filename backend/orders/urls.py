@@ -1,11 +1,12 @@
 from django.urls import include, path
+from rest_framework.routers import DefaultRouter
+
 from orders.views import (
     AllMerchToAmbassadorViewSet,
     AmbassadorOrdersViewSet,
     MerchViewSet,
     OrdersViewSet,
 )
-from rest_framework.routers import DefaultRouter
 
 router_merch = DefaultRouter()
 router_merch.register("merch", MerchViewSet, basename="merch")

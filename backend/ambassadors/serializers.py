@@ -1,5 +1,6 @@
-from content.models import Content, Promocode
 from rest_framework import serializers
+
+from content.models import Content, Promocode
 
 from .models import (
     Actions,

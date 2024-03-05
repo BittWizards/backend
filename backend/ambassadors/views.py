@@ -1,4 +1,3 @@
-from content.models import Content, Promocode
 from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
@@ -8,6 +7,8 @@ from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
+
+from content.models import Content, Promocode
 
 from .models import Ambassador, YandexProgramm
 from .serializers import (
