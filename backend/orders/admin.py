@@ -17,23 +17,21 @@ class OrderAdmin(admin.ModelAdmin):
         "first_name",
         "last_name",
         "middle_name",
-        "email",
         "phone",
-        "tg_acc",
         "country",
         "city",
         "street_home",
         "post_index",
         "full_address",
-        "order_status",
+        "status",
         "created_date",
         "delivered_date",
         "track_number",
         "comment",
         "total_cost",
     )
-    search_fields = ("ambassador_id", "merch", "order_status", "city")
-    list_filter = ("ambassador_id", "merch", "order_status", "city")
+    search_fields = ("ambassador_id", "merch", "status", "city")
+    list_filter = ("ambassador_id", "merch", "status", "city")
     empty_value_display = "-пусто-"
 
     def get_merch(self, obj: Order) -> str:
