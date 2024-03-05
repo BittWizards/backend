@@ -9,18 +9,18 @@ services:
     ports:
       - 5432:5432
 
-  # backend:
-  #   restart: always
-  #   build:
-  #     context: ./backend/
-  #   entrypoint: /app/backend_entrypoint.sh
-  #   env_file: .env
-  #   volumes:
-  #     - static:/backend_static
-  #     - media:/app/media
-  #     - ./backend/:/app/
-  #   depends_on:
-  #     - db
+  backend:
+    restart: always
+    build:
+      context: ./backend/
+    entrypoint: /app/backend_entrypoint.sh
+    env_file: .env
+    volumes:
+      - static:/backend_static
+      - media:/app/media
+      - ./backend/:/app/
+    depends_on:
+      - db
 
   # redis:
   #   image: redis:7.2.4-alpine
@@ -40,17 +40,17 @@ services:
   #     - backend
   #     - redis
 
-  # nginx:
-  #   build: ./nginx/
-  #   env_file: .env
-  #   ports:
-  #     - 8000:80
-  #     - 443:443
-  #   volumes:
-  #     - static:/static/
-  #     - bot_static:/bot_static/
-  #     - media:/media/
-  #     - certs:/etc/letsencrypt
+  nginx:
+    build: ./nginx/
+    env_file: .env
+    ports:
+      - 8000:80
+      - 443:443
+    volumes:
+      - static:/static/
+      - bot_static:/bot_static/
+      - media:/media/
+      - certs:/etc/letsencrypt
 
   bot:
     build: ./webapp_bot/

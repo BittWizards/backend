@@ -126,5 +126,4 @@ def test_patch_ambassador(client: APIClient, create_ambassadors):
 
     response = client.patch(url, data, "application/json")
     assert response.status_code == HTTPStatus.OK
-    data = response.json()
-    assert data["status"] == "Not active"
+    assert response.json()["status"] == "Not active"

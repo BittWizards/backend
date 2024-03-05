@@ -48,8 +48,7 @@ def test_all_ambassadors(client: APIClient, create_ambassadors):
             assert element["tg_acc"] == f"ivanov{index + 1}"
             assert "created" in element
 
-            assert element["ya_programm"]["title"] == f"Programm{index + 1}"
-            assert element["ya_programm"]["description"] == f"{index + 1}"
+            assert element["ya_programm"] == f"Programm{index + 1}"
 
     url = "/api/v1/ambassadors/"
     response = client.get(url)
@@ -59,24 +58,25 @@ def test_all_ambassadors(client: APIClient, create_ambassadors):
     assert_instances(response.json())
 
 
-# @pytest.mark.django_db
-# def test_new_ambassadors(client: APIClient):
-#     def assert_instances(instances):
-#         for element, index in enumerate(instances):
-#             assert element["id"] == index + 1
-#             assert "user_pic" in element
-#             assert element["first_name"] == f"Иван{index + 1}"
-#             assert element["last_name"] == f"Иванов{index + 1}"
-#             assert element["middle_name"] == f"Иванович{index + 1}"
-#             assert element["ya_programm_name"] == f"Programm{index + 1}"
-#             assert "created" in element
+@pytest.mark.django_db
+def test_new_ambassadors(client: APIClient, create_new_ambassadors):
+    def assert_instances(instances):
+        for index, element in enumerate(instances):
+            assert element["id"] == index + 6
+            assert "image" in element
+            assert element["first_name"] == f"Иван{index + 6}"
+            assert element["last_name"] == f"Иванов{index + 6}"
+            assert element["middle_name"] == f"Иванович{index + 6}"
+            assert element["ya_programm"] == f"Programm{index + 1}"
+            assert element["status"] == "Clarify"
+            assert "created" in element
 
-#     url = "/api/v1/ambassadors/new/"
-#     response = client.get(url)
-#     assert response.status_code == HTTPStatus.OK
-#     assert isinstance(response.json(), list)
-#     assert len(response.json()) == 5
-#     assert_instances(response.json())
+    url = "/api/v1/ambassadors/?status=Clarify"
+    response = client.get(url)
+    assert response.status_code == HTTPStatus.OK
+    assert isinstance(response.json(), list)
+    assert len(response.json()) == 2
+    assert_instances(response.json())
 
 
 @pytest.mark.django_db
@@ -107,8 +107,8 @@ def test_ambassador_profile(client: APIClient, create_ambassadors):
         assert instance["size"]["clothes_size"] == "M"
         assert instance["size"]["foot_size"] == 37
 
-        assert isinstance(instance["ya_programm"], dict)
-        # assert instance["goal"] == "Закончить"
+        assert instance["ya_programm"] == "Programm1"
+        # assert instance["purpose"] == "Закончить"
         assert instance["work"] == "Беллинсгаузен"
         assert instance["education"] == "9 классов"
 

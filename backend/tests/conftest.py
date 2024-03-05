@@ -16,11 +16,13 @@ from orders.models import Merch, Order
 @pytest.fixture
 def create_ambassadors():
     programms = [
-        YandexProgramm.objects.create(title=f"Programm{i}", description=f"{i}")
+        YandexProgramm.objects.create(
+            id=i, title=f"Programm{i}", description=f"{i}"
+        )
         for i in range(1, 6)
     ]
     actions = [
-        Actions.objects.create(title=f"Actions{i}", description=f"{i}")
+        Actions.objects.create(id=i, title=f"Actions{i}", description=f"{i}")
         for i in range(1, 7)
     ]
     for i in range(1, 6):
@@ -59,6 +61,26 @@ def create_ambassadors():
             ambassador_id=ambassador,
             clothes_size="M",
             foot_size="37",
+        )
+
+
+@pytest.fixture
+def create_new_ambassadors(create_ambassadors):
+    for i in range(1, 3):
+        ambassador = Ambassador.objects.create(
+            id=5 + i,
+            email=f"ivan.ivanov{5 + i}@example.com",
+            first_name=f"Иван{5 + i}",
+            last_name=f"Иванов{5 + i}",
+            middle_name=f"Иванович{5 + i}",
+            gender="Male",
+            ya_programm_id=i,
+            phone=f"7(917)123-45-6{5 + i}",
+            tg_acc=f"ivanov{5 + i}",
+            # purpose="Закончить",
+            education="9 классов",
+            work="Беллинсгаузен",
+            status="Clarify",
         )
 
 
@@ -103,9 +125,16 @@ def create_orders(create_ambassadors):
         size=37,
     )
     for i in range(1, 6):
-        Order.objects.create(
+        order = Order.objects.create(
+            id=i,
             ambassador_id=i,
-            merch=[hoodie, plus, socks],
-            email=f"example{i}@example.com",
-            tg_acc=f"acc{i}",
+            phone=f"7(917)123-45-6{i}",
+            first_name="Имя",
+            last_name="Фамилия",
+            middle_name="Отчество",
+            country="Страна",
+            city="Город",
+            street_home="УлицаДом",
+            post_index=123456,
         )
+        order.merch.set((hoodie, plus, socks))

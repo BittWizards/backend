@@ -4,38 +4,38 @@ import pytest
 from rest_framework.test import APIClient
 
 create_data = {
-    "ambassador_id": 1,
-    "gender": "male",
-    "address": {
-        "country": "Страна",
-        "city": "Город1",
-        "street_home": "Улица1",
-        "post_index": "100001",
-    },
-    "sizes": {
-        "clothes_size": "XL",
-        "foot_size": "39-41",
-    },
-    "merch_type": "толстовка",
-    "email": "test@example.com",
+    "first_name": "Имя",
+    "last_name": "Фамилия",
+    "middle_name": "Отчество",
     "phone": "7 (917) 123-45-69",
-    "tg_acc": "ivanov",
+    "country": "Страна",
+    "city": "Город1",
+    "street_home": "Улица1",
+    "post_index": "100001",
+    # TODO
+    # "sizes": {
+    #     "clothes_size": "XL",
+    #     "foot_size": "39-41",
+    # },
+    # TODO
+    # "merch": "толстовка",
 }
 
 
 @pytest.mark.django_db
-def test_post_and_patch_merch(client: APIClient, create_orders):
+def test_post_and_patch_order(client: APIClient, create_orders):
     url = "/api/v1/orders/"
     data = create_data
 
     response = client.post(url, data, "application/json")
+    print(response.json())
     assert response.status_code == HTTPStatus.CREATED
     data["id"] = 1
     data["status"] = "created"
     data["track_number"] = None
     assert response.json() == data
 
-    url = "/api/v1/ambassador/1/content/1/"
+    url = "/api/v1/orders/1/"
     response = client.patch(
         url,
         {"status": "delivered", "track_number": "123h"},
@@ -47,10 +47,14 @@ def test_post_and_patch_merch(client: APIClient, create_orders):
 
 
 @pytest.mark.django_db
-def test_post_incorrect_merch(client: APIClient, create_orders):
+def test_post_incorrect_order(client: APIClient, create_orders):
     url = "/api/v1/orders/"
     data = create_data
     data.pop("address")
 
     response = client.post(url, data, "application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
+
+
+# TODO проверка на патч запрос
+# TODO проверка на патч запрос с изменением сатутса на доставлено, появляется время доставки
