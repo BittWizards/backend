@@ -3,6 +3,8 @@ python manage.py makemigrations
 
 python manage.py migrate
 
+python manage.py loaddata */fixtures/*.json
+
 python manage.py collectstatic --noinput
 
 cp -r collected_static/. /backend_static/static/
