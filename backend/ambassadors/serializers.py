@@ -113,37 +113,6 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "created",
         )
 
-    def create(self, validated_data):
-        ya_programm = validated_data.pop("ya_programm")
-        address = validated_data.pop("address")
-        size = validated_data.pop("size")
-        actions_data = validated_data.pop("actions")
-        ambassador = Ambassador.objects.create(
-            ya_programm=YandexProgramm.objects.get_or_create(**ya_programm)[0],
-            **validated_data,
-        )
-        address_data = AmbassadorAddress.objects.create(
-            **address,
-            ambassador_id=ambassador,
-        )
-        size_data = AmbassadorSize.objects.create(
-            ambassador_id=ambassador,
-            **size,
-        )
-        for action_data in actions_data:
-            current_action = Actions.objects.get_or_create(
-                **action_data["action"],
-            )
-            AmbassadorActions.objects.create(
-                action=current_action[0],
-                ambassador_id=ambassador,
-            )
-
-        ambassador.address = address_data
-        ambassador.size = size_data
-        ambassador.save()
-        return ambassador
-
     def update(self, instance, validated_data):
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
@@ -192,6 +161,100 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
             "tg_acc",
             "ya_programm",
         )
+
+
+class CreateAmbassadorSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор создания амбассадора через YandexForm.
+    """
+
+    full_name = serializers.CharField()
+    ya_programm = serializers.CharField()
+    extra_purpose = serializers.CharField(required=False)
+    foot_size = serializers.IntegerField()
+    clothes_size = serializers.CharField()
+    country = serializers.CharField()
+    city = serializers.CharField()
+    street_home = serializers.CharField()
+    post_index = serializers.IntegerField()
+    actions = serializers.CharField()
+
+    class Meta:
+        model = Ambassador
+        fields = (
+            "full_name",
+            "gender",
+            "ya_programm",
+            "country",
+            "city",
+            "street_home",
+            "post_index",
+            "email",
+            "phone",
+            "tg_acc",
+            "education",
+            "work",
+            "purpose",
+            "extra_purpose",
+            "actions",
+            "clothes_size",
+            "foot_size",
+            "extra_info",
+        )
+
+    def create(self, validated_data):
+        full_name = validated_data.pop("full_name")
+        ya_programm = validated_data.pop("ya_programm")
+        actions = validated_data.pop("actions")
+        purpose = validated_data.pop("purpose")
+        foot_size = validated_data.pop("foot_size")
+        clothes_size = validated_data.pop("clothes_size")
+        country = validated_data.pop("country")
+        city = validated_data.pop("city")
+        street_home = validated_data.pop("street_home")
+        post_index = validated_data.pop("post_index")
+
+        if not purpose:
+            purpose = validated_data.pop("extra_purpose")
+
+        prepared_fio = full_name.split()
+
+        ambassador = Ambassador.objects.create(
+            ya_programm=YandexProgramm.objects.get_or_create(
+                title=ya_programm
+            )[0],
+            purpose=purpose,
+            last_name=prepared_fio[0],
+            first_name=prepared_fio[1],
+            middle_name=prepared_fio[2],
+            **validated_data,
+        )
+        address_data = AmbassadorAddress.objects.create(
+            ambassador_id=ambassador,
+            country=country,
+            city=city,
+            street_home=street_home,
+            post_index=post_index,
+        )
+        size_data = AmbassadorSize.objects.create(
+            ambassador_id=ambassador,
+            clothes_size=clothes_size,
+            foot_size=foot_size,
+        )
+        action_data = actions.split(", ")
+        for action in action_data:
+            current_action = Actions.objects.get_or_create(
+                title=action,
+            )
+            AmbassadorActions.objects.create(
+                action=current_action[0],
+                ambassador_id=ambassador,
+            )
+
+        ambassador.address = address_data
+        ambassador.size = size_data
+        ambassador.save()
+        return ambassador
 
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):

@@ -90,6 +90,9 @@ class Ambassador(AbstractUser):
         null=True,
         default="profiles/default_pic.jpeg",
     )
+    extra_info = models.CharField(
+        verbose_name="Дополнительная информация", blank=True, max_length=2000
+    )
 
     class Meta:
         verbose_name = "Амбассадор"
@@ -110,7 +113,11 @@ class Actions(models.Model):
     """
 
     title = models.CharField(verbose_name="Заголовок", max_length=150)
-    description = models.CharField(verbose_name="Описание", max_length=2000)
+    description = models.CharField(
+        verbose_name="Описание",
+        max_length=2000,
+        null=True,
+    )
 
     class Meta:
         verbose_name = "Действие"

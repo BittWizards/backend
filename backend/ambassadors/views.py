@@ -17,6 +17,7 @@ from .serializers import (
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
+    CreateAmbassadorSerializer,
     YandexProgrammSerializer,
 )
 
@@ -35,6 +36,8 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return AmbassadorListSerializer
+        elif self.action == "create":
+            return CreateAmbassadorSerializer
         else:
             return AmbassadorSerializer
 
