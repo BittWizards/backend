@@ -129,6 +129,7 @@ class AllContentsViewSet(ListViewSet):
         )
         return queryset
 
+    @extend_schema(responses=NewContentSerializer(many=True))
     @action(methods=["get"], detail=False, url_path="new")
     def new_content(self, request, *args, **kwargs):
         """Просмотр новых заявок на контент"""

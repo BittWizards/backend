@@ -83,6 +83,7 @@ class Documents(models.Model):
         on_delete=models.CASCADE,
     )
     document = models.URLField(
+        max_length=400,
         verbose_name="Ссылка на документ",
     )
 

@@ -67,7 +67,10 @@ class Ambassador(AbstractUser):
         on_delete=models.SET_NULL,
         null=True,
     )
-    education = models.CharField(verbose_name="Образование", max_length=1500)
+    purpose = models.CharField(
+        verbose_name="цель обучения", max_length=300, null=True
+    )
+    education = models.CharField(verbose_name="Образование", max_length=300)
     work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
         verbose_name="Статус", max_length=50, choices=AmbassadorStatus.choices

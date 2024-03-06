@@ -72,6 +72,7 @@ class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
     email = serializers.CharField(read_only=True)
     phone = serializers.CharField(read_only=True)
     status = serializers.CharField(read_only=True)
+    ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
         model = Ambassador
@@ -118,15 +119,13 @@ class ContentSerializers(serializers.ModelSerializer):
 class PostContentSerializer(serializers.ModelSerializer):
     """Сериализатор для создания и изменения контента."""
 
-    id = serializers.IntegerField(required=False)
     name = serializers.CharField(required=False)
-    tg_acc = serializers.CharField(validators=(tg_acc_validator,))
-    files = serializers.CharField(required=False)
+    tg_acc = serializers.CharField()
+    files = serializers.URLField(required=False)
 
     class Meta:
         model = Content
         fields = (
-            "id",
             "link",
             "start_guide",
             "type",
@@ -141,34 +140,49 @@ class PostContentSerializer(serializers.ModelSerializer):
     def create(self, validated_data) -> Content:
         fio = validated_data.pop("name")  # noqa: F841
         tg_acc = validated_data.pop("tg_acc")
-        documents = None
+        files = None
         if "files" in validated_data:
-            documents = validated_data.pop("files").split(",")
+            files = validated_data.pop("files").split(",")
         ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
         with transaction.atomic():
             content = Content.objects.create(
                 **validated_data, ambassador=ambassador
             )
-            if documents:
+            if files:
                 docs_to_create = [
-                    Documents(content=content, document=docs)
-                    for docs in documents
+                    Documents(content=content, document=file) for file in files
                 ]
                 Documents.objects.bulk_create(docs_to_create)
 
         return content
 
     def update(self, instance, validated_data):
-        super().update()
+        super().update(instance, validated_data)
         if not validated_data.get("accepted"):
             return instance
-
-    # функция подсчета контента и присвоения достижений
+        # функция подсчета контента и присвоения достижений
+        return instance
 
     def to_representation(self, instance):
         return ContentSerializers(
             instance, context={"request": self.context.get("request")}
         ).data
+
+    def validate(self, data):
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        if "files" in data:
+            files = data.pop("files").split(",")
+            new_files = ""
+            for file in files:
+                if re.search(r"\w*$", file).group(0) in [
+                    "png",
+                    ["jpg"],
+                    ["jpeg"],
+                ]:
+                    new_files += file + ","
+            data["files"] = new_files
+        return data
 
 
 class PromocodeSerializer(serializers.ModelSerializer):
