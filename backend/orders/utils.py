@@ -18,10 +18,10 @@ def editing_response_data(query: list[dict]) -> list[dict]:
     """Добавление недостающего мерча к амбассадору"""
     all_merch = Merch.objects.distinct("name").values("name")
     for obj in query:
-        [obj["merch"].append({
-            "name": merch["name"],
-            "count": 0
-        }) for merch in all_merch if merch["name"] not in [
-            product["name"] for product in obj['merch']
-        ]]
+        [
+            obj["merch"].append({"name": merch["name"], "count": 0})
+            for merch in all_merch
+            if merch["name"]
+            not in [product["name"] for product in obj["merch"]]
+        ]
     return query

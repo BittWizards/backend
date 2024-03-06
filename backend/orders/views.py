@@ -25,7 +25,7 @@ from orders.serializers import (
     MerchSerializer,
     OrderSerializer,
 )
-from orders.utils import get_filtered_merch_objects, editing_response_data
+from orders.utils import editing_response_data, get_filtered_merch_objects
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
@@ -96,9 +96,7 @@ class AllMerchToAmbassadorView(views.APIView):
             Order.objects.filter(ambassador=OuterRef("pk"))
             .values("merch__name")
             .annotate(
-                data=JSONObject(
-                    name=F("merch__name"), count=Count("merch")
-                )
+                data=JSONObject(name=F("merch__name"), count=Count("merch"))
             )
             .values_list("data")
         )
