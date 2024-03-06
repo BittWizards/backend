@@ -41,6 +41,7 @@ class AllContentSerializer(serializers.ModelSerializer):
     instagram_count = serializers.IntegerField(default=0)
     linkedin_count = serializers.IntegerField(default=0)
     other_count = serializers.IntegerField(default=0)
+    last_date = serializers.DateTimeField()
 
     class Meta:
         model = Ambassador
@@ -59,6 +60,7 @@ class AllContentSerializer(serializers.ModelSerializer):
             "instagram_count",
             "linkedin_count",
             "other_count",
+            "last_date",
         )
 
 
