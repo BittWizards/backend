@@ -1,3 +1,4 @@
+import datetime as dt
 from http import HTTPStatus
 
 import pytest
@@ -35,27 +36,38 @@ def test_post_and_patch_order(client: APIClient, create_orders):
     data["track_number"] = None
     assert response.json() == data
 
-    url = "/api/v1/orders/1/"
-    response = client.patch(
-        url,
-        {"status": "delivered", "track_number": "123h"},
-        "application/json",
-    )
-    assert response.status_code == HTTPStatus.OK
-    data["status"] == "delivered"
-    assert response.json() == data
-
 
 @pytest.mark.django_db
 def test_post_incorrect_order(client: APIClient, create_orders):
     url = "/api/v1/orders/"
     data = create_data
-    data.pop("address")
+    data.pop("phone")
 
     response = client.post(url, data, "application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
 
 
-# TODO проверка на патч запрос
-""" TODO проверка на патч запрос с изменением сатутса на доставлено,
-должно обязательно приходить дата доставки"""
+@pytest.mark.django_db
+def test_patch_status_order(client: APIClient, create_orders):
+    url = "/api/v1/orders/1/"
+
+    now = dt.datetime.now()
+
+    response = client.patch(
+        url,
+        {"status": "delivered", "delivered_at": now},
+        "application/json",
+    )
+    assert response.status_code == HTTPStatus.OK
+
+
+@pytest.mark.django_db
+def test_patch_status_without_time_order(client: APIClient, create_orders):
+    url = "/api/v1/orders/1/"
+
+    response = client.patch(
+        url,
+        {"status": "delivered"},
+        "application/json",
+    )
+    assert response.status_code == HTTPStatus.BAD_REQUEST

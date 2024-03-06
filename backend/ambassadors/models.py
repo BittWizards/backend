@@ -73,7 +73,10 @@ class Ambassador(AbstractUser):
     education = models.CharField(verbose_name="Образование", max_length=300)
     work = models.CharField(verbose_name="Работа", blank=True, null=True)
     status = models.CharField(
-        verbose_name="Статус", max_length=50, choices=AmbassadorStatus.choices
+        verbose_name="Статус",
+        max_length=50,
+        choices=AmbassadorStatus.choices,
+        default=AmbassadorStatus.CLARIFY,
     )
     created = models.DateTimeField(
         verbose_name="Дата и время создания", default=timezone.now

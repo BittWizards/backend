@@ -1,5 +1,6 @@
 # flake8: noqa
 import pytest
+from django.conf import settings
 
 from ambassadors.models import (
     Actions,
@@ -86,11 +87,20 @@ def create_new_ambassadors(create_ambassadors):
 
 @pytest.fixture
 def create_content(create_ambassadors):
+    ids = []
     for i in range(1, 6):
         content = Content.objects.create(
             ambassador_id=i,
             link=f"http://localhost/{i}",
             accepted=True,
+            type="review",
+        )
+        ids.append(content.id)
+        content = Content.objects.create(
+            ambassador_id=i,
+            link=f"http://localhost/{i}",
+            accepted=True,
+            platform="habr",
         )
         Documents.objects.create(
             content=content,
@@ -100,6 +110,7 @@ def create_content(create_ambassadors):
             content=content,
             document=f"http://localhost:2/{i}",
         )
+    return ids
 
 
 @pytest.fixture

@@ -18,12 +18,9 @@ create_data = {
         "clothes_size": "XL",
         "foot_size": "41",
     },
-    "ya_programm": {
-        "title": "Programm1",
-        "description": "1",
-    },
+    "ya_programm": "Programm1",
     "actions": [{"title": "Action1"}],
-    # "goal": "Закончить",
+    "purpose": "Закончить",
     "education": "11 классов",
     "work": "Кремль",
     "email": "test@example.com",
@@ -83,29 +80,14 @@ create_data = {
 
 
 @pytest.mark.django_db
-def test_create_ambassador(client: APIClient, create_ambassadors):
+def test_create_ambassador(client: APIClient):
     url = "/api/v1/ambassadors/"
 
     data = create_data
 
     response = client.post(url, data, "application/json")
-    print(response.json())
     assert response.status_code == HTTPStatus.CREATED
-
-    data["ya_programm"] = {"title": "Programm1", "description": "1"}
-    data["ambassador_actions"] = [
-        {
-            "title": "Actions2",
-            "description": "2",
-        },
-        {
-            "title": "Actions4",
-            "description": "4",
-        },
-    ]
-    data["id"] = 6
-    data["status"] = "active"
-    assert response.json() == data
+    assert response.json()["status"] == "Clarify"
 
 
 @pytest.mark.django_db

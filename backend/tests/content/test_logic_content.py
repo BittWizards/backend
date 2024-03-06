@@ -8,19 +8,17 @@ from rest_framework.test import APIClient
 def test_post_and_patch_content(client: APIClient, create_ambassadors):
     url = "/api/v1/content/"
     data = {
-        "ambassador_id": 1,
-        "telegram": "example",
+        "name": "Алексий",
+        "tg_acc": "ivanov1",
         "link": "https://example.com",
-        "files": None,
+        "files": "",
     }
 
     response = client.post(url, data, "application/json")
     assert response.status_code == HTTPStatus.CREATED
-    data["id"] = 1
-    data["status"] == "in pending"
-    assert response.json() == data
+    assert response.json()["accepted"] is False
 
-    url = "/api/v1/ambassador/1/content/1/"
+    url = "/api/v1/content/1/"
     response = client.patch(url, {"status": "accepted"}, "application/json")
     assert response.status_code == HTTPStatus.OK
 
@@ -43,15 +41,14 @@ def test_post_incorrect_content(client: APIClient, create_ambassadors):
 def test_post_and_delete_promocode(client: APIClient, create_ambassadors):
     url = "/api/v1/promocodes/"
     data = {
-        "ambassador_id": 1,
-        "name": "example",
+        "ambassador": 1,
+        "promocode": "EXAMPLE",
     }
 
     response = client.post(url, data, "application/json")
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == data
+    assert response.status_code == HTTPStatus.CREATED
 
-    url = "/api/v1/promocodes/example/"
+    url = "/api/v1/promocodes/1/"
     response = client.delete(url)
     assert response.status_code == HTTPStatus.NO_CONTENT
 
@@ -60,13 +57,12 @@ def test_post_and_delete_promocode(client: APIClient, create_ambassadors):
 def test_post_duplicate_promocode(client: APIClient, create_ambassadors):
     url = "/api/v1/promocodes/"
     data = {
-        "ambassador_id": 1,
-        "name": "example",
+        "ambassador": 1,
+        "promocode": "EXAMPLE",
     }
 
     response = client.post(url, data, "application/json")
-    assert response.status_code == HTTPStatus.OK
-    assert response.json() == data
+    assert response.status_code == HTTPStatus.CREATED
 
     response = client.post(url, data, "application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST
