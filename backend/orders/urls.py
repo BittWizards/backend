@@ -18,10 +18,10 @@ urlpatterns = [
         AmbassadorOrdersViewSet.as_view({"get": "retrieve"}),
         name="ambassador_orders",
     ),
-    path("", include(router_merch.urls)),
     path(
         "merch_to_ambassador/",
         AllMerchToAmbassadorView.as_view(),
         name="merch_to_ambassador",
     ),
+    path("", include(router_merch.urls)),
 ]

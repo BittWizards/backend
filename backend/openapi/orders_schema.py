@@ -13,6 +13,7 @@ from orders.serializers import (
 
 merch_example = {"name": "string", "size": "XS"}
 order_one_request_example = {
+    "ambassador": 0,
     "first_name": "string",
     "last_name": "string",
     "middle_name": "string",
@@ -31,7 +32,6 @@ order_two_request_example = {
 }
 order_response_example = {
     "id": 0,
-    "ambassador": 0,
     "created_date": "2024-02-29",
     "status": "string",
     "total_cost": 2147483647,
@@ -70,6 +70,20 @@ all_merch_to_ambassador_example = {
 }
 
 ambassador_orders_extend_schema_view = {
+    "retrieve": extend_schema(
+        summary="Получение всех заявок относящихся к амбассадору по его ID",
+        description="Возращает список всех заявок относящихся к амбассадору",
+        responses={
+            200: OpenApiResponse(
+                description="Список заявок на амбассадора",
+                response=AmbassadorOrderListSerializer,
+            )
+        },
+        tags=["Заявки"],
+    ),
+}
+
+orders_extend_schema_view = {
     "create": extend_schema(
         summary="Создание новой заявки",
         description="Создает новый заказ в базе",
@@ -88,20 +102,6 @@ ambassador_orders_extend_schema_view = {
         },
         tags=["Заявки"],
     ),
-    "retrieve": extend_schema(
-        summary="Получение всех заявок относящихся к амбассадору по его ID",
-        description="Возращает список всех заявок относящихся к амбассадору",
-        responses={
-            200: OpenApiResponse(
-                description="Список заявок на амбассадора",
-                response=AmbassadorOrderListSerializer,
-            )
-        },
-        tags=["Заявки"],
-    ),
-}
-
-orders_extend_schema_view = {
     "retrieve": extend_schema(
         summary="Получение заявки по ID",
         description="Возвращает заявку по ID",

@@ -35,7 +35,7 @@ class AmbassadorOrdersViewSet(RetrieveMixin):
     queryset = Ambassador.objects.all()
     serializer_class = AmbassadorOrderListSerializer
 
-    def get_object(self) -> Order:
+    def get_object(self) -> Ambassador:
         ambassador_id = self.kwargs.get("ambassador_id")
         return Ambassador.objects.get(id=ambassador_id)
 
