@@ -5,9 +5,9 @@ from orders.models import Merch, Order
 
 
 class MerchAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "cost", "size")
+    list_display = ("id", "name", "size")
     search_fields = ("name", "size")
-    list_filter = ("name", "cost", "size")
+    list_filter = ("name", "size")
     empty_value_display = "-пусто-"
 
 
