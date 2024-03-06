@@ -6,8 +6,8 @@ class Gender(models.TextChoices):
     Выбор гендера при создании амбассадора.
     """
 
-    MALE = "Male", "Мужчина"
-    FEMALE = "Female", "Женщина"
+    MALE = "M", "Мужчина"
+    FEMALE = "Ж", "Женщина"
 
 
 class AmbassadorStatus(models.TextChoices):
@@ -18,7 +18,7 @@ class AmbassadorStatus(models.TextChoices):
     ACTIVE = "Active", "Активный"
     PAUSE = "Pause", "На паузе"
     CLARIFY = "Clarify", "Уточняется"
-    NOT_ACTIVE = "Not active", "Не активный"
+    NOT_ACTIVE = "Not_active", "Не активный"
 
 
 class AmbassadorsClothesSizes(models.TextChoices):
