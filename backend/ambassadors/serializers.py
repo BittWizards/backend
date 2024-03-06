@@ -19,7 +19,7 @@ class YandexProgrammSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = YandexProgramm
-        fields = ("title", "description")
+        fields = ("title",)
 
 
 class AmbassadorAddressSerializer(serializers.ModelSerializer):
@@ -38,7 +38,6 @@ class AmbassadorActionsSerializer(serializers.ModelSerializer):
     """
 
     title = serializers.CharField(source="action.title")
-    # description = serializers.CharField(source="action.description")
 
     class Meta:
         model = AmbassadorActions
@@ -63,7 +62,7 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
     Сериализатор для выдачи списка объектов модели Ambassador.
     """
 
-    ya_programm = YandexProgrammSerializer()
+    ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
         model = Ambassador
@@ -85,7 +84,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
     Сериализатор единственного объекта модели Ambassador.
     """
 
-    ya_programm = YandexProgrammSerializer()
+    ya_programm = serializers.CharField(source="ya_programm.title")
     address = AmbassadorAddressSerializer()
     size = AmbassadorSizeSerializer()
     actions = AmbassadorActionsSerializer(many=True)
@@ -104,6 +103,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "email",
             "tg_acc",
             "ya_programm",
+            "purpose",
             "education",
             "work",
             "address",
@@ -179,7 +179,7 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
     """Сериалайзер для отображения короткого списка полей амбассадора
     Поля: id, image, first_name, last_name, status, tg_acc, ya_programm"""
 
-    ya_programm = serializers.SerializerMethodField()
+    ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
         model = Ambassador
@@ -193,14 +193,12 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
             "ya_programm",
         )
 
-    def get_ya_programm(self, obj):
-        return obj.ya_programm.title
-
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
     """Родительский сериализатор для контента промокодов."""
 
     city = serializers.SerializerMethodField()
+    ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
         model = Ambassador
