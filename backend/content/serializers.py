@@ -156,7 +156,7 @@ class PostContentSerializer(serializers.ModelSerializer):
             files = validated_data.pop("files").split(",")
         ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
         with transaction.atomic():
-            content = Content.objects.create(
+            content = Content.objects.get_or_create(
                 **validated_data, ambassador=ambassador
             )
             if files:
