@@ -126,9 +126,32 @@ class AllContentsViewSet(ListViewSet):
                 .annotate(count=Count("pk"))
                 .values("count")
             ),
+            last_date=Subquery(
+                Content.objects.filter(
+                    ambassador=OuterRef("pk"),
+                    accepted=True,
+                )
+                .order_by("-created_at")
+                .values("ambassador")
+                .values("created_at")[:1]
+            ),
         )
         return queryset
 
+
+@extend_schema(tags=["Контент"])
+class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
+    """Просмотр, создание, изменение, удаление карточки контента"""
+
+    queryset = Content.objects.all().select_related("ambassador")
+    http_method_names = ["get", "post", "patch", "delete"]
+
+    def get_serializer_class(self):
+        if self.request.method in ["POST", "PATCH"]:
+            return PostContentSerializer
+        return ContentSerializers
+
+    @extend_schema(responses=NewContentSerializer(many=True))
     @action(methods=["get"], detail=False, url_path="new")
     def new_content(self, request, *args, **kwargs):
         """Просмотр новых заявок на контент"""
@@ -139,15 +162,3 @@ class AllContentsViewSet(ListViewSet):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
-
-
-@extend_schema(tags=["Контент"])
-class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
-    """Просмотр, создание, изменение, удаление карточки контента"""
-
-    queryset = Content.objects.all().select_related("ambassador")
-
-    def get_serializer_class(self):
-        if self.request.method in ["POST", "PATCH"]:
-            return PostContentSerializer
-        return ContentSerializers

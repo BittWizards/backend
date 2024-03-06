@@ -8,34 +8,22 @@ def get_filtered_merch_objects(merch_data: list[dict]) -> list[Merch]:
     существующие объекты мерча в базе"""
     query = []
     for data in merch_data:
-        merch = Merch.objects.get(name=data.get("name"), size=data.get("size"))
+        merch = Merch.objects.filter(
+            name=data.get("name"), size=data.get("size") or None
+        )
         validate_exsisting_merch(merch)
-        query.append(merch)
+        query.append(merch[0])
     return query
 
 
-def modification_of_response_dict(query: list[dict]) -> list[dict]:
-    """Агрегация по id амбассадора данных о мерче на выходе.
-    Берет все данные, и соединяет мерч по id амбассадора"""
-    uniq = set(obj["id"] for obj in query)
-    result = []
-    i = 0
-    for id in uniq:
-        # Вычисление количествbа таких же id в словаре
-        k = sum(1 for q in query if q["id"] == id)
-        result.append(
-            {
-                "id": query[i]["id"],
-                "first_name": query[i]["first_name"],
-                "last_name": query[i]["last_name"],
-                # Добавление мерча относящегося к амбассадору
-                "merch": {
-                    query[j]["merch_name"]: query[j]["count"] for j in range(k)
-                },
-                "total": query[i]["total"],
-            }
-        )
-        # Удаление всех записей относящихся к id
-        for _ in range(k):
-            query.pop(0)
-    return result
+def editing_response_data(query: list[dict]) -> list[dict]:
+    """Добавление недостающего мерча к амбассадору"""
+    all_merch = Merch.objects.distinct("name").values("name")
+    for obj in query:
+        [
+            obj["merch"].append({"name": merch["name"], "count": 0})
+            for merch in all_merch
+            if merch["name"]
+            not in [product["name"] for product in obj["merch"]]
+        ]
+    return query

@@ -1,12 +1,14 @@
-from django.db.models import Count, F, QuerySet, Sum
+from django.contrib.postgres.expressions import ArraySubquery
+from django.db.models import Count, F, Max, OuterRef, Sum
+from django.db.models.functions import JSONObject
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema_view
-from rest_framework import viewsets
+from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import views, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer
-from rest_framework.status import HTTP_201_CREATED
+from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
 from openapi.orders_schema import (
@@ -16,18 +18,14 @@ from openapi.orders_schema import (
     orders_extend_schema_view,
 )
 from orders.mixins import CreateRetrieveMixin
-from orders.models import Merch, Order
+from orders.models import Merch, Order, OrderStatus
 from orders.serializers import (
-    AllMerchToAmbassadorSerializer,
     AllOrdersListSerialiazer,
     AmbassadorOrderListSerializer,
     MerchSerializer,
     OrderSerializer,
 )
-from orders.utils import (
-    get_filtered_merch_objects,
-    modification_of_response_dict,
-)
+from orders.utils import editing_response_data, get_filtered_merch_objects
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
@@ -88,23 +86,39 @@ class MerchViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = MerchSerializer
 
 
-@extend_schema_view(**all_merch_to_ambassador_schema_view)
-class AllMerchToAmbassadorViewSet(viewsets.ReadOnlyModelViewSet):
-    """ViewSet для отображения всех амбассадоров
+@extend_schema(**all_merch_to_ambassador_schema_view)
+class AllMerchToAmbassadorView(views.APIView):
+    """View для отображения всех амбассадоров
     и мерча который был им отправлен"""
 
-    serializer_class = AllMerchToAmbassadorSerializer
-
-    def get_queryset(self) -> QuerySet:
-        query = Ambassador.objects.annotate(
-            merch_name=F("orders__merch__name"),
-            count=Count("orders__merch__name"),
-            total=Sum("orders__total_cost"),
-        ).order_by("id")
-        return query
-
-    def finalize_response(
-        self, request: Request, response: Response, *args, **kwargs
-    ) -> Response:
-        response.data = modification_of_response_dict(response.data)
-        return super().finalize_response(request, response, *args, **kwargs)
+    def get(self, request: Request) -> Response:
+        subsuery = (
+            Order.objects.filter(ambassador=OuterRef("pk"))
+            .values("merch__name")
+            .annotate(
+                data=JSONObject(name=F("merch__name"), count=Count("merch"))
+            )
+            .values_list("data")
+        )
+        query = (
+            Ambassador.objects.annotate(
+                merch=ArraySubquery(subsuery),
+                last_delivery_date=Max("orders__delivered_date"),
+                c=Count("merch", distinct=True),
+            )
+            .filter(orders__status=OrderStatus.DELIVERED)
+            .order_by("c")
+            .annotate(total=Sum("orders__total_cost", distinct=True))
+            .values(
+                "id",
+                "first_name",
+                "last_name",
+                "image",
+                "tg_acc",
+                "merch",
+                "last_delivery_date",
+                "total",
+            )
+        )
+        query = editing_response_data(list(query))
+        return Response(query, status=HTTP_200_OK)

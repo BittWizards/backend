@@ -17,6 +17,7 @@ from content.views import (
     PromoCodeViewSet,
 )
 from orders.urls import urlpatterns as orders_url
+from websocket.views import index, room
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
@@ -35,12 +36,13 @@ v1_urlpatterns = [
 ]
 api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),
-    # path("auth/", AuthAPIView.as_view(), name="registration"),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
+    path("<str:room_name>/", room, name="room"),
     path("tg", bot_view),
+    path("", index, name="index"),
 ]
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
