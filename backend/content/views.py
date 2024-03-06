@@ -143,7 +143,11 @@ class AllContentsViewSet(ListViewSet):
 class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     """Просмотр, создание, изменение, удаление карточки контента"""
 
-    queryset = Content.objects.all().select_related("ambassador")
+    queryset = (
+        Content.objects.all()
+        .select_related("ambassador")
+        .prefetch_related("documents")
+    )
     http_method_names = ["get", "post", "patch", "delete"]
 
     def get_serializer_class(self):

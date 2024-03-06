@@ -51,6 +51,7 @@ class AllContentSerializer(serializers.ModelSerializer):
             "last_name",
             "first_name",
             "tg_acc",
+            "status",
             "rating",
             "review_count",
             "habr_count",
@@ -97,11 +98,18 @@ class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
         return city
 
 
+class DocumentsSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Documents
+        fields = ("document",)
+
+
 class ContentSerializers(serializers.ModelSerializer):
     """Сериализатор для карточек контента."""
 
     ambassador = AmbassadorForContentPromoCardSerializer()
     id = serializers.IntegerField(required=False)
+    documents = DocumentsSerializers(many=True, read_only=True)
 
     class Meta:
         model = Content
@@ -115,6 +123,7 @@ class ContentSerializers(serializers.ModelSerializer):
             "comment",
             "accepted",
             "ambassador",
+            "documents",
         )
 
 
@@ -123,7 +132,7 @@ class PostContentSerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(required=False)
     tg_acc = serializers.CharField()
-    files = serializers.URLField(required=False)
+    files = serializers.URLField(required=False, allow_blank=True)
 
     class Meta:
         model = Content
@@ -177,13 +186,14 @@ class PostContentSerializer(serializers.ModelSerializer):
             files = data.pop("files").split(",")
             new_files = ""
             for file in files:
-                if re.search(r"\w*$", file).group(0) in [
-                    "png",
-                    ["jpg"],
-                    ["jpeg"],
-                ]:
-                    new_files += file + ","
-            data["files"] = new_files
+                if len(files) > 0:
+                    if re.search(r"\w*$", file).group(0) in [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                    ]:
+                        new_files += file + ","
+                        data["files"] = new_files
         return data
 
 

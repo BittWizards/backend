@@ -68,7 +68,7 @@ class Ambassador(AbstractUser):
         null=True,
     )
     purpose = models.CharField(
-        verbose_name="цель обучения", max_length=300, null=True
+        verbose_name="цель обучения", max_length=300, null=True, blank=True
     )
     education = models.CharField(verbose_name="Образование", max_length=300)
     work = models.CharField(verbose_name="Работа", blank=True, null=True)
