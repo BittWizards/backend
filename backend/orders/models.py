@@ -38,7 +38,7 @@ class Merch(models.Model):
     name = models.CharField(
         verbose_name="Название продукции",
         max_length=60,
-        choices=MerchTypes.choices
+        choices=MerchTypes.choices,
     )
     cost = models.IntegerField(
         verbose_name="Стоимость продукции",
