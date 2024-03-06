@@ -30,13 +30,30 @@ from orders.utils import editing_response_data, get_filtered_merch_objects
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
 class AmbassadorOrdersViewSet(CreateRetrieveMixin):
-    """ViewSet для заявок на мерч"""
+    """ViewSet для заявок на мерч по конкретному амбассадору"""
 
-    queryset = Order.objects.all()
+    queryset = Ambassador.objects.all()
+    serializer_class = AmbassadorOrderListSerializer
 
     def get_object(self) -> Order:
         ambassador_id = self.kwargs.get("ambassador_id")
         return Ambassador.objects.get(id=ambassador_id)
+
+
+@extend_schema_view(**orders_extend_schema_view)
+class OrdersViewSet(viewsets.ModelViewSet):
+    """ViewSet для заявок на мерч"""
+
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    http_method_names = ["get", "post", "patch", "delete"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["ambassador__id", "status"]
+
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = AllOrdersListSerialiazer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -51,31 +68,10 @@ class AmbassadorOrdersViewSet(CreateRetrieveMixin):
 
     def perform_create(self, serializer: Serializer, merch: Merch) -> None:
         ambassador = get_object_or_404(
-            Ambassador, pk=self.kwargs["ambassador_id"]
+            Ambassador, pk=self.request.data["ambassador"]
         )
         serializer.validated_data["ambassador"] = ambassador
         serializer.save(merch=merch)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return OrderSerializer
-        return AmbassadorOrderListSerializer
-
-
-@extend_schema_view(**orders_extend_schema_view)
-class OrdersViewSet(viewsets.ModelViewSet):
-    """ViewSet для заявок на мерч"""
-
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    http_method_names = ["get", "patch", "delete"]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["ambassador__id", "status"]
-
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = AllOrdersListSerialiazer(queryset, many=True)
-        return Response(serializer.data)
 
 
 @extend_schema_view(**merch_extend_schema_view)

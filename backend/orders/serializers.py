@@ -24,6 +24,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             "id",
+            "ambassador",
             "first_name",
             "last_name",
             "middle_name",
@@ -38,7 +39,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "comment",
         )
         read_only_fields = (
-            "ambassador",
             "created_date",
             "merch",
             "total_cost",
