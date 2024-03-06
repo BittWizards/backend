@@ -8,6 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from content.mixins import ListViewSet
 from content.models import Content, Promocode
 
 from .models import Ambassador, YandexProgramm
@@ -80,7 +81,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
 
 
 @extend_schema(tags=["Программы Яндекса"])
-class YandexProgrammViewSet(viewsets.ModelViewSet):
+class YandexProgrammViewSet(ListViewSet):
     """
     Viewset модели YandexProgramm.
     """
