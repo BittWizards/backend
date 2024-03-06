@@ -25,7 +25,7 @@ from orders.serializers import (
     MerchSerializer,
     OrderSerializer,
 )
-from orders.utils import get_filtered_merch_objects
+from orders.utils import get_filtered_merch_objects, editing_response_data
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
@@ -94,10 +94,10 @@ class AllMerchToAmbassadorView(views.APIView):
     def get(self, request: Request) -> Response:
         subsuery = (
             Order.objects.filter(ambassador=OuterRef("pk"))
-            .values("merch")
+            .values("merch__name")
             .annotate(
                 data=JSONObject(
-                    merch_name=F("merch__name"), count=Count("merch__name")
+                    name=F("merch__name"), count=Count("merch")
                 )
             )
             .values_list("data")
@@ -106,10 +106,10 @@ class AllMerchToAmbassadorView(views.APIView):
             Ambassador.objects.annotate(
                 merch=ArraySubquery(subsuery),
                 last_delivery_date=Max("orders__delivered_date"),
-                merch_count=Count("merch", distinct=True),
+                c=Count("merch", distinct=True),
             )
-            .filter(orders__status=OrderStatus.CREATED)
-            .order_by("merch_count")
+            .filter(orders__status=OrderStatus.DELIVERED)
+            .order_by("c")
             .annotate(total=Sum("orders__total_cost", distinct=True))
             .values(
                 "id",
@@ -122,4 +122,5 @@ class AllMerchToAmbassadorView(views.APIView):
                 "total",
             )
         )
-        return Response(list(query), status=HTTP_200_OK)
+        query = editing_response_data(list(query))
+        return Response(query, status=HTTP_200_OK)
