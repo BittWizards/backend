@@ -14,7 +14,7 @@ def new_ambassador_handler(**kwargs) -> None:
         "notification",
         {
             "type": "chat.message",
-            "message": "ambassador",
+            "message": "ambassadors/?status=Clarify",
         },
     )
 
@@ -26,6 +26,6 @@ def new_content_handler(**kwargs) -> None:
         "notification",
         {
             "type": "chat.message",
-            "message": "content",
+            "message": "content/new/",
         },
     )

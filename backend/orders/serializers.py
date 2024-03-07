@@ -1,34 +1,27 @@
-from rest_framework import serializers, status
-from rest_framework.exceptions import ValidationError
+from django.db import transaction
+from django.shortcuts import get_object_or_404
+from rest_framework import serializers
 
 from ambassadors.models import Ambassador
 from ambassadors.serializers import ShortAmbassadorSerializer
 from orders.models import Merch, Order, OrderMerch, OrderStatus
-
-# from orders.utils import get_filtered_merch_objects
-from orders.validators import validate_editing_order  # , validate_merch_num
+from orders.validators import validate_editing_order
 
 
 def update_merch(instance: Order, data: list[dict]) -> None:
-    """Перезаписываем мерч в заявку."""
-    try:
-        prev_order_merch = list(instance.merch.all())
-        order_merch = []
-        for product in data:
-            item = OrderMerch(
-                merch_in_order=Merch.objects.get(name=product["name"]),
-                order=instance,
-                size=product.get("size"),
-            )
-            order_merch.append(item)
-        OrderMerch.objects.bulk_create(order_merch)
-        for e in prev_order_merch:
-            e.delete()
-    except Exception as e:
-        raise ValidationError(
-            f"Не удалось изменить мерч в заявке: {e}",
-            status.HTTP_400_BAD_REQUEST,
+    """Перезаписываем мерч в заявке."""
+    prev_order_merch = list(instance.merch.all())
+    order_merch = []
+    for product in data:
+        item = OrderMerch(
+            merch_in_order=get_object_or_404(Merch, name=product["name"]),
+            order=instance,
+            size=product.get("size"),
         )
+        order_merch.append(item)
+    OrderMerch.objects.bulk_create(order_merch)
+    for e in prev_order_merch:
+        e.delete()
 
 
 class MerchSerializer(serializers.ModelSerializer):
@@ -46,7 +39,7 @@ class OrderMerchSerializer(serializers.ModelSerializer):
     cost = serializers.IntegerField(
         source="merch_in_order.cost", required=False
     )
-    size = serializers.CharField()
+    size = serializers.CharField(required=False)
 
     class Meta:
         model = OrderMerch
@@ -82,46 +75,40 @@ class OrderSerializer(serializers.ModelSerializer):
             "total_cost",
         )
 
-    # def validate(self, attrs: dict) -> dict:
-    #     merch_data = self.initial_data.get("merch")
-    #     if merch_data:
-    #         validate_merch_num(merch_data)
-    #         merch = get_filtered_merch_objects(merch_data)
-    #         attrs["merch"] = merch
-    #     return attrs
-
     def create(self, validated_data: dict) -> Order:
-        merch_data = self.initial_data.get("merch")
-        validated_data.pop("merch")
-        order = Order.objects.create(**validated_data)
-        try:
+        with transaction.atomic():
+            merch_data = self.initial_data.get("merch")
+            validated_data.pop("merch")
+            order = Order.objects.create(**validated_data)
             order_merch = []
             for product in merch_data:
                 item = OrderMerch(
-                    merch_in_order=Merch.objects.get(name=product["name"]),
+                    merch_in_order=get_object_or_404(
+                        Merch, name=product["name"]
+                    ),
                     order=order,
                     size=product.get("size"),
                 )
                 order_merch.append(item)
             OrderMerch.objects.bulk_create(order_merch)
-        except Exception as e:
-            order.delete()
-            raise ValidationError(f"Не удалось создать заявку: {e}", 400)
-        return order
+            return order
 
     # TODO не пропускать дальше если статус доставлено, но не передана дата
     def update(self, instance: Order, validated_data: dict) -> Order:
         validate_editing_order(instance.status)
-        merch_data = self.initial_data.get("merch")
-        validated_data.pop("merch", None)
-        # Проверка отсутствие трек-номера у заказа
-        if validated_data.get("track_number") and not instance.track_number:
-            validated_data["status"] = OrderStatus.SHIPPED
-        instance = super().update(instance, validated_data)
-        if merch_data:
-            # merch = get_filtered_merch_objects(merch_data)
-            update_merch(instance, merch_data)
-        return instance
+        with transaction.atomic():
+            merch_data = self.initial_data.get("merch")
+            validated_data.pop("merch", None)
+            # Проверка отсутствие трек-номера у заказа
+            if (
+                validated_data.get("track_number")
+                and not instance.track_number
+            ):
+                validated_data["status"] = OrderStatus.SHIPPED
+            instance = super().update(instance, validated_data)
+            if merch_data:
+                update_merch(instance, merch_data)
+            return instance
 
 
 class AllOrdersListSerialiazer(serializers.ModelSerializer):
