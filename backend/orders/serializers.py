@@ -123,11 +123,6 @@ class OrderSerializer(serializers.ModelSerializer):
             update_merch(instance, merch_data)
         return instance
 
-    # def to_representation(self, instance: Order):
-    #     instance = super().to_representation(instance)
-    #     instance["merch"] = OrderMerchSerializer(instance["merch"], many=True).data
-    #     return instance
-
 
 class AllOrdersListSerialiazer(serializers.ModelSerializer):
     """Сериалайзер для отображения всех существующих заявок"""
