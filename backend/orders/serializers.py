@@ -128,6 +128,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "middle_name",
+            "status",
             "city",
             "ya_programm",
             "email",
