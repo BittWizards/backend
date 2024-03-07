@@ -260,9 +260,13 @@ class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
     """Сериализатор для контента конкретного амбассадора."""
 
     my_content = ContentsForAmbassadorSerializer(many=True)
+    rating = serializers.IntegerField(default=0)
 
     class Meta(AmbassadorContentPromoSerializer.Meta):
-        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_content"]
+        fields = AmbassadorContentPromoSerializer.Meta.fields + [
+            "my_content",
+            "rating",
+        ]
 
 
 class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
