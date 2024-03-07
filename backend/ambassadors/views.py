@@ -36,8 +36,6 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return AmbassadorListSerializer
-        elif self.action == "create":
-            return FormCreateAmbassadorSerializer
         else:
             return AmbassadorSerializer
 
