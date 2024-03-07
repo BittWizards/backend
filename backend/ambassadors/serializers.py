@@ -115,6 +115,37 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "created",
         )
 
+    def create(self, validated_data):
+        ya_programm = validated_data.pop("ya_programm")
+        address = validated_data.pop("address")
+        size = validated_data.pop("size")
+        actions_data = validated_data.pop("actions")
+        ambassador = Ambassador.objects.create(
+            ya_programm=YandexProgramm.objects.get_or_create(**ya_programm)[0],
+            **validated_data,
+        )
+        address_data = AmbassadorAddress.objects.create(
+            **address,
+            ambassador_id=ambassador,
+        )
+        size_data = AmbassadorSize.objects.create(
+            ambassador_id=ambassador,
+            **size,
+        )
+        for action_data in actions_data:
+            current_action = Actions.objects.get_or_create(
+                **action_data["action"],
+            )
+            AmbassadorActions.objects.create(
+                action=current_action[0],
+                ambassador_id=ambassador,
+            )
+
+        ambassador.address = address_data
+        ambassador.size = size_data
+        ambassador.save()
+        return ambassador
+
     def update(self, instance, validated_data):
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
@@ -165,7 +196,7 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
         )
 
 
-class CreateAmbassadorSerializer(serializers.ModelSerializer):
+class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
     """
     Сериализатор создания амбассадора через YandexForm.
     """
