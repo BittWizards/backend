@@ -6,7 +6,7 @@ class Gender(models.TextChoices):
     Выбор гендера при создании амбассадора.
     """
 
-    MALE = "M", "Мужчина"
+    MALE = "М", "Мужчина"
     FEMALE = "Ж", "Женщина"
 
 
