@@ -131,6 +131,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "status",
             "city",
             "ya_programm",
+            "tg_acc",
             "email",
             "phone",
             "orders",
