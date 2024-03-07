@@ -1,10 +1,34 @@
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador
 from ambassadors.serializers import ShortAmbassadorSerializer
-from orders.models import Merch, Order, OrderStatus
-from orders.utils import get_filtered_merch_objects
-from orders.validators import validate_editing_order, validate_merch_num
+from orders.models import Merch, Order, OrderMerch, OrderStatus
+
+# from orders.utils import get_filtered_merch_objects
+from orders.validators import validate_editing_order  # , validate_merch_num
+
+
+def update_merch(instance: Order, data: list[dict]) -> None:
+    """Перезаписываем мерч в заявку."""
+    try:
+        prev_order_merch = list(instance.merch.all())
+        order_merch = []
+        for product in data:
+            item = OrderMerch(
+                merch_in_order=Merch.objects.get(name=product["name"]),
+                order=instance,
+                size=product.get("size"),
+            )
+            order_merch.append(item)
+        OrderMerch.objects.bulk_create(order_merch)
+        for e in prev_order_merch:
+            e.delete()
+    except Exception as e:
+        raise ValidationError(
+            f"Не удалось изменить мерч в заявке: {e}",
+            status.HTTP_400_BAD_REQUEST,
+        )
 
 
 class MerchSerializer(serializers.ModelSerializer):
@@ -12,13 +36,27 @@ class MerchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Merch
-        fields = ("name", "size")
+        fields = ("name",)
+
+
+class OrderMerchSerializer(serializers.ModelSerializer):
+    """Сериалайзер для мерча в заказе"""
+
+    name = serializers.CharField(source="merch_in_order.name")
+    cost = serializers.IntegerField(
+        source="merch_in_order.cost", required=False
+    )
+    size = serializers.CharField()
+
+    class Meta:
+        model = OrderMerch
+        fields = ("name", "cost", "size")
 
 
 class OrderSerializer(serializers.ModelSerializer):
     """Сериалайзер для заявок на мерч"""
 
-    merch = serializers.SerializerMethodField()
+    merch = OrderMerchSerializer(many=True)
 
     class Meta:
         model = Order
@@ -44,42 +82,51 @@ class OrderSerializer(serializers.ModelSerializer):
             "total_cost",
         )
 
-    def get_merch(self, obj: Order):
-        return obj.merch
+    # def validate(self, attrs: dict) -> dict:
+    #     merch_data = self.initial_data.get("merch")
+    #     if merch_data:
+    #         validate_merch_num(merch_data)
+    #         merch = get_filtered_merch_objects(merch_data)
+    #         attrs["merch"] = merch
+    #     return attrs
 
-    def validate(self, attrs: dict) -> dict:
+    def create(self, validated_data: dict) -> Order:
         merch_data = self.initial_data.get("merch")
-        if merch_data:
-            validate_merch_num(merch_data)
-            merch = get_filtered_merch_objects(merch_data)
-            attrs["merch"] = merch
-        return attrs
-
-    def create(self, validated_data: dict):
-        merch = validated_data.pop("merch")
+        validated_data.pop("merch")
         order = Order.objects.create(**validated_data)
-        order.merch.add(*merch)
+        try:
+            order_merch = []
+            for product in merch_data:
+                item = OrderMerch(
+                    merch_in_order=Merch.objects.get(name=product["name"]),
+                    order=order,
+                    size=product.get("size"),
+                )
+                order_merch.append(item)
+            OrderMerch.objects.bulk_create(order_merch)
+        except Exception as e:
+            order.delete()
+            raise ValidationError(f"Не удалось создать заявку: {e}", 400)
         return order
 
+    # TODO не пропускать дальше если статус доставлено, но не передана дата
     def update(self, instance: Order, validated_data: dict) -> Order:
         validate_editing_order(instance.status)
-        merch_data = validated_data.pop("merch", None)
+        merch_data = self.initial_data.get("merch")
+        validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
         if validated_data.get("track_number") and not instance.track_number:
             validated_data["status"] = OrderStatus.SHIPPED
         instance = super().update(instance, validated_data)
         if merch_data:
-            instance.merch.clear()
-            merch = get_filtered_merch_objects(merch_data)
-            for product in merch:
-                instance.merch.add(product.id)
-            instance.save()
+            # merch = get_filtered_merch_objects(merch_data)
+            update_merch(instance, merch_data)
         return instance
 
-    def to_representation(self, instance: Order):
-        instance = super().to_representation(instance)
-        instance["merch"] = MerchSerializer(instance["merch"], many=True).data
-        return instance
+    # def to_representation(self, instance: Order):
+    #     instance = super().to_representation(instance)
+    #     instance["merch"] = OrderMerchSerializer(instance["merch"], many=True).data
+    #     return instance
 
 
 class AllOrdersListSerialiazer(serializers.ModelSerializer):
@@ -104,7 +151,7 @@ class OrderListSerializer(serializers.ModelSerializer):
     конкретному амбассадору. Работает только на чтение.
     """
 
-    merch = MerchSerializer(many=True)
+    merch = OrderMerchSerializer(many=True)
 
     class Meta:
         model = Order
@@ -117,7 +164,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
 
     orders = OrderListSerializer(many=True)
     total_orders_cost = serializers.SerializerMethodField()
-    city = serializers.SerializerMethodField()
+    city = serializers.CharField(source="address.city")
     ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
@@ -137,9 +184,6 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "orders",
             "total_orders_cost",
         )
-
-    def get_city(self, obj: Ambassador) -> str:
-        return obj.address.city
 
     def get_total_orders_cost(self, obj: Ambassador) -> int:
         return sum(order["total_cost"] or 0 for order in obj.orders.values())

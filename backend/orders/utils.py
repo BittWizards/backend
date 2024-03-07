@@ -9,7 +9,7 @@ def get_filtered_merch_objects(merch_data: list[dict]) -> list[Merch]:
     query = []
     for data in merch_data:
         merch = Merch.objects.filter(
-            name=data.get("name"), size=data.get("size") or None
+            name=data.get("name"),
         )
         validate_exsisting_merch(merch)
         query.append(merch[0])

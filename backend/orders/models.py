@@ -14,22 +14,22 @@ class OrderStatus(models.TextChoices):
     SHIPPED = "shipped", "Отправлено"
 
 
-class MerchTypes(models.TextChoices):
-    """Список видов мерча"""
+# class MerchTypes(models.TextChoices):
+#     """Список видов мерча"""
 
-    HOODIE = "hoodie", "Толстовка"
-    COFFEE = "coffee", "Кофе"
-    STIKERS = "stikers", "Стикеры"
-    YANDEX_PLUS = "yandex_plus", "Яндекс_плюс"
-    ARZAMAS = "arzamas", "Арзамас"
-    SHOPPER = "shopper", "Шоппер"
-    BACKPACK = "backpack", "Рюкзак"
-    BAG = "bag", "Сумка"
-    SOCKS = "socks", "Носки"
-    DISCOUNT = "discount", "Скидка"
-    ALICE = "alice", "Алиса"
-    ALICE_BOT = "alice_bot", "Алиса_бот"
-    CLUB = "club", "Клуб"
+#     HOODIE = "hoodie", "Толстовка"
+#     COFFEE = "coffee", "Кофе"
+#     STIKERS = "stikers", "Стикеры"
+#     YANDEX_PLUS = "yandex_plus", "Яндекс_плюс"
+#     ARZAMAS = "arzamas", "Арзамас"
+#     SHOPPER = "shopper", "Шоппер"
+#     BACKPACK = "backpack", "Рюкзак"
+#     BAG = "bag", "Сумка"
+#     SOCKS = "socks", "Носки"
+#     DISCOUNT = "discount", "Скидка"
+#     ALICE = "alice", "Алиса"
+#     ALICE_BOT = "alice_bot", "Алиса_бот"
+#     CLUB = "club", "Клуб"
 
 
 class Merch(models.Model):
@@ -38,7 +38,7 @@ class Merch(models.Model):
     name = models.CharField(
         verbose_name="Название продукции",
         max_length=60,
-        choices=MerchTypes.choices,
+        unique=True,
     )
     cost = models.IntegerField(
         verbose_name="Стоимость продукции",
@@ -47,22 +47,14 @@ class Merch(models.Model):
         ],
         default=0,
     )
-    size = models.CharField(
-        verbose_name="Размер для одежды",
-        null=True,
-        blank=True,
-        choices=(
-            AmbassadorsClothesSizes.choices + AmbassadorsFootsSizes.choices
-        ),
-    )
 
     class Meta:
         verbose_name = "Мерч"
         verbose_name_plural = "Мерч"
-        ordering = ("name", "size")
+        ordering = ("name",)
 
     def __str__(self):
-        return f"{self.name} ({self.size})"
+        return self.name
 
 
 class Order(AbstractUser, AbstractAmbassadorAddress):
@@ -73,11 +65,6 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
         related_name="orders",
         verbose_name="Амбассадор в заказе",
         on_delete=models.CASCADE,
-    )
-    merch = models.ManyToManyField(
-        Merch,
-        related_name="order",
-        verbose_name="Мерч в заявке",
     )
     status = models.CharField(
         verbose_name="Статус заявки",
@@ -121,4 +108,37 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
     def full_address(self) -> str:
         return "{}:{}:{}:{}".format(
             self.country, self.city, self.street_home, self.post_index
+        )
+
+
+class OrderMerch(models.Model):
+    order = models.ForeignKey(
+        Order,
+        related_name="merch",
+        verbose_name="Заказ",
+        on_delete=models.CASCADE,
+    )
+    merch_in_order = models.ForeignKey(
+        Merch,
+        related_name="order",
+        verbose_name="Мерч",
+        on_delete=models.CASCADE,
+    )
+    size = models.CharField(
+        verbose_name="Размер для одежды",
+        null=True,
+        blank=True,
+        choices=(
+            AmbassadorsClothesSizes.choices + AmbassadorsFootsSizes.choices
+        ),
+    )
+
+    class Meta:
+        verbose_name = "Мерч в заявке"
+        verbose_name_plural = "Мерч в заявках"
+        ordering = ("id",)
+
+    def __str__(self) -> str:
+        return "Заявка {}, мерч {}, размер {}".format(
+            self.order.id, self.merch_in_order.name, self.size
         )

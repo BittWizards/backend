@@ -92,22 +92,24 @@ class AllMerchToAmbassadorView(views.APIView):
     и мерча который был им отправлен"""
 
     def get(self, request: Request) -> Response:
-        subsuery = (
+        subquery = (
             Order.objects.filter(ambassador=OuterRef("pk"))
-            .values("merch__name")
+            .values("merch__merch_in_order__name")
             .annotate(
-                data=JSONObject(name=F("merch__name"), count=Count("merch"))
+                data=JSONObject(
+                    name=F("merch__merch_in_order__name"), count=Count("merch")
+                )
             )
             .values_list("data")
         )
         query = (
             Ambassador.objects.annotate(
-                merch=ArraySubquery(subsuery),
+                merch=ArraySubquery(subquery),
                 last_delivery_date=Max("orders__delivered_date"),
                 c=Count("merch", distinct=True),
             )
             .filter(orders__status=OrderStatus.DELIVERED)
-            .order_by("c")
+            .order_by("last_delivery_date")
             .annotate(total=Sum("orders__total_cost", distinct=True))
             .values(
                 "id",
@@ -120,5 +122,6 @@ class AllMerchToAmbassadorView(views.APIView):
                 "total",
             )
         )
+        print(query)
         query = editing_response_data(list(query))
         return Response(query, status=HTTP_200_OK)
