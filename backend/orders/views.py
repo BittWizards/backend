@@ -122,6 +122,5 @@ class AllMerchToAmbassadorView(views.APIView):
                 "total",
             )
         )
-        print(query)
         query = editing_response_data(list(query))
         return Response(query, status=HTTP_200_OK)
