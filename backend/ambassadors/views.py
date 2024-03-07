@@ -17,7 +17,7 @@ from .serializers import (
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
-    CreateAmbassadorSerializer,
+    FormCreateAmbassadorSerializer,
     YandexProgrammSerializer,
 )
 
@@ -37,9 +37,23 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return AmbassadorListSerializer
         elif self.action == "create":
-            return CreateAmbassadorSerializer
+            return FormCreateAmbassadorSerializer
         else:
             return AmbassadorSerializer
+
+    @action(detail=False, url_path="form", methods=("post",))
+    def form(self, request):
+        """
+        Создание экземпляра амбассадора через форму.
+        """
+        serializer = FormCreateAmbassadorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(
+                serializer.errors, status=status.HTTP_400_BAD_REQUEST
+            )
 
     @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")
