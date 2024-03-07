@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ambassadors.validators import tg_acc_validator
+from ambassadors.validators import telegram_validator
 from content.models import Content, Promocode
 
 from .models import (
@@ -103,6 +103,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "phone",
             "email",
             "tg_acc",
+            "tg_id",
             "ya_programm",
             "purpose",
             "education",
@@ -206,7 +207,7 @@ class CreateAmbassadorSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if "tg_acc" in data:
-            tg_acc_validator(data)
+            data["tg_id"] = telegram_validator(data)
         return data
 
     def create(self, validated_data):
