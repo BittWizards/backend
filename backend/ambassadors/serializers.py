@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from ambassadors.validators import tg_acc_validator
 from content.models import Content, Promocode
 
 from .models import (
@@ -170,7 +171,8 @@ class CreateAmbassadorSerializer(serializers.ModelSerializer):
 
     full_name = serializers.CharField()
     ya_programm = serializers.CharField()
-    extra_purpose = serializers.CharField(required=False)
+    purpose = serializers.CharField(required=False)
+    purpose_extra = serializers.CharField(required=False)
     foot_size = serializers.IntegerField()
     clothes_size = serializers.CharField()
     country = serializers.CharField()
@@ -195,18 +197,23 @@ class CreateAmbassadorSerializer(serializers.ModelSerializer):
             "education",
             "work",
             "purpose",
-            "extra_purpose",
+            "purpose_extra",
             "actions",
             "clothes_size",
             "foot_size",
             "extra_info",
         )
 
+    def validate(self, data):
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        return data
+
     def create(self, validated_data):
         full_name = validated_data.pop("full_name")
         ya_programm = validated_data.pop("ya_programm")
         actions = validated_data.pop("actions")
-        purpose = validated_data.pop("purpose")
+        purpose = validated_data.get("purpose")
         foot_size = validated_data.pop("foot_size")
         clothes_size = validated_data.pop("clothes_size")
         country = validated_data.pop("country")
@@ -215,7 +222,9 @@ class CreateAmbassadorSerializer(serializers.ModelSerializer):
         post_index = validated_data.pop("post_index")
 
         if not purpose:
-            purpose = validated_data.pop("extra_purpose")
+            purpose = validated_data.pop("purpose_extra")
+        else:
+            purpose = validated_data.pop("purpose")
 
         prepared_fio = full_name.split()
 
@@ -255,6 +264,9 @@ class CreateAmbassadorSerializer(serializers.ModelSerializer):
         ambassador.size = size_data
         ambassador.save()
         return ambassador
+
+    def to_representation(self, instance):
+        return AmbassadorSerializer(instance).data
 
 
 class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
