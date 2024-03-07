@@ -11,12 +11,14 @@
         "tg_acc": "dartanyun",
         "gender": "М",
         "ya_programm": 3,
+        "purpose": "",
         "education": "Школа магии и волшебства Хогвартс",
         "work": "False",
         "status": "Active",
         "created": "2024-03-04T06:12:07Z",
         "tg_id": null,
-        "image": "profiles/kandinsky-download-1706673683083.png"
+        "image": "profiles/kandinsky-download-1706673683083.png",
+        "extra_info": ""
     }
 },
 {
@@ -30,13 +32,15 @@
         "phone": "88005553536",
         "tg_acc": "durov",
         "gender": "М",
+        "purpose": "",
         "ya_programm": 2,
         "education": "Пермский техникум промышленных и информационных технологий",
         "work": "True",
         "status": "Clarify",
         "created": "2024-03-04T06:12:07Z",
         "tg_id": null,
-        "image": "profiles/kandinsky-download-1706542648092.png"
+        "image": "profiles/kandinsky-download-1706542648092.png",
+        "extra_info": ""
     }
 },
 {
@@ -50,13 +54,15 @@
         "phone": "88005553537",
         "tg_acc": "anna",
         "gender": "Ж",
+        "purpose": "",
         "ya_programm": 1,
         "education": "ПГНИУ",
         "work": "True",
         "status": "Active",
         "created": "2024-03-04T06:12:07Z",
         "tg_id": null,
-        "image": "profiles/kandinsky-download-1706543920006.png"
+        "image": "profiles/kandinsky-download-1706543920006.png",
+        "extra_info": ""
     }
 }
 ]
