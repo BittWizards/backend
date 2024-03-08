@@ -39,7 +39,7 @@ class OrderMerchSerializer(serializers.ModelSerializer):
     cost = serializers.IntegerField(
         source="merch_in_order.cost", required=False
     )
-    size = serializers.CharField(required=False)
+    size = serializers.CharField(required=False, allow_blank=True)
 
     class Meta:
         model = OrderMerch
