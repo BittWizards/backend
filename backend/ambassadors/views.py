@@ -11,12 +11,13 @@ from rest_framework.response import Response
 from content.mixins import ListViewSet
 from content.models import Content, Promocode
 
-from .models import Ambassador, YandexProgramm
+from .models import Ambassador, Message, YandexProgramm
 from .serializers import (
     AmbassadorContentSerializer,
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
+    MessageSerializer,
     YandexProgrammSerializer,
 )
 
@@ -98,3 +99,13 @@ def get_ambassador_by_tg_acc(request: Request, tg_acc: str) -> Response:
     ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
     serializer = AmbassadorSerializer(instance=ambassador)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@extend_schema(tags=["Рассылки"])
+class MessageViewSet(viewsets.ModelViewSet):
+    """Viewset модели Message"""
+
+    queryset = Message.objects.all()
+    serializer_class = MessageSerializer
+    permission_classes = (AllowAny,)
+    http_method_names = ("get", "post", "patch", "delete")

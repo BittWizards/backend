@@ -9,18 +9,13 @@ from .models import (
     AmbassadorActions,
     AmbassadorAddress,
     AmbassadorSize,
-    MessageToAmbassador,
-    SendingMessage,
+    Message,
     YandexProgramm,
 )
 
 
 class AmbassadorActionsTabularInline(admin.TabularInline):
     model = AmbassadorActions
-
-
-class MessageToAmbassadorTabularInline(admin.TabularInline):
-    model = MessageToAmbassador
 
 
 @admin.register(Ambassador)
@@ -48,10 +43,10 @@ class AmbassdorAdmin(admin.ModelAdmin):
         "status",
         "created",
         "take_image",
+        "messages",
     )
     inlines = [
         AmbassadorActionsTabularInline,
-        MessageToAmbassadorTabularInline,
     ]
 
     def fio(self, instance):
@@ -85,11 +80,6 @@ class AmbassadorSizeAdmin(admin.ModelAdmin):
     list_display = ("clothes_size", "foot_size")
 
 
-@admin.register(SendingMessage)
-class SendingMessageAdmin(admin.ModelAdmin):
-    list_display = ("title", "description", "created", "supervisor_id", "sent")
-
-
-@admin.register(MessageToAmbassador)
-class MessageToAmbassadorAdmin(admin.ModelAdmin):
-    list_display = ("ambassador_id", "sending_message_id")
+@admin.register(Message)
+class MessageAdmin(admin.ModelAdmin):
+    list_display = ("title", "text", "sent", "is_sent")

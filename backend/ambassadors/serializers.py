@@ -1,4 +1,6 @@
+from django.db import transaction
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from content.models import Content, Promocode
 
@@ -8,6 +10,7 @@ from .models import (
     AmbassadorActions,
     AmbassadorAddress,
     AmbassadorSize,
+    Message,
     YandexProgramm,
 )
 
@@ -278,3 +281,65 @@ class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
         fields = AmbassadorContentPromoSerializer.Meta.fields + [
             "my_promocode"
         ]
+
+
+class AmbassadorInMessageSerializer(serializers.ModelSerializer):
+    tg_acc = serializers.CharField(required=False, read_only=True)
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Ambassador
+        fields = ("id", "tg_acc")
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    """Сериализатор для модели сообщений."""
+
+    ambassadors = AmbassadorInMessageSerializer(many=True)
+    sent = serializers.DateTimeField(required=False, allow_null=True)
+    by_email = serializers.BooleanField(required=False)
+    to_telegram = serializers.BooleanField(required=False)
+    is_sent = serializers.BooleanField(required=False)
+
+    class Meta:
+        model = Message
+        fields = (
+            "id",
+            "title",
+            "text",
+            "sent",
+            "by_email",
+            "to_telegram",
+            "is_sent",
+            "ambassadors",
+        )
+
+    def create(self, validated_data):
+        ambassadors_data = validated_data.pop("ambassadors", [])
+        with transaction.atomic():
+            instance = Message.objects.create(**validated_data)
+            ambassadors_id = [amb["id"] for amb in ambassadors_data]
+            ambassadors = Ambassador.objects.filter(id__in=(ambassadors_id))
+            if len(ambassadors) != len(ambassadors_id):
+                raise ValidationError(
+                    "Абмассадора с таким id не существует", 404
+                )
+            instance.ambassadors.set(ambassadors_id)
+        return instance
+
+    def update(self, instance: Message, validated_data):
+        ambassadors_data = validated_data.pop("ambassadors", [])
+        if validated_data.get("is_sent") is True:
+            raise ValidationError("Это сообщение уже нельзя изменить.")
+        with transaction.atomic():
+            for attr, value in validated_data.items():
+                setattr(instance, attr, value)
+            ambassadors_id = [amb["id"] for amb in ambassadors_data]
+            ambassadors = Ambassador.objects.filter(id__in=(ambassadors_id))
+            if len(ambassadors) != len(ambassadors_id):
+                raise ValidationError(
+                    "Абмассадора с таким id не существует", 404
+                )
+            instance.ambassadors.set(ambassadors_id)
+            instance.save()
+        return instance

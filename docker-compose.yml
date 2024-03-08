@@ -27,18 +27,17 @@ services:
     expose:
       - 6379
 
-  # worker:
-  #   restart: always
-  #   build: ./backend/
-  #   command: celery -A ambassadors_project worker -B -l info
-  #   env_file: .env
-  #   volumes:
-  #     - static:/backend_static
-  #     - media:/app/media
-  #     - ./backend/:/app/
-  #   depends_on:
-  #     - backend
-  #     - redis
+  worker:
+    restart: always
+    build: ./backend/
+    command: celery -A ambassadors_project worker -B -l info -c 2
+    env_file: .env
+    volumes:
+      - static:/backend_static
+      - media:/app/media
+    depends_on:
+      - backend
+      - redis
 
   nginx:
     build: ./nginx/

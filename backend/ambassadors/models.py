@@ -204,18 +204,20 @@ class AmbassadorSize(models.Model):
         )
 
 
-class SendingMessage(models.Model):
+class Message(models.Model):
     """
     Модель отправки сообщений.
     """
 
+    ambassadors = models.ManyToManyField(Ambassador, related_name="messages")
     title = models.CharField(verbose_name="Заголовок", max_length=100)
-    description = models.CharField(verbose_name="Описание", max_length=2000)
-    created = models.DateTimeField(verbose_name="Было отправлено", null=True)
-    supervisor_id = models.ForeignKey(
-        User, verbose_name="Супервизор", on_delete=models.CASCADE
+    text = models.CharField(verbose_name="Текст", max_length=2000)
+    sent = models.DateTimeField(
+        verbose_name="Дата отправки", null=True, blank=True
     )
-    sent = models.BooleanField(verbose_name="Отправлено", default=False)
+    by_email = models.BooleanField(verbose_name="На почту", default=False)
+    to_telegram = models.BooleanField(verbose_name="В телеграм", default=False)
+    is_sent = models.BooleanField(verbose_name="Отправить", default=False)
 
     class Meta:
         verbose_name = "Сообщение для амбассадора"
@@ -226,28 +228,29 @@ class SendingMessage(models.Model):
         return f"{self.title}"
 
 
-class MessageToAmbassador(models.Model):
-    """
-    Связанная таблица сообщений и амбассадоров.
-    """
+# class MessageToAmbassador(models.Model):
+#     """
+#     Связанная таблица сообщений и амбассадоров.
+#     """
 
-    ambassador_id = models.ForeignKey(
-        Ambassador,
-        verbose_name="Амбассадор",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    sending_message_id = models.ForeignKey(
-        SendingMessage,
-        verbose_name="Сообщение",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
+#     ambassador = models.ForeignKey(
+#         Ambassador,
+#         verbose_name="Амбассадор",
+#         related_name="messages",
+#         on_delete=models.SET_NULL,
+#         null=True,
+#     )
+#     message = models.ForeignKey(
+#         Message,
+#         verbose_name="Сообщение",
+#         on_delete=models.SET_NULL,
+#         null=True,
+#     )
 
-    class Meta:
-        verbose_name = "Отправленное сообщение для амбассадора"
-        verbose_name_plural = "Отправленные сообщения для амбассадоров"
-        ordering = ("id",)
+#     class Meta:
+#         verbose_name = "Отправленное сообщение для амбассадора"
+#         verbose_name_plural = "Отправленные сообщения для амбассадоров"
+#         ordering = ("id",)
 
-    def __str__(self) -> str:
-        return f"{self.ambassador_id} {self.sending_message_id}"
+#     def __str__(self) -> str:
+#         return f"{self.ambassador} {self.message}"

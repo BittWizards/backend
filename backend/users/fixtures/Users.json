@@ -1,7 +1,7 @@
 [
     {
         "model": "users.User",
-        "pk": 1,
+        "pk": 2,
         "fields": {
             "email": "test@test.ru",
             "first_name": "Игорь",
@@ -14,7 +14,7 @@
     },
     {
         "model": "users.User",
-        "pk": 2,
+        "pk": 3,
         "fields": {
             "email": "test1@test.ru",
             "first_name": "Виталий",
@@ -27,7 +27,7 @@
     },
     {
         "model": "users.User",
-        "pk": 3,
+        "pk": 4,
         "fields": {
             "email": "test2@test.ru",
             "first_name": "Андрей",
@@ -38,7 +38,7 @@
     },
     {
         "model": "users.User",
-        "pk": 4,
+        "pk": 5,
         "fields": {
             "email": "admin@admin.ru",
             "first_name": "admin",

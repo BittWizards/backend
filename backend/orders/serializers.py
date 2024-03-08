@@ -45,6 +45,7 @@ class OrderSerializer(serializers.ModelSerializer):
         )
 
     def get_merch(self, obj: Order):
+        print(type(obj.merch))
         return obj.merch
 
     def validate(self, attrs: dict) -> dict:
