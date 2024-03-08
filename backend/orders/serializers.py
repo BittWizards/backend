@@ -98,24 +98,11 @@ class AllOrdersListSerialiazer(serializers.ModelSerializer):
         )
 
 
-class OrderListSerializer(serializers.ModelSerializer):
-    """
-    Сериалайзер для всех заявок на мерч по
-    конкретному амбассадору. Работает только на чтение.
-    """
-
-    merch = MerchSerializer(many=True)
-
-    class Meta:
-        model = Order
-        fields = ("id", "created_date", "merch", "total_cost")
-
-
 class AmbassadorOrderListSerializer(serializers.ModelSerializer):
     """Сериалайзер для выдачи всех заявок на мерч по
     конкретному амбассадору. Работает только на чтение"""
 
-    orders = OrderListSerializer(many=True)
+    merch = serializers.SerializerMethodField()
     total_orders_cost = serializers.SerializerMethodField()
     city = serializers.SerializerMethodField()
     ya_programm = serializers.CharField(source="ya_programm.title")
@@ -132,9 +119,12 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "ya_programm",
             "email",
             "phone",
-            "orders",
+            "merch",
             "total_orders_cost",
         )
+
+    def get_merch(self, obj):
+        return obj.merch
 
     def get_city(self, obj: Ambassador) -> str:
         return obj.address.city

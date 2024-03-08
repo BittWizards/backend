@@ -37,7 +37,25 @@ class AmbassadorOrdersViewSet(RetrieveMixin):
 
     def get_object(self) -> Ambassador:
         ambassador_id = self.kwargs.get("ambassador_id")
-        return Ambassador.objects.get(id=ambassador_id)
+        subquery = (
+            Order.objects.filter(ambassador=ambassador_id)
+            .values("merch__name")
+            .annotate(
+                data=JSONObject(
+                    id=F("id"),
+                    created_date=F("created_date"),
+                    name=F("merch__name"),
+                    size=F("merch__size"),
+                    amount=1,
+                    total_cost=F("total_cost")
+                )
+            ).values_list("data")
+        )
+        return Ambassador.objects.filter(
+            id=ambassador_id
+        ).annotate(
+            merch=ArraySubquery(subquery),
+        )[0]
 
 
 @extend_schema_view(**orders_extend_schema_view)
