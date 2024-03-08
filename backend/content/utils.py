@@ -7,6 +7,13 @@ from content.models import Content, ContentType
 from orders.models import Order
 
 
+def change_achievement_create_order(ambassador, new_achievement):
+    ambassador.achievement = new_achievement
+    ambassador.save()
+    Order.objects.create(ambassador=ambassador)
+    # TODO отправить сообщение
+
+
 def add_achievments(ambassador):
     if ambassador.achievement == Achievement.NEW:
         if (
@@ -15,10 +22,7 @@ def add_achievments(ambassador):
             ).count()
             == REVIEW_COUNT_FOR_ACHIEV
         ):
-            ambassador.achievement = Achievement.FRIEND
-            ambassador.save()
-            Order.objects.create(ambassador=ambassador)
-        # TODO отправить сообщение
+            change_achievement_create_order(Achievement.FRIEND)
     elif ambassador.achievement == Achievement.FRIEND:
         if (
             Content.objects.filter(
@@ -26,7 +30,4 @@ def add_achievments(ambassador):
             ).count()
             == CONTENT_COUNT_FOR_ACHIEV
         ):
-            ambassador.achievement = Achievement.PROFI_FRIEND
-            ambassador.save()
-            Order.objects.create(ambassador=ambassador)
-    # TODO отправить сообщение
+            change_achievement_create_order(Achievement.PROFI_FRIEND)
