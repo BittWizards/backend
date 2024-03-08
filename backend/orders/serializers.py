@@ -104,7 +104,7 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
 
     merch = serializers.SerializerMethodField()
     total_orders_cost = serializers.SerializerMethodField()
-    city = serializers.SerializerMethodField()
+    city = serializers.CharField(source="address.city")
     ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
@@ -123,11 +123,8 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "total_orders_cost",
         )
 
-    def get_merch(self, obj):
+    def get_merch(self, obj: Ambassador):
         return obj.merch
-
-    def get_city(self, obj: Ambassador) -> str:
-        return obj.address.city
 
     def get_total_orders_cost(self, obj: Ambassador) -> int:
         return sum(order["total_cost"] or 0 for order in obj.orders.values())
