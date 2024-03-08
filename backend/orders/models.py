@@ -14,39 +14,10 @@ class OrderStatus(models.TextChoices):
     SHIPPED = "shipped", "Отправлено"
 
 
-class MerchTypes(models.TextChoices):
-    """Список видов мерча"""
-
-    HOODIE = "hoodie", "Толстовка"
-    COFFEE = "coffee", "Кофе"
-    STIKERS = "stikers", "Стикеры"
-    YANDEX_PLUS = "yandex_plus", "Яндекс_плюс"
-    ARZAMAS = "arzamas", "Арзамас"
-    SHOPPER = "shopper", "Шоппер"
-    BACKPACK = "backpack", "Рюкзак"
-    BAG = "bag", "Сумка"
-    SOCKS = "socks", "Носки"
-    DISCOUNT = "discount", "Скидка"
-    ALICE = "alice", "Алиса"
-    ALICE_BOT = "alice_bot", "Алиса_бот"
-    CLUB = "club", "Клуб"
-
-
 class Merch(models.Model):
     """Модель для мерча"""
 
-    name = models.CharField(
-        verbose_name="Название продукции",
-        max_length=60,
-        choices=MerchTypes.choices,
-    )
-    cost = models.IntegerField(
-        verbose_name="Стоимость продукции",
-        validators=[
-            MinValueValidator(0, "Стоимость не может быть отрицательной"),
-        ],
-        default=0,
-    )
+    name = models.CharField(verbose_name="Название продукции", max_length=60)
     size = models.CharField(
         verbose_name="Размер для одежды",
         null=True,

@@ -188,7 +188,7 @@ class AmbassadorSize(models.Model):
         max_length=30,
         choices=AmbassadorsClothesSizes.choices,
     )
-    foot_size = models.IntegerField(
+    foot_size = models.CharField(
         verbose_name="Размер обуви",
         choices=AmbassadorsFootsSizes.choices,
     )

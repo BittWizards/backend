@@ -24,6 +24,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             "id",
+            "ambassador",
             "first_name",
             "last_name",
             "middle_name",
@@ -38,7 +39,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "comment",
         )
         read_only_fields = (
-            "ambassador",
             "created_date",
             "merch",
             "total_cost",
@@ -98,26 +98,13 @@ class AllOrdersListSerialiazer(serializers.ModelSerializer):
         )
 
 
-class OrderListSerializer(serializers.ModelSerializer):
-    """
-    Сериалайзер для всех заявок на мерч по
-    конкретному амбассадору. Работает только на чтение.
-    """
-
-    merch = MerchSerializer(many=True)
-
-    class Meta:
-        model = Order
-        fields = ("id", "created_date", "merch", "total_cost")
-
-
 class AmbassadorOrderListSerializer(serializers.ModelSerializer):
     """Сериалайзер для выдачи всех заявок на мерч по
     конкретному амбассадору. Работает только на чтение"""
 
-    orders = OrderListSerializer(many=True)
+    merch = serializers.SerializerMethodField()
     total_orders_cost = serializers.SerializerMethodField()
-    city = serializers.SerializerMethodField()
+    city = serializers.CharField(source="address.city")
     ya_programm = serializers.CharField(source="ya_programm.title")
 
     class Meta:
@@ -134,12 +121,12 @@ class AmbassadorOrderListSerializer(serializers.ModelSerializer):
             "tg_acc",
             "email",
             "phone",
-            "orders",
+            "merch",
             "total_orders_cost",
         )
 
-    def get_city(self, obj: Ambassador) -> str:
-        return obj.address.city
+    def get_merch(self, obj: Ambassador):
+        return obj.merch
 
     def get_total_orders_cost(self, obj: Ambassador) -> int:
         return sum(order["total_cost"] or 0 for order in obj.orders.values())

@@ -26,26 +26,26 @@ class AmbassadorsClothesSizes(models.TextChoices):
     Выбор размера одежды амбассадора.
     """
 
-    XS = "XS"
-    S = "S"
-    M = "M"
-    L = "L"
-    XL = "XL"
+    XS = "XS", "XS"
+    S = "S", "S"
+    M = "M", "M"
+    L = "L", "L"
+    XL = "XL", "XL"
 
 
-class AmbassadorsFootsSizes(models.IntegerChoices):
+class AmbassadorsFootsSizes(models.TextChoices):
     """
     Выбор размера обуви.
     """
 
-    SIZE35 = 35, "35"
-    SIZE36 = 36, "36"
-    SIZE37 = 37, "37"
-    SIZE38 = 38, "38"
-    SIZE39 = 39, "39"
-    SIZE40 = 40, "40"
-    SIZE41 = 41, "41"
-    SIZE42 = 42, "42"
-    SIZE43 = 43, "43"
-    SIZE44 = 44, "44"
-    SIZE45 = 45, "45"
+    SIZE35 = "35", "35"
+    SIZE36 = "36", "36"
+    SIZE37 = "37", "37"
+    SIZE38 = "38", "38"
+    SIZE39 = "39", "39"
+    SIZE40 = "40", "40"
+    SIZE41 = "41", "41"
+    SIZE42 = "42", "42"
+    SIZE43 = "43", "43"
+    SIZE44 = "44", "44"
+    SIZE45 = "45", "45"
