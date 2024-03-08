@@ -17,10 +17,7 @@ class OrderStatus(models.TextChoices):
 class Merch(models.Model):
     """Модель для мерча"""
 
-    name = models.CharField(
-        verbose_name="Название продукции",
-        max_length=60
-    )
+    name = models.CharField(verbose_name="Название продукции", max_length=60)
     size = models.CharField(
         verbose_name="Размер для одежды",
         null=True,

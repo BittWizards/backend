@@ -47,13 +47,12 @@ class AmbassadorOrdersViewSet(RetrieveMixin):
                     name=F("merch__name"),
                     size=F("merch__size"),
                     amount=1,
-                    total_cost=F("total_cost")
+                    total_cost=F("total_cost"),
                 )
-            ).values_list("data")
+            )
+            .values_list("data")
         )
-        return Ambassador.objects.filter(
-            id=ambassador_id
-        ).annotate(
+        return Ambassador.objects.filter(id=ambassador_id).annotate(
             merch=ArraySubquery(subquery),
         )[0]
 
