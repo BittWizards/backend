@@ -1,4 +1,4 @@
-from django.db.models import Prefetch
+from django.db.models import Count, OuterRef, Prefetch, Subquery
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
@@ -43,18 +43,27 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     def contents(self, request, ambassador_id):
         """Весь контент амбассадора."""
 
-        queryset = Ambassador.objects.filter(
-            id=ambassador_id
-        ).prefetch_related(
-            Prefetch(
-                "my_content",
-                queryset=Content.objects.filter(
-                    accepted=True
-                ).prefetch_related("documents"),
+        queryset = (
+            Ambassador.objects.filter(id=ambassador_id)
+            .prefetch_related(
+                Prefetch(
+                    "my_content",
+                    queryset=Content.objects.filter(
+                        accepted=True
+                    ).prefetch_related("documents"),
+                )
             )
-        )[
-            0
-        ]
+            .annotate(
+                rating=Subquery(
+                    Content.objects.filter(
+                        ambassador=OuterRef("pk"), accepted=True
+                    )
+                    .values("ambassador")
+                    .annotate(count=Count("pk"))
+                    .values("count")
+                ),
+            )[0]
+        )
         serializer = AmbassadorContentSerializer(
             queryset, many=False, context={"request": request}
         )
