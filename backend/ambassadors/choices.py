@@ -49,3 +49,9 @@ class AmbassadorsFootsSizes(models.TextChoices):
     SIZE43 = "43", "43"
     SIZE44 = "44", "44"
     SIZE45 = "45", "45"
+
+
+class Achievement(models.TextChoices):
+    NEW = ("new", "Новичок")
+    FRIEND = ("friend", "Друг практикума")
+    PROFI_FRIEND = ("profi_friend", "Практикующий амбассадор")

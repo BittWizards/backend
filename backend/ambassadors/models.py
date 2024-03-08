@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 from ambassadors.choices import (
+    Achievement,
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
@@ -88,10 +89,15 @@ class Ambassador(AbstractUser):
         verbose_name="Телеграмм id", blank=True, null=True
     )
     image = models.ImageField(
-        "Фото",
+        verbose_name="Фото",
         upload_to="profiles/",
         null=True,
         default="profiles/default_pic.jpeg",
+    )
+    achievement = models.CharField(
+        verbose_name="Ачивка",
+        choices=Achievement.choices,
+        default=Achievement.NEW,
     )
 
     class Meta:
