@@ -1,6 +1,6 @@
 app-up:
 	@echo "Migrate and Starting Django app ..."
-	cd backend && python manage.py migrate && python manage.py runserver
+	cd backend && python manage.py makemigrations && python manage.py migrate && python manage.py runserver
 
 make-migrations:
 	@echo "Make migrations ..."
