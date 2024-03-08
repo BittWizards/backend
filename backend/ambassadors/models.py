@@ -213,7 +213,7 @@ class Message(models.Model):
     title = models.CharField(verbose_name="Заголовок", max_length=100)
     text = models.CharField(verbose_name="Текст", max_length=2000)
     sent = models.DateTimeField(
-        verbose_name="Дата отправки", null=True, blank=True
+        verbose_name="Дата отправки", null=True, default=timezone.now
     )
     by_email = models.BooleanField(verbose_name="На почту", default=False)
     to_telegram = models.BooleanField(verbose_name="В телеграм", default=False)
