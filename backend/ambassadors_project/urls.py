@@ -16,6 +16,7 @@ from content.views import (
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
+from mailing.views import MessageViewSet
 from orders.urls import urlpatterns as orders_url
 from websocket.views import index, room
 
@@ -24,8 +25,9 @@ router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
 router_v1.register("content", ContentDetailViewSet, basename="content_detail")
 router_v1.register("promocodes", PromoCodeViewSet, basename="promo")
 router_v1.register("ambassadors", AmbassadorViewSet, basename="ambassadors")
+router_v1.register("mailing", MessageViewSet, basename="mailing")
 router_v1.register(
-    r"yandexprogramms", YandexProgrammViewSet, basename="yandexprogramms"
+    "yandexprogramms", YandexProgrammViewSet, basename="yandexprogramms"
 )
 
 v1_urlpatterns = [

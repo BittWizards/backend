@@ -96,6 +96,8 @@ def get_image_if_not_exists(ambassador: Ambassador, user: User) -> None:
 @api_view(["POST"])
 def bot_view(request: Request) -> Response:
     """Обрабатываем запросы пользователей, который нам присылает telegram."""
+    if not settings.BOT_TOKEN:
+        return
     data = request.data
     update = Update.de_json(data)
     if update.message:

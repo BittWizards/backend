@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
-from content.models import Content, Promocode
-
-from .models import (
+from ambassadors.models import (
     Actions,
     Ambassador,
     AmbassadorActions,
@@ -10,6 +8,7 @@ from .models import (
     AmbassadorSize,
     YandexProgramm,
 )
+from content.models import Content, Promocode
 
 
 class YandexProgrammSerializer(serializers.ModelSerializer):
@@ -278,3 +277,12 @@ class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
         fields = AmbassadorContentPromoSerializer.Meta.fields + [
             "my_promocode"
         ]
+
+
+class AmbassadorInMessageSerializer(serializers.ModelSerializer):
+    tg_acc = serializers.CharField(required=False, read_only=True)
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Ambassador
+        fields = ("id", "tg_acc")
