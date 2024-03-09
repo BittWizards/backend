@@ -22,7 +22,7 @@ def add_achievments(ambassador):
             ).count()
             == REVIEW_COUNT_FOR_ACHIEV
         ):
-            change_achievement_create_order(Achievement.FRIEND)
+            change_achievement_create_order(ambassador, Achievement.FRIEND)
     elif ambassador.achievement == Achievement.FRIEND:
         if (
             Content.objects.filter(
@@ -30,4 +30,6 @@ def add_achievments(ambassador):
             ).count()
             == CONTENT_COUNT_FOR_ACHIEV
         ):
-            change_achievement_create_order(Achievement.PROFI_FRIEND)
+            change_achievement_create_order(
+                ambassador, Achievement.PROFI_FRIEND
+            )

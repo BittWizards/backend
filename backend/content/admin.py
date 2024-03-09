@@ -43,6 +43,7 @@ class ContentAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "ambassador",
+        "ambassador__achievement",
         "platform",
         "accepted",
         "start_guide",

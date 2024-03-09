@@ -75,6 +75,7 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
             "ya_programm",
             "tg_acc",
             "status",
+            "achievement",
             "created",
         )
 
@@ -203,6 +204,7 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "status",
+            "achievement",
             "tg_acc",
             "ya_programm",
         )
@@ -223,6 +225,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
             "first_name",
             "middle_name",
             "status",
+            "achievement",
             "tg_acc",
             "email",
             "phone",
