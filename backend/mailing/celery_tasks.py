@@ -1,10 +1,10 @@
 from celery import shared_task
 
-from ambassadors.models import Message
 from ambassadors_project.utils import (
     send_to_ambassadors_email,
     send_to_ambassadors_tg,
 )
+from mailing.models import Message
 
 
 @shared_task

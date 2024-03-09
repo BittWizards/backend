@@ -2,8 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
-from ambassadors.celery_tasks import send_messages_celery
-from ambassadors.models import Message
+from mailing.celery_tasks import send_messages_celery
+from mailing.models import Message
 
 
 @receiver(post_save, sender=Message)

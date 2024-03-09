@@ -1,17 +1,15 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-from users.custom_functions import get_full_name
-
-from .models import (
+from ambassadors.models import (
     Actions,
     Ambassador,
     AmbassadorActions,
     AmbassadorAddress,
     AmbassadorSize,
-    Message,
     YandexProgramm,
 )
+from users.custom_functions import get_full_name
 
 
 class AmbassadorActionsTabularInline(admin.TabularInline):
@@ -43,7 +41,6 @@ class AmbassdorAdmin(admin.ModelAdmin):
         "status",
         "created",
         "take_image",
-        "messages",
     )
     inlines = [
         AmbassadorActionsTabularInline,
@@ -78,8 +75,3 @@ class AmbassadorAddressAdmin(admin.ModelAdmin):
 @admin.register(AmbassadorSize)
 class AmbassadorSizeAdmin(admin.ModelAdmin):
     list_display = ("clothes_size", "foot_size")
-
-
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ("title", "text", "sent", "is_sent")

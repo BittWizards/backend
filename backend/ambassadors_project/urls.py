@@ -7,7 +7,6 @@ from rest_framework import routers
 
 from ambassadors.views import (
     AmbassadorViewSet,
-    MessageViewSet,
     YandexProgrammViewSet,
     get_ambassador_by_tg_acc,
 )
@@ -17,6 +16,7 @@ from content.views import (
     ContentDetailViewSet,
     PromoCodeViewSet,
 )
+from mailing.views import MessageViewSet
 from orders.urls import urlpatterns as orders_url
 from websocket.views import index, room
 
