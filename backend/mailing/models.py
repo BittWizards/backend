@@ -11,7 +11,7 @@ class Message(models.Model):
 
     ambassadors = models.ManyToManyField(Ambassador, related_name="messages")
     title = models.CharField(verbose_name="Заголовок", max_length=100)
-    text = models.CharField(verbose_name="Текст", max_length=2000)
+    text = models.TextField(verbose_name="Текст", max_length=2000)
     sent = models.DateTimeField(
         verbose_name="Дата отправки", null=True, default=timezone.now
     )
