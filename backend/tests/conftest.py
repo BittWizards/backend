@@ -1,6 +1,7 @@
 # flake8: noqa
 import pytest
 from django.conf import settings
+from django.db.models import signals
 
 from ambassadors.models import (
     Actions,
@@ -12,6 +13,16 @@ from ambassadors.models import (
 )
 from content.models import Content, Documents, Promocode
 from orders.models import Merch, Order
+
+
+@pytest.fixture(scope="session", autouse=True)
+def disable_signals():
+    signals.post_save.disconnect()
+    settings.CHANNEL_LAYERS = {
+        "default": {
+            "BACKEND": "channels.layers.InMemoryChannelLayer",
+        }
+    }
 
 
 @pytest.fixture
