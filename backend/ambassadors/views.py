@@ -8,17 +8,16 @@ from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 
-from content.mixins import ListViewSet
-from content.models import Content, Promocode
-
-from .models import Ambassador, YandexProgramm
-from .serializers import (
+from ambassadors.models import Ambassador, YandexProgramm
+from ambassadors.serializers import (
     AmbassadorContentSerializer,
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
     YandexProgrammSerializer,
 )
+from content.mixins import ListViewSet
+from content.models import Content, Promocode
 
 
 @extend_schema(tags=["Амбассадоры"])
