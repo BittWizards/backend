@@ -25,7 +25,7 @@ services:
       - 6379
 
   worker:
-    build: ./backend/
+    image: aleksey2299/ambassadors_backend:latest
     command: celery -A ambassadors_project worker -B -l info
     env_file: .env
     volumes:
