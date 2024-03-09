@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils import timezone
 
 from ambassadors.choices import AmbassadorsClothesSizes, AmbassadorsFootsSizes
 from ambassadors.models import AbstractAmbassadorAddress, Ambassador
@@ -56,7 +57,7 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
         default=OrderStatus.CREATED,
     )
     created_date = models.DateField(
-        verbose_name="Дата создания заявки", auto_now_add=True
+        verbose_name="Дата создания заявки", default=timezone.now
     )
     delivered_date = models.DateField(
         verbose_name="Дата получения заказа", null=True, blank=True
