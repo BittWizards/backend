@@ -72,10 +72,10 @@ MVP CRM ambassador
 
     Команда для загрузки данных в бд:
 
-    ```sh
-    python manage.py loaddata */fixtures/*.json
     ```
-    User password: user_test
-    Admin password: admin
+    python manage.py fill_db
+
+    ```
+
 
 [Оглавление](#contents)
