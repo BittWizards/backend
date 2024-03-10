@@ -1,3 +1,4 @@
+from ambassadors_project.settings import DOMAIN
 from orders.models import Merch
 from orders.validators import validate_exsisting_merch
 
@@ -20,6 +21,7 @@ def editing_response_data(query: list[dict]) -> list[dict]:
     """Добавление недостающего мерча к амбассадору"""
     all_merch = Merch.objects.distinct("name").values("name")
     for obj in query:
+        obj["image"] = f"http://{DOMAIN}/{obj['image']}"
         [
             obj["merch"].append({"name": merch["name"], "count": 0})
             for merch in all_merch
