@@ -44,13 +44,9 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         Создание экземпляра амбассадора через форму.
         """
         serializer = FormCreateAmbassadorSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(
-                serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )
 
     @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")

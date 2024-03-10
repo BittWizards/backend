@@ -107,7 +107,6 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "phone",
             "email",
             "tg_acc",
-            "tg_id",
             "ya_programm",
             "purpose",
             "education",
