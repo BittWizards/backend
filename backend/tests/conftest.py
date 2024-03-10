@@ -27,7 +27,7 @@ def disable_signals():
     }
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_ambassadors(db):
     programms = [
         YandexProgramm.objects.create(
@@ -77,7 +77,7 @@ def create_ambassadors(db):
     return ambassadors
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_new_ambassadors(create_ambassadors):
     for i in range(1, 3):
         ambassador = Ambassador.objects.create(
@@ -97,7 +97,7 @@ def create_new_ambassadors(create_ambassadors):
         )
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_content(create_ambassadors):
     ids = []
     for i in range(1, 6):
@@ -127,7 +127,7 @@ def create_content(create_ambassadors):
     return ids
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_promocodes(create_ambassadors):
     for i in range(1, 6):
         Promocode.objects.create(
@@ -137,7 +137,7 @@ def create_promocodes(create_ambassadors):
         time.sleep(0.1)
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_merch():
     hoodie = Merch.objects.create(
         name="Толстовка",
@@ -153,7 +153,7 @@ def create_merch():
     return (hoodie, plus, socks)
 
 
-@pytest.fixture()
+@pytest.fixture
 def create_orders(create_ambassadors, create_merch):
     # hoodie = Merch.objects.create(
     #     name="Толстовка",
