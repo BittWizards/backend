@@ -1,7 +1,10 @@
 from rest_framework.exceptions import PermissionDenied, ValidationError
 from rest_framework.status import HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 
-from ambassadors_project.constants import MERCH_MAX_NUM_IN_ORDER
+from ambassadors_project.constants import (
+    DELIVERED_STATUS_WITHOUT_DATE_ERROR,
+    MERCH_MAX_NUM_IN_ORDER,
+)
 from orders.models import Merch, OrderStatus
 
 
@@ -33,3 +36,9 @@ def validate_exsisting_merch(merch: Merch | None) -> None:
         raise ValidationError(
             "Добавлен несуществующий мерч", code=HTTP_400_BAD_REQUEST
         )
+
+
+def validate_delivered_date(data: dict) -> None:
+    if "status" in data and data["status"] == "delivered":
+        if "delivered_date" not in data:
+            raise ValidationError(DELIVERED_STATUS_WITHOUT_DATE_ERROR, 400)
