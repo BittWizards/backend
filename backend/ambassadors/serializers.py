@@ -8,11 +8,7 @@ from ambassadors.models import (
     AmbassadorSize,
     YandexProgramm,
 )
-from ambassadors.validators import (
-    gender_validator,
-    telegram_validator,
-    tg_acc_validator,
-)
+from ambassadors.validators import gender_validator, tg_acc_validator
 from content.models import Content, Promocode
 
 
@@ -120,12 +116,8 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        try:
-            tg_acc = data.get("tg_acc")
-        except KeyError as error:
-            return error
-
-        data["tg_id"] = telegram_validator(tg_acc)
+        if "tg_acc" in data:
+            tg_acc_validator(data)
         return data
 
     def create(self, validated_data):
@@ -203,11 +195,6 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
-    def validate(self, data):
-        if "tg_acc" in data:
-            tg_acc_validator(data)
-        return data
-
 
 class ShortAmbassadorSerializer(serializers.ModelSerializer):
     """Сериалайзер для отображения короткого списка полей амбассадора
@@ -271,14 +258,10 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        try:
-            gender = data.get("gender")
-            tg_acc = data.get("tg_acc")
-        except KeyError as error:
-            return error
-
-        data["tg_id"] = telegram_validator(tg_acc)
-        data["gender"] = gender_validator(gender)
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        if "gender" in data:
+            gender_validator(data)
         return data
 
     def create(self, validated_data):
@@ -293,7 +276,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
         street_home = validated_data.pop("street_home")
         post_index = validated_data.pop("post_index")
 
-        if not purpose:
+        if purpose == "Свой вариант":
             purpose = validated_data.pop("purpose_extra")
         else:
             purpose = validated_data.pop("purpose")
@@ -307,7 +290,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
             purpose=purpose,
             last_name=prepared_fio[0],
             first_name=prepared_fio[1],
-            middle_name=prepared_fio[2],
+            middle_name=prepared_fio[2] if len(prepared_fio) > 2 else None,
             **validated_data,
         )
         address_data = AmbassadorAddress.objects.create(
