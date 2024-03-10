@@ -11,9 +11,9 @@ def test_all_content(client: APIClient, create_content):
             assert element["image"] == (
                 "http://testserver/media/profiles/default_pic.jpeg"
             )
-            assert element["first_name"] == f"Иван{index + 1}"
-            assert element["last_name"] == f"Иванов{index + 1}"
-            assert element["tg_acc"] == f"ivanov{index + 1}"
+            assert element["first_name"] == f"Иван{5 - index}"
+            assert element["last_name"] == f"Иванов{5 - index}"
+            assert element["tg_acc"] == f"ivanov{5 - index}"
             assert "rating" in element
 
             assert element["review_count"] == 1

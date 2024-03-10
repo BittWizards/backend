@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.3"
 
 services:
   db:
@@ -46,8 +46,21 @@ services:
       - media:/media/
       - certs:/etc/letsencrypt
 
+  frontend:
+    env_file: .env
+    image: natashasolntseva/ambassadors_frontend:latest
+    command: cp -r /app/dist/. /frontend_static/
+    volumes:
+      - static:/frontend_static
+
+  bot:
+    image: aleksey299/ambassadors_bot_frontend:latest
+    volumes:
+      - bot_static:/frontend_static
+
 volumes:
   postgres_data:
   static:
+  bot_static:
   media:
   certs:

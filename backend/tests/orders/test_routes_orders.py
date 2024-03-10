@@ -10,7 +10,7 @@ def test_track_orders(client: APIClient, create_orders):
         for index, element in enumerate(instances):
             assert element["id"] == 5 - index
             assert "image" in element["ambassador"]
-            assert element["ambassador"]["status"] == "active"
+            assert element["ambassador"]["status"] == "Active"
             assert element["ambassador"]["first_name"] == f"Иван{5 - index}"
             assert element["ambassador"]["last_name"] == f"Иванов{5 - index}"
             assert (
@@ -18,8 +18,8 @@ def test_track_orders(client: APIClient, create_orders):
             )
             assert element["ambassador"]["tg_acc"] == f"ivanov{5 - index}"
             assert element["track_number"] == f"track_number{5 - index}"
-            assert "created_date" in element["merch"]
-            assert "status" in element["merch"]
+            assert "created_date" in element
+            assert "status" in element
 
     url = "/api/v1/orders/"
 
@@ -42,12 +42,10 @@ def test_single_order(client: APIClient, create_orders):
         assert instance["street_home"] == "УлицаДом"
         assert instance["post_index"] == 123456
 
-        # TODO
-        # assert isinstance(instance["sizes"], dict)
-        # assert instance["size"]["clothes_size"] == "M"
-        # assert instance["size"]["foot_size"] == "35-39"
-
         assert isinstance(instance["merch"], list)
+        for e in instance["merch"]:
+            assert "name" in e
+            assert "size" in e
 
     url = "/api/v1/orders/1/"
 
@@ -70,7 +68,7 @@ def test_all_orders(client: APIClient, create_orders):
             assert "total_cost" in element
             assert "last_delivered" in element
 
-    url = "/api/v1/ordrs/"  # ???
+    url = "/api/v1/merch_to_ambassador/"
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
     assert_instances(response.json())
@@ -85,7 +83,7 @@ def test_ambassador_orders(client: APIClient, create_orders):
         assert "last_name" in instance
         assert "middle_name" in instance
         assert "city" in instance
-        assert "ya_program" in instance
+        assert "ya_programm" in instance
         assert "phone" in instance
         assert "email" in instance
         assert "tg_acc" in instance
@@ -93,12 +91,12 @@ def test_ambassador_orders(client: APIClient, create_orders):
 
         for single_merch in instance["merch"]:
             assert "delivered_date" in single_merch
-            assert "cost" in single_merch
+            assert "total_cost" in single_merch
             assert "name" in single_merch
             assert "size" in single_merch
-            assert "count" in single_merch
+            assert "amount" in single_merch
 
-    url = "/api/v1/ambassadors/1/merch/"
+    url = "/api/v1/ambassadors/1/orders/"
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
     assert_instance(response.json())

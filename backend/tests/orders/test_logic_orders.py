@@ -31,11 +31,11 @@ def test_post_order(client: APIClient, create_ambassadors, create_merch):
 
 @pytest.mark.django_db
 def test_patch_order(client: APIClient, create_orders):
-    url = "/api/v1/orders/1"
+    url = "/api/v1/orders/1/"
 
-    data = dict(status="delivered", track_number="5415gfdgg55")
+    data = dict(status="shipped", track_number="5415gfdgg55")
     response = client.patch(url, data, "application/json")
-    assert response.status_code == HTTPStatus.CREATED
+    assert response.status_code == HTTPStatus.OK
 
 
 @pytest.mark.django_db
@@ -56,7 +56,7 @@ def test_patch_status_order(client: APIClient, create_orders):
 
     response = client.patch(
         url,
-        {"status": "delivered", "delivered_at": now},
+        {"status": "delivered", "delivered_date": now},
         "application/json",
     )
     assert response.status_code == HTTPStatus.OK

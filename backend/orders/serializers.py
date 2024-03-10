@@ -1,7 +1,9 @@
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from ambassadors.models import Ambassador
 from ambassadors.serializers import ShortAmbassadorSerializer
+from ambassadors_project.constants import DELIVERED_STATUS_WITHOUT_DATE_ERROR
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
 from orders.validators import validate_editing_order, validate_merch_num
@@ -34,10 +36,12 @@ class OrderSerializer(serializers.ModelSerializer):
             "status",
             "created_date",
             "track_number",
+            "country",
             "city",
             "street_home",
             "post_index",
             "comment",
+            "delivered_date",
         )
         read_only_fields = (
             "created_date",
@@ -64,6 +68,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Order, validated_data: dict) -> Order:
         validate_editing_order(instance.status)
+        if (
+            "status" in validated_data
+            and validated_data["status"] == "delivered"
+        ):
+            if "delivered_date" not in validated_data:
+                raise ValidationError(DELIVERED_STATUS_WITHOUT_DATE_ERROR, 400)
         merch_data = validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
         if validated_data.get("track_number") and not instance.track_number:

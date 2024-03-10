@@ -22,7 +22,7 @@ class AbstractUser(models.Model):
     )
     phone = models.CharField(
         verbose_name="Номер телефона",
-        max_length=15,
+        max_length=20,
         blank=False,
     )
 
