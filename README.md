@@ -21,11 +21,11 @@ MVP CRM ambassador
 
 Команда:
 
-- Product manager
-  - Смирнов Алексей
-
 - Project manager
   - Кравцова Елена
+
+- Product manager
+  - Смирнов Алексей
 
 - Business analytics
   - Филимонова Ольга
