@@ -1,4 +1,5 @@
-from django.db.models import Count, OuterRef, Subquery
+from django.db.models import Count, OuterRef, Subquery, Value
+from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -42,13 +43,16 @@ class AllContentsViewSet(ListViewSet):
 
     def get_queryset(self):
         queryset = Ambassador.objects.annotate(
-            rating=Subquery(
-                Content.objects.filter(
-                    ambassador=OuterRef("pk"), accepted=True
-                )
-                .values("ambassador")
-                .annotate(count=Count("pk"))
-                .values("count")
+            rating=Coalesce(
+                Subquery(
+                    Content.objects.filter(
+                        ambassador=OuterRef("pk"), accepted=True
+                    )
+                    .values("ambassador")
+                    .annotate(count=Count("pk"))
+                    .values("count")
+                ),
+                Value(0),
             ),
             review_count=Subquery(
                 Content.objects.filter(
