@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ambassadors.validators import telegram_validator
+from ambassadors.validators import gender_validator, telegram_validator
 from content.models import Content, Promocode
 
 from .models import (
@@ -202,6 +202,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
     """
 
     full_name = serializers.CharField()
+    gender = serializers.CharField()
     ya_programm = serializers.CharField()
     purpose = serializers.CharField(required=False)
     purpose_extra = serializers.CharField(required=False)
@@ -237,8 +238,14 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, data):
-        if "tg_acc" in data:
-            data["tg_id"] = telegram_validator(data)
+        try:
+            gender = data.get("gender")
+            tg_acc = data.get("tg_acc")
+        except KeyError as error:
+            return error
+
+        data["tg_id"] = telegram_validator(tg_acc)
+        data["gender"] = gender_validator(gender)
         return data
 
     def create(self, validated_data):
