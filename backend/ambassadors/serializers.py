@@ -8,6 +8,7 @@ from ambassadors.models import (
     AmbassadorSize,
     YandexProgramm,
 )
+from ambassadors.validators import tg_acc_validator
 from content.models import Content, Promocode
 
 
@@ -110,6 +111,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "size",
             "actions",
             "status",
+            "achievement",
             "created",
         )
 
@@ -120,7 +122,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         actions_data = validated_data.pop("actions")
         ambassador = Ambassador.objects.create(
             ya_programm=YandexProgramm.objects.get_or_create(
-                title=ya_programm
+                title=ya_programm["title"]
             )[0],
             **validated_data,
         )
@@ -187,6 +189,11 @@ class AmbassadorSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+    def validate(self, data):
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        return data
 
 
 class ShortAmbassadorSerializer(serializers.ModelSerializer):

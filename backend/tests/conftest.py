@@ -1,4 +1,6 @@
 # flake8: noqa
+import time
+
 import pytest
 from django.conf import settings
 from django.db.models import signals
@@ -26,7 +28,7 @@ def disable_signals():
 
 
 @pytest.fixture
-def create_ambassadors():
+def create_ambassadors(db):
     programms = [
         YandexProgramm.objects.create(
             id=i, title=f"Programm{i}", description=f"{i}"
@@ -37,6 +39,7 @@ def create_ambassadors():
         Actions.objects.create(id=i, title=f"Actions{i}", description=f"{i}")
         for i in range(1, 7)
     ]
+    ambassadors = []
     for i in range(1, 6):
         ambassador = Ambassador.objects.create(
             id=i,
@@ -48,7 +51,7 @@ def create_ambassadors():
             ya_programm=programms[i - 1],
             phone=f"7(917)123-45-6{i}",
             tg_acc=f"ivanov{i}",
-            # purpose="Закончить",
+            purpose="Закончить",
             education="9 классов",
             work="Беллинсгаузен",
             status="Active",
@@ -57,10 +60,6 @@ def create_ambassadors():
         AmbassadorActions.objects.create(
             ambassador_id=ambassador,
             action=actions[i - 1],
-        )
-        AmbassadorActions.objects.create(
-            ambassador_id=ambassador,
-            action=actions[i],
         )
         AmbassadorAddress.objects.create(
             ambassador_id=ambassador,
@@ -74,6 +73,8 @@ def create_ambassadors():
             clothes_size="M",
             foot_size="37",
         )
+        ambassadors.append(ambassador)
+    return ambassadors
 
 
 @pytest.fixture
@@ -100,26 +101,28 @@ def create_new_ambassadors(create_ambassadors):
 def create_content(create_ambassadors):
     ids = []
     for i in range(1, 6):
-        content = Content.objects.create(
+        content1 = Content.objects.create(
             ambassador_id=i,
             link=f"http://localhost/{i}",
             accepted=True,
             type="review",
         )
-        ids.append(content.id)
-        content = Content.objects.create(
+        ids.append(content1.id)
+        content2 = Content.objects.create(
             ambassador_id=i,
-            link=f"http://localhost/{i}",
+            link=f"http://localhost/2{i}",
             accepted=True,
+            type="content",
             platform="habr",
         )
+        ids.append(content2.id)
         Documents.objects.create(
-            content=content,
-            document=f"http://localhost:1/{i}",
+            content=content1,
+            document=f"http://localhost:1/d{i}.jpg",
         )
         Documents.objects.create(
-            content=content,
-            document=f"http://localhost:2/{i}",
+            content=content2,
+            document=f"http://localhost:2/d2{i}.png",
         )
     return ids
 
@@ -131,10 +134,11 @@ def create_promocodes(create_ambassadors):
             ambassador_id=i,
             promocode=f"PROMO{i}",
         )
+        time.sleep(0.1)
 
 
 @pytest.fixture
-def create_orders(create_ambassadors):
+def create_merch():
     hoodie = Merch.objects.create(
         name="Толстовка",
         size="XL",
@@ -146,6 +150,22 @@ def create_orders(create_ambassadors):
         name="Носки",
         size=37,
     )
+    return (hoodie, plus, socks)
+
+
+@pytest.fixture
+def create_orders(create_ambassadors, create_merch):
+    # hoodie = Merch.objects.create(
+    #     name="Толстовка",
+    #     size="XL",
+    # )
+    # plus = Merch.objects.create(
+    #     name="plus",
+    # )
+    # socks = Merch.objects.create(
+    #     name="Носки",
+    #     size=37,
+    # )
     for i in range(1, 6):
         order = Order.objects.create(
             id=i,
@@ -159,4 +179,4 @@ def create_orders(create_ambassadors):
             street_home="УлицаДом",
             post_index=123456,
         )
-        order.merch.set((hoodie, plus, socks))
+        order.merch.set(create_merch)

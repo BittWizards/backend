@@ -19,6 +19,7 @@ class OrderSerializer(serializers.ModelSerializer):
     """Сериалайзер для заявок на мерч"""
 
     merch = serializers.SerializerMethodField()
+    created_date = serializers.DateTimeField(required=False)
 
     class Meta:
         model = Order
