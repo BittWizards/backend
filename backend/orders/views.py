@@ -63,15 +63,14 @@ class OrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
 
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
     http_method_names = ["get", "post", "patch", "delete"]
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["ambassador__id", "status"]
 
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = AllOrdersListSerialiazer(queryset, many=True)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        if self.request.method == "GET" and self.action == "list":
+            return AllOrdersListSerialiazer
+        return OrderSerializer
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)

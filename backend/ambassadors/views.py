@@ -14,6 +14,7 @@ from ambassadors.serializers import (
     AmbassadorListSerializer,
     AmbassadorPromocodeSerializer,
     AmbassadorSerializer,
+    FormCreateAmbassadorSerializer,
     YandexProgrammSerializer,
 )
 from content.mixins import ListViewSet
@@ -36,6 +37,16 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
             return AmbassadorListSerializer
         else:
             return AmbassadorSerializer
+
+    @action(detail=False, url_path="form", methods=("post",))
+    def form(self, request):
+        """
+        Создание экземпляра амбассадора через форму.
+        """
+        serializer = FormCreateAmbassadorSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")

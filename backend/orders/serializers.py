@@ -93,7 +93,7 @@ class OrderSerializer(serializers.ModelSerializer):
 class AllOrdersListSerialiazer(serializers.ModelSerializer):
     """Сериалайзер для отображения всех существующих заявок"""
 
-    ambassador = ShortAmbassadorSerializer()
+    ambassador = ShortAmbassadorSerializer(read_only=True)
 
     class Meta:
         model = Order
