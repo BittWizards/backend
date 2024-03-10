@@ -4,11 +4,10 @@ import pytest
 from rest_framework.test import APIClient
 
 
-@pytest.mark.django_db
+@pytest.mark.django_db(True)
 def test_all_content(client: APIClient, create_content):
     def assert_instances(instances):
         for index, element in enumerate(instances):
-            assert element["id"] == create_content[index]
             assert element["image"] == (
                 "http://testserver/media/profiles/default_pic.jpeg"
             )
@@ -26,7 +25,7 @@ def test_all_content(client: APIClient, create_content):
             assert element["instagram_count"] is None
             assert element["other_count"] is None
 
-            assert "last_created" in element
+            assert "last_date" in element
 
     url = "/api/v1/allcontent/"
 
@@ -41,21 +40,22 @@ def test_ambassador_content(client: APIClient, create_content):
     def assert_instance(instance):
         assert instance["id"] == 1
         assert "image" in instance
-        assert instance["accepted"] is True
         assert instance["first_name"] == "Иван1"
         assert instance["last_name"] == "Иванов1"
         assert instance["tg_acc"] == "ivanov1"
         assert instance["email"] == "ivan.ivanov1@example.com"
-        assert instance["phone"] == "7 (917) 123-45-61"
-        assert instance["ya_programm_name"] == "Programm1"
-        assert instance["city_address"] == "Город1"
+        assert instance["phone"] == "7(917)123-45-61"
+        assert instance["ya_programm"] == "Programm1"
+        assert instance["achievement"] == "new"
+        assert instance["city"] == "Город1"
+        assert "rating" in instance
 
-        assert isinstance(instance["content"], list)
-        for element in instance["content"]:
+        assert isinstance(instance["my_content"], list)
+        for element in instance["my_content"]:
             assert "id" in element
             assert "created_at" in element
             assert "link" in element
-            assert "files" in element
+            assert "documents" in element
 
     url = "/api/v1/ambassadors/1/content/"
 

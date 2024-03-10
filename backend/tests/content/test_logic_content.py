@@ -54,15 +54,11 @@ def test_post_and_delete_promocode(client: APIClient, create_ambassadors):
 
 
 @pytest.mark.django_db
-def test_post_duplicate_promocode(client: APIClient, create_ambassadors):
+def test_post_incorrect_promocode(client: APIClient, create_ambassadors):
     url = "/api/v1/promocodes/"
     data = {
         "ambassador": 1,
-        "promocode": "EXAMPLE",
+        "promocode": "ffffff",
     }
-
-    response = client.post(url, data, "application/json")
-    assert response.status_code == HTTPStatus.CREATED
-
     response = client.post(url, data, "application/json")
     assert response.status_code == HTTPStatus.BAD_REQUEST

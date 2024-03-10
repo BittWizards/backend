@@ -46,9 +46,9 @@ def test_all_ambassadors(client: APIClient, create_ambassadors):
             assert element["middle_name"] == f"Иванович{index + 1}"
             assert element["status"] == "Active"
             assert element["tg_acc"] == f"ivanov{index + 1}"
-            assert "created" in element
-
             assert element["ya_programm"] == f"Programm{index + 1}"
+            assert element["achievement"] == "new"
+            assert "created" in element
 
     url = "/api/v1/ambassadors/"
     response = client.get(url)
@@ -69,6 +69,7 @@ def test_new_ambassadors(client: APIClient, create_new_ambassadors):
             assert element["middle_name"] == f"Иванович{index + 6}"
             assert element["ya_programm"] == f"Programm{index + 1}"
             assert element["status"] == "Clarify"
+            assert element["achievement"] == "new"
             assert "created" in element
 
     url = "/api/v1/ambassadors/?status=Clarify"
@@ -105,16 +106,14 @@ def test_ambassador_profile(client: APIClient, create_ambassadors):
 
         assert isinstance(instance["size"], dict)
         assert instance["size"]["clothes_size"] == "M"
-        assert instance["size"]["foot_size"] == 37
+        assert instance["size"]["foot_size"] == "37"
 
         assert instance["ya_programm"] == "Programm1"
-        # assert instance["purpose"] == "Закончить"
+        assert instance["purpose"] == "Закончить"
         assert instance["work"] == "Беллинсгаузен"
         assert instance["education"] == "9 классов"
-
+        assert instance["achievement"] == "new"
         assert isinstance(instance["actions"], list)
-
-        # assert instance["extra_info"] == "Хороший человек"
 
     url = "/api/v1/ambassadors/1/"
     response = client.get(url)

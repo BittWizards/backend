@@ -22,7 +22,11 @@ from content.serializers import (
 
 @extend_schema(tags=["Промокоды"])
 class PromoCodeViewSet(ListCreateDestroyViewSet):
-    queryset = Promocode.objects.all().prefetch_related("ambassador")
+    queryset = (
+        Promocode.objects.all()
+        .prefetch_related("ambassador")
+        .order_by("-created_at")
+    )
 
     def get_serializer_class(self):
         if self.request.method in ["POST"]:
