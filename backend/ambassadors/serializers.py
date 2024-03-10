@@ -155,7 +155,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             ambassador.save()
             return ambassador
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Ambassador, validated_data):
         if "status" in validated_data:
             if (
                 validated_data["status"] == "Active"
@@ -171,18 +171,32 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         if "address" in validated_data:
             address = validated_data.pop("address")
             # TODO Валидация
-            AmbassadorAddress.objects.get_or_create(
+            try:
+                AmbassadorAddress.objects.get(ambassador_id=instance).delete()
+            except Exception:
+                ...
+            AmbassadorAddress.objects.update_or_create(
                 **address, ambassador_id=instance
             )
         if "size" in validated_data:
             size = validated_data.pop("size")
             # TODO Валидация
-            AmbassadorSize.objects.get_or_create(
-                ambassador_id=instance,
+            try:
+                AmbassadorSize.objects.get(ambassador_id=instance).delete()
+            except Exception:
+                ...
+            AmbassadorSize.objects.update_or_create(
                 **size,
+                ambassador_id=instance,
             )
         if "actions" in validated_data:
             actions_data = validated_data.pop("actions")
+            try:
+                AmbassadorActions.objects.filter(
+                    ambassador_id=instance
+                ).delete()
+            except Exception:
+                ...
             for action_data in actions_data:
                 # TODO Валидация
                 current_action = Actions.objects.get_or_create(
