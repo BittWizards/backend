@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from ambassadors.validators import gender_validator, telegram_validator
-from content.models import Content, Promocode
-
-from .models import (
+from ambassadors.models import (
     Actions,
     Ambassador,
     AmbassadorActions,
@@ -11,6 +8,12 @@ from .models import (
     AmbassadorSize,
     YandexProgramm,
 )
+from ambassadors.validators import (
+    gender_validator,
+    telegram_validator,
+    tg_acc_validator,
+)
+from content.models import Content, Promocode
 
 
 class YandexProgrammSerializer(serializers.ModelSerializer):
@@ -76,6 +79,7 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
             "ya_programm",
             "tg_acc",
             "status",
+            "achievement",
             "created",
         )
 
@@ -112,6 +116,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "size",
             "actions",
             "status",
+            "achievement",
             "created",
         )
 
@@ -130,21 +135,27 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         size = validated_data.pop("size")
         actions_data = validated_data.pop("actions")
         ambassador = Ambassador.objects.create(
-            ya_programm=YandexProgramm.objects.get_or_create(**ya_programm)[0],
+            ya_programm=YandexProgramm.objects.get_or_create(
+                title=ya_programm["title"]
+            )[0],
             **validated_data,
         )
+        # TODO Валидация
         address_data = AmbassadorAddress.objects.create(
             **address,
             ambassador_id=ambassador,
         )
+        # TODO Валидация
         size_data = AmbassadorSize.objects.create(
             ambassador_id=ambassador,
             **size,
         )
         for action_data in actions_data:
+            # TODO Валидация
             current_action = Actions.objects.get_or_create(
                 **action_data["action"],
             )
+            # TODO Валидация
             AmbassadorActions.objects.create(
                 action=current_action[0],
                 ambassador_id=ambassador,
@@ -158,16 +169,19 @@ class AmbassadorSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
+            # TODO Валидация
             instance.ya_programm = YandexProgramm.objects.get_or_create(
                 **ya_programm
             )[0]
         if "address" in validated_data:
             address = validated_data.pop("address")
+            # TODO Валидация
             AmbassadorAddress.objects.get_or_create(
                 **address, ambassador_id=instance
             )
         if "size" in validated_data:
             size = validated_data.pop("size")
+            # TODO Валидация
             AmbassadorSize.objects.get_or_create(
                 ambassador_id=instance,
                 **size,
@@ -175,15 +189,25 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         if "actions" in validated_data:
             actions_data = validated_data.pop("actions")
             for action_data in actions_data:
+                # TODO Валидация
                 current_action = Actions.objects.get_or_create(
                     **action_data["action"]
                 )
+                # TODO Валидация
                 AmbassadorActions.objects.create(
                     action=current_action[0], ambassador_id=instance
                 )
 
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
         instance.save()
         return instance
+
+    def validate(self, data):
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        return data
 
 
 class ShortAmbassadorSerializer(serializers.ModelSerializer):
@@ -200,6 +224,7 @@ class ShortAmbassadorSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "status",
+            "achievement",
             "tg_acc",
             "ya_programm",
         )
@@ -332,6 +357,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
             "first_name",
             "middle_name",
             "status",
+            "achievement",
             "tg_acc",
             "email",
             "phone",
@@ -369,9 +395,13 @@ class AmbassadorContentSerializer(AmbassadorContentPromoSerializer):
     """Сериализатор для контента конкретного амбассадора."""
 
     my_content = ContentsForAmbassadorSerializer(many=True)
+    rating = serializers.IntegerField(default=0)
 
     class Meta(AmbassadorContentPromoSerializer.Meta):
-        fields = AmbassadorContentPromoSerializer.Meta.fields + ["my_content"]
+        fields = AmbassadorContentPromoSerializer.Meta.fields + [
+            "my_content",
+            "rating",
+        ]
 
 
 class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
@@ -383,3 +413,12 @@ class AmbassadorPromocodeSerializer(AmbassadorContentPromoSerializer):
         fields = AmbassadorContentPromoSerializer.Meta.fields + [
             "my_promocode"
         ]
+
+
+class AmbassadorInMessageSerializer(serializers.ModelSerializer):
+    tg_acc = serializers.CharField(required=False, read_only=True)
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = Ambassador
+        fields = ("id", "tg_acc")

@@ -17,7 +17,7 @@ from openapi.orders_schema import (
     merch_extend_schema_view,
     orders_extend_schema_view,
 )
-from orders.mixins import CreateRetrieveMixin
+from orders.mixins import RetrieveMixin
 from orders.models import Merch, Order, OrderStatus
 from orders.serializers import (
     AllOrdersListSerialiazer,
@@ -29,14 +29,48 @@ from orders.utils import editing_response_data, get_filtered_merch_objects
 
 
 @extend_schema_view(**ambassador_orders_extend_schema_view)
-class AmbassadorOrdersViewSet(CreateRetrieveMixin):
+class AmbassadorOrdersViewSet(RetrieveMixin):
+    """ViewSet для заявок на мерч по конкретному амбассадору"""
+
+    queryset = Ambassador.objects.all()
+    serializer_class = AmbassadorOrderListSerializer
+
+    def get_object(self) -> Ambassador:
+        ambassador_id = self.kwargs.get("ambassador_id")
+        subquery = (
+            Order.objects.filter(ambassador=ambassador_id)
+            .values("merch__name")
+            .annotate(
+                data=JSONObject(
+                    id=F("id"),
+                    created_date=F("created_date"),
+                    name=F("merch__name"),
+                    size=F("merch__size"),
+                    amount=1,
+                    total_cost=F("total_cost"),
+                )
+            )
+            .values_list("data")
+        )
+        return Ambassador.objects.filter(id=ambassador_id).annotate(
+            merch=ArraySubquery(subquery),
+        )[0]
+
+
+@extend_schema_view(**orders_extend_schema_view)
+class OrdersViewSet(viewsets.ModelViewSet):
     """ViewSet для заявок на мерч"""
 
     queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+    http_method_names = ["get", "post", "patch", "delete"]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["ambassador__id", "status"]
 
-    def get_object(self) -> Order:
-        ambassador_id = self.kwargs.get("ambassador_id")
-        return Ambassador.objects.get(id=ambassador_id)
+    def list(self, request: Request, *args, **kwargs) -> Response:
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = AllOrdersListSerialiazer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request: Request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(data=request.data)
@@ -51,31 +85,10 @@ class AmbassadorOrdersViewSet(CreateRetrieveMixin):
 
     def perform_create(self, serializer: Serializer, merch: Merch) -> None:
         ambassador = get_object_or_404(
-            Ambassador, pk=self.kwargs["ambassador_id"]
+            Ambassador, pk=self.request.data["ambassador"]
         )
         serializer.validated_data["ambassador"] = ambassador
         serializer.save(merch=merch)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return OrderSerializer
-        return AmbassadorOrderListSerializer
-
-
-@extend_schema_view(**orders_extend_schema_view)
-class OrdersViewSet(viewsets.ModelViewSet):
-    """ViewSet для заявок на мерч"""
-
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    http_method_names = ["get", "patch", "delete"]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ["ambassador__id", "status"]
-
-    def list(self, request: Request, *args, **kwargs) -> Response:
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = AllOrdersListSerialiazer(queryset, many=True)
-        return Response(serializer.data)
 
 
 @extend_schema_view(**merch_extend_schema_view)
@@ -104,10 +117,9 @@ class AllMerchToAmbassadorView(views.APIView):
             Ambassador.objects.annotate(
                 merch=ArraySubquery(subsuery),
                 last_delivery_date=Max("orders__delivered_date"),
-                c=Count("merch", distinct=True),
             )
             .filter(orders__status=OrderStatus.DELIVERED)
-            .order_by("c")
+            .order_by("last_delivery_date")
             .annotate(total=Sum("orders__total_cost", distinct=True))
             .values(
                 "id",

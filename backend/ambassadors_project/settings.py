@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "content",
     "bot",
     "websocket",
+    "mailing",
 ]
 
 MIDDLEWARE = [
@@ -161,6 +162,20 @@ CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://redis:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get(
     "RESULT_BACKEND", "redis://redis:6379/0"
 )
-CELERY_TIMEZONE = "UTC"
+CELERY_TIMEZONE = "Europe/Moscow"
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+# Email Settings
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
+DEFAULT_FROM_EMAIL = os.getenv("EMAIL_HOST_USER", "ambassadors@yandex.ru")
+if os.getenv("USE_SMTP", "False").lower() == "true":
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_HOST = os.getenv("EMAIL_HOST")
+EMAIL_PORT = os.getenv("EMAIL_PORT")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS")
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL")

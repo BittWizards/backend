@@ -10,9 +10,12 @@ from ambassadors.serializers import ShortAmbassadorSerializer
 from ambassadors.validators import tg_acc_validator
 from ambassadors_project.constants import (
     ERROR_MESSAGE_PROMOCODE,
+    ERROR_MESSAGE_SISE_PROMOCODE,
     PATTERN_PROMO,
+    PROMOSIZE,
 )
 from content.models import Content, Documents, Promocode
+from content.utils import add_achievments
 
 
 class NewContentSerializer(serializers.ModelSerializer):
@@ -52,6 +55,7 @@ class AllContentSerializer(serializers.ModelSerializer):
             "first_name",
             "tg_acc",
             "status",
+            "achievement",
             "rating",
             "review_count",
             "habr_count",
@@ -86,6 +90,7 @@ class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
             "first_name",
             "middle_name",
             "status",
+            "achievement",
             "tg_acc",
             "email",
             "phone",
@@ -165,13 +170,13 @@ class PostContentSerializer(serializers.ModelSerializer):
                 ]
                 Documents.objects.bulk_create(docs_to_create)
 
-        return content
+        return content[0]
 
     def update(self, instance, validated_data):
         super().update(instance, validated_data)
         if not validated_data.get("accepted"):
             return instance
-        # функция подсчета контента и присвоения достижений
+        add_achievments(instance.ambassador)
         return instance
 
     def to_representation(self, instance):
@@ -233,6 +238,8 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         promocode = data.get("promocode")
         if not re.fullmatch(PATTERN_PROMO, promocode):
             raise ValidationError(ERROR_MESSAGE_PROMOCODE)
+        if len(promocode) > PROMOSIZE:
+            raise ValidationError(ERROR_MESSAGE_SISE_PROMOCODE)
         return data
 
     def to_representation(self, instance):

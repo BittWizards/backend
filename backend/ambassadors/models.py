@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 
 from ambassadors.choices import (
+    Achievement,
     AmbassadorsClothesSizes,
     AmbassadorsFootsSizes,
     AmbassadorStatus,
@@ -88,10 +89,15 @@ class Ambassador(AbstractUser):
         verbose_name="Телеграмм id", blank=True, null=True
     )
     image = models.ImageField(
-        "Фото",
+        verbose_name="Фото",
         upload_to="profiles/",
         null=True,
         default="profiles/default_pic.jpeg",
+    )
+    achievement = models.CharField(
+        verbose_name="Ачивка",
+        choices=Achievement.choices,
+        default=Achievement.NEW,
     )
     extra_info = models.CharField(
         verbose_name="Дополнительная информация",
@@ -198,7 +204,7 @@ class AmbassadorSize(models.Model):
         max_length=30,
         choices=AmbassadorsClothesSizes.choices,
     )
-    foot_size = models.IntegerField(
+    foot_size = models.CharField(
         verbose_name="Размер обуви",
         choices=AmbassadorsFootsSizes.choices,
     )
@@ -212,52 +218,3 @@ class AmbassadorSize(models.Model):
         return (
             f"Размер обуви:{self.foot_size}, размер одежды:{self.clothes_size}"
         )
-
-
-class SendingMessage(models.Model):
-    """
-    Модель отправки сообщений.
-    """
-
-    title = models.CharField(verbose_name="Заголовок", max_length=100)
-    description = models.CharField(verbose_name="Описание", max_length=2000)
-    created = models.DateTimeField(verbose_name="Было отправлено", null=True)
-    supervisor_id = models.ForeignKey(
-        User, verbose_name="Супервизор", on_delete=models.CASCADE
-    )
-    sent = models.BooleanField(verbose_name="Отправлено", default=False)
-
-    class Meta:
-        verbose_name = "Сообщение для амбассадора"
-        verbose_name_plural = "Сообщения для амбассадоров"
-        ordering = ("id",)
-
-    def __str__(self) -> str:
-        return f"{self.title}"
-
-
-class MessageToAmbassador(models.Model):
-    """
-    Связанная таблица сообщений и амбассадоров.
-    """
-
-    ambassador_id = models.ForeignKey(
-        Ambassador,
-        verbose_name="Амбассадор",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    sending_message_id = models.ForeignKey(
-        SendingMessage,
-        verbose_name="Сообщение",
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-
-    class Meta:
-        verbose_name = "Отправленное сообщение для амбассадора"
-        verbose_name_plural = "Отправленные сообщения для амбассадоров"
-        ordering = ("id",)
-
-    def __str__(self) -> str:
-        return f"{self.ambassador_id} {self.sending_message_id}"

@@ -1,4 +1,7 @@
-from django.db.models import Count, OuterRef, Subquery
+from datetime import datetime
+
+from django.db.models import Count, OuterRef, Subquery, Value
+from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -22,7 +25,11 @@ from content.serializers import (
 
 @extend_schema(tags=["Промокоды"])
 class PromoCodeViewSet(ListCreateDestroyViewSet):
-    queryset = Promocode.objects.all().prefetch_related("ambassador")
+    queryset = (
+        Promocode.objects.all()
+        .prefetch_related("ambassador")
+        .order_by("-created_at")
+    )
 
     def get_serializer_class(self):
         if self.request.method in ["POST"]:
@@ -38,13 +45,16 @@ class AllContentsViewSet(ListViewSet):
 
     def get_queryset(self):
         queryset = Ambassador.objects.annotate(
-            rating=Subquery(
-                Content.objects.filter(
-                    ambassador=OuterRef("pk"), accepted=True
-                )
-                .values("ambassador")
-                .annotate(count=Count("pk"))
-                .values("count")
+            rating=Coalesce(
+                Subquery(
+                    Content.objects.filter(
+                        ambassador=OuterRef("pk"), accepted=True
+                    )
+                    .values("ambassador")
+                    .annotate(count=Count("pk"))
+                    .values("count")
+                ),
+                Value(0),
             ),
             review_count=Subquery(
                 Content.objects.filter(
@@ -126,16 +136,19 @@ class AllContentsViewSet(ListViewSet):
                 .annotate(count=Count("pk"))
                 .values("count")
             ),
-            last_date=Subquery(
-                Content.objects.filter(
-                    ambassador=OuterRef("pk"),
-                    accepted=True,
-                )
-                .order_by("-created_at")
-                .values("ambassador")
-                .values("created_at")[:1]
+            last_date=Coalesce(
+                Subquery(
+                    Content.objects.filter(
+                        ambassador=OuterRef("pk"),
+                        accepted=True,
+                    )
+                    .order_by("-created_at")
+                    .values("ambassador")
+                    .values("created_at")[:1]
+                ),
+                Value(datetime(2000, 1, 1, 0, 0, 0)),
             ),
-        )
+        ).order_by("-rating", "-last_date")
         return queryset
 
 

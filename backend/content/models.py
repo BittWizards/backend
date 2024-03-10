@@ -1,6 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
+from django.utils import timezone
 
 from ambassadors.models import Ambassador
 from ambassadors_project.constants import (
@@ -40,9 +41,9 @@ class Content(models.Model):
         related_name="my_content",
     )
     created_at = models.DateTimeField(
-        verbose_name="Дата отчета", auto_now_add=True, db_index=True
+        verbose_name="Дата отчета", default=timezone.now, db_index=True
     )
-    link = models.URLField(verbose_name="ссылка на контент")
+    link = models.URLField(verbose_name="ссылка на контент", unique=True)
     start_guide = models.BooleanField(default=False, verbose_name="По гайду")
     type = models.CharField(
         null=True,
