@@ -15,5 +15,4 @@ DJANGO_SUPERUSER_LAST_NAME=admin \
 DJANGO_SUPERUSER_PHONE="8(999)adm-in-im" \
 python manage.py createsuperuser --noinput
 
-gunicorn --reload -b 0.0.0.0:8000 ambassadors_project.wsgi & daphne -v 1 -b 0.0.0.0 -p 8001 ambassadors_project.asgi:application --access-log -
-# daphne -v 1 -b 0.0.0.0 -p 8000 ambassadors_project.asgi:application --access-log -
+gunicorn --reload -b 0.0.0.0:8000 -w 2 ambassadors_project.wsgi & daphne -v 1 -b 0.0.0.0 -p 8001 ambassadors_project.asgi:application --access-log -

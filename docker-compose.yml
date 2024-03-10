@@ -1,4 +1,4 @@
-version: '3.3'
+version: "3.3"
 
 services:
   db:
@@ -54,7 +54,7 @@ services:
   bot:
     build: ./webapp_bot/
     volumes:
-      - static:/frontend_static
+      - bot_static:/frontend_static
 
 volumes:
   postgres_data:

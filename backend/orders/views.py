@@ -48,6 +48,7 @@ class AmbassadorOrdersViewSet(RetrieveMixin):
                     size=F("merch__size"),
                     amount=1,
                     total_cost=F("total_cost"),
+                    delivered_date=F("delivered_date"),
                 )
             )
             .values_list("data")

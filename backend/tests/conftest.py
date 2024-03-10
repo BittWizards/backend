@@ -178,5 +178,7 @@ def create_orders(create_ambassadors, create_merch):
             city="Город",
             street_home="УлицаДом",
             post_index=123456,
+            track_number=f"track_number{i}",
         )
         order.merch.set(create_merch)
+        time.sleep(0.1)

@@ -1,3 +1,5 @@
+from django.db import transaction
+from django.utils import timezone
 from rest_framework import serializers
 
 from ambassadors.models import (
@@ -125,39 +127,46 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         address = validated_data.pop("address")
         size = validated_data.pop("size")
         actions_data = validated_data.pop("actions")
-        ambassador = Ambassador.objects.create(
-            ya_programm=YandexProgramm.objects.get_or_create(
-                title=ya_programm["title"]
-            )[0],
-            **validated_data,
-        )
-        # TODO Валидация
-        address_data = AmbassadorAddress.objects.create(
-            **address,
-            ambassador_id=ambassador,
-        )
-        # TODO Валидация
-        size_data = AmbassadorSize.objects.create(
-            ambassador_id=ambassador,
-            **size,
-        )
-        for action_data in actions_data:
-            # TODO Валидация
-            current_action = Actions.objects.get_or_create(
-                **action_data["action"],
+        with transaction.atomic():
+            ambassador = Ambassador.objects.create(
+                ya_programm=YandexProgramm.objects.get_or_create(
+                    title=ya_programm["title"]
+                )[0],
+                **validated_data,
             )
             # TODO Валидация
-            AmbassadorActions.objects.create(
-                action=current_action[0],
+            address_data = AmbassadorAddress.objects.create(
+                **address,
                 ambassador_id=ambassador,
             )
+            # TODO Валидация
+            size_data = AmbassadorSize.objects.create(
+                ambassador_id=ambassador,
+                **size,
+            )
+            for action_data in actions_data:
+                # TODO Валидация
+                current_action = Actions.objects.get_or_create(
+                    **action_data["action"],
+                )
+                # TODO Валидация
+                AmbassadorActions.objects.create(
+                    action=current_action[0],
+                    ambassador_id=ambassador,
+                )
 
-        ambassador.address = address_data
-        ambassador.size = size_data
-        ambassador.save()
-        return ambassador
+            ambassador.address = address_data
+            ambassador.size = size_data
+            ambassador.save()
+            return ambassador
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Ambassador, validated_data):
+        if "status" in validated_data:
+            if (
+                validated_data["status"] == "Active"
+                and instance.status == "Clarify"
+            ):
+                validated_data["created"] = timezone.now()
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
             # TODO Валидация
@@ -167,18 +176,32 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         if "address" in validated_data:
             address = validated_data.pop("address")
             # TODO Валидация
-            AmbassadorAddress.objects.get_or_create(
+            try:
+                AmbassadorAddress.objects.get(ambassador_id=instance).delete()
+            except Exception:
+                ...
+            AmbassadorAddress.objects.update_or_create(
                 **address, ambassador_id=instance
             )
         if "size" in validated_data:
             size = validated_data.pop("size")
             # TODO Валидация
-            AmbassadorSize.objects.get_or_create(
-                ambassador_id=instance,
+            try:
+                AmbassadorSize.objects.get(ambassador_id=instance).delete()
+            except Exception:
+                ...
+            AmbassadorSize.objects.update_or_create(
                 **size,
+                ambassador_id=instance,
             )
         if "actions" in validated_data:
             actions_data = validated_data.pop("actions")
+            try:
+                AmbassadorActions.objects.filter(
+                    ambassador_id=instance
+                ).delete()
+            except Exception:
+                ...
             for action_data in actions_data:
                 # TODO Валидация
                 current_action = Actions.objects.get_or_create(

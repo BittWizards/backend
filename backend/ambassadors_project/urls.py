@@ -17,7 +17,12 @@ from content.views import (
     PromoCodeViewSet,
 )
 from mailing.views import MessageViewSet
-from orders.urls import urlpatterns as orders_url
+from orders.views import (
+    AllMerchToAmbassadorView,
+    AmbassadorOrdersViewSet,
+    MerchViewSet,
+    OrdersViewSet,
+)
 from websocket.views import index, room
 
 router_v1 = routers.DefaultRouter()
@@ -25,6 +30,8 @@ router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
 router_v1.register("content", ContentDetailViewSet, basename="content_detail")
 router_v1.register("promocodes", PromoCodeViewSet, basename="promo")
 router_v1.register("ambassadors", AmbassadorViewSet, basename="ambassadors")
+router_v1.register("merch", MerchViewSet, basename="merch")
+router_v1.register("orders", OrdersViewSet, basename="orders")
 router_v1.register("mailing", MessageViewSet, basename="mailing")
 router_v1.register(
     "yandexprogramms", YandexProgrammViewSet, basename="yandexprogramms"
@@ -32,10 +39,19 @@ router_v1.register(
 
 v1_urlpatterns = [
     path("ambassador_by_tg_username/<str:tg_acc>/", get_ambassador_by_tg_acc),
+    path(
+        "ambassadors/<ambassador_id>/orders/",
+        AmbassadorOrdersViewSet.as_view({"get": "retrieve"}),
+        name="ambassador_orders",
+    ),
+    path(
+        "merch_to_ambassador/",
+        AllMerchToAmbassadorView.as_view(),
+        name="merch_to_ambassador",
+    ),
     path("", include(router_v1.urls)),
-    # С этим надо что-то делать, у нас 2 шт с одинаковыми путями
-    path("", include(orders_url)),
 ]
+
 api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
@@ -46,6 +62,7 @@ api_urlpatterns = [
     path("tg", bot_view),
     path("", index, name="index"),
 ]
+
 urlpatterns = [
     path("__debug__/", include("debug_toolbar.urls")),
     path("admin/", admin.site.urls),

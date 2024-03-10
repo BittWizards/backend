@@ -56,10 +56,10 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
         choices=OrderStatus.choices,
         default=OrderStatus.CREATED,
     )
-    created_date = models.DateField(
+    created_date = models.DateTimeField(
         verbose_name="Дата создания заявки", default=timezone.now
     )
-    delivered_date = models.DateField(
+    delivered_date = models.DateTimeField(
         verbose_name="Дата получения заказа", null=True, blank=True
     )
     post_index = models.IntegerField(
@@ -87,7 +87,7 @@ class Order(AbstractUser, AbstractAmbassadorAddress):
     class Meta:
         verbose_name = "Заявка на отправку мерча"
         verbose_name_plural = "Заявка на отправку мерча"
-        ordering = ("id",)
+        ordering = ("-created_date",)
 
     @property
     def full_address(self) -> str:

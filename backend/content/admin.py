@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Content, Documents, Promocode
+from content.models import Content, Documents, Promocode
 
 
 class DocumentsAdmin(admin.TabularInline):

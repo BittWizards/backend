@@ -4,7 +4,11 @@ from ambassadors.models import Ambassador
 from ambassadors.serializers import ShortAmbassadorSerializer
 from orders.models import Merch, Order, OrderStatus
 from orders.utils import get_filtered_merch_objects
-from orders.validators import validate_editing_order, validate_merch_num
+from orders.validators import (
+    validate_delivered_date,
+    validate_editing_order,
+    validate_merch_num,
+)
 
 
 class MerchSerializer(serializers.ModelSerializer):
@@ -34,10 +38,12 @@ class OrderSerializer(serializers.ModelSerializer):
             "status",
             "created_date",
             "track_number",
+            "country",
             "city",
             "street_home",
             "post_index",
             "comment",
+            "delivered_date",
         )
         read_only_fields = (
             "created_date",
@@ -64,6 +70,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def update(self, instance: Order, validated_data: dict) -> Order:
         validate_editing_order(instance.status)
+        validate_delivered_date(validated_data)
         merch_data = validated_data.pop("merch", None)
         # Проверка отсутствие трек-номера у заказа
         if validated_data.get("track_number") and not instance.track_number:
