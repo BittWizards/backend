@@ -115,6 +115,15 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "created",
         )
 
+    def validate(self, data):
+        try:
+            tg_acc = data.get("tg_acc")
+        except KeyError as error:
+            return error
+
+        data["tg_id"] = telegram_validator(tg_acc)
+        return data
+
     def create(self, validated_data):
         ya_programm = validated_data.pop("ya_programm")
         address = validated_data.pop("address")
