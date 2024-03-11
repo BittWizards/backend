@@ -1,7 +1,7 @@
 from django.db.models import Count, OuterRef, Prefetch, Subquery
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import AllowAny
@@ -19,9 +19,18 @@ from ambassadors.serializers import (
 )
 from content.mixins import ListViewSet
 from content.models import Content, Promocode
+from openapi.ambassadors_schema import (
+    ambassador_extend_schema_view,
+    form_create_schema,
+    yandex_programms_extend_schema_view,
+)
+from openapi.contents_schema import (
+    all_promocodes_of_ambassador,
+    allcontent_to_ambassador,
+)
 
 
-@extend_schema(tags=["Амбассадоры"])
+@extend_schema_view(**ambassador_extend_schema_view)
 class AmbassadorViewSet(viewsets.ModelViewSet):
     """Viewset модели Ambassador."""
 
@@ -38,9 +47,9 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         else:
             return AmbassadorSerializer
 
-    # @extend_schema(exclude=True)
+    @extend_schema(**form_create_schema)
     @action(detail=False, url_path="form", methods=("POST",))
-    def form(self, request: Request) -> Response:
+    def form(self, request):
         """
         Создание экземпляра амбассадора через форму.
         """
@@ -49,7 +58,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
+    @extend_schema(**allcontent_to_ambassador)
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")
     def contents(self, request: Request, ambassador_id: int) -> Response:
         """Весь контент амбассадора."""
@@ -80,9 +89,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
-    @extend_schema(
-        tags=["Промокоды"], responses=AmbassadorPromocodeSerializer()
-    )
+    @extend_schema(**all_promocodes_of_ambassador)
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/promocodes")
     def promocodes(self, request, ambassador_id):
         """Все промокоды амбассадора."""
@@ -100,7 +107,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-@extend_schema(tags=["Программы Яндекса"])
+@extend_schema_view(**yandex_programms_extend_schema_view)
 class YandexProgrammViewSet(ListViewSet):
     """
     Viewset модели YandexProgramm.

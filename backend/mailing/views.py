@@ -1,12 +1,13 @@
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema_view
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 
 from mailing.models import Message
 from mailing.serializers import MessageSerializer
+from openapi.mailing_schema import mailing_extended_schema_view
 
 
-@extend_schema(tags=["Рассылки"])
+@extend_schema_view(**mailing_extended_schema_view)
 class MessageViewSet(viewsets.ModelViewSet):
     """Viewset модели Message"""
 
