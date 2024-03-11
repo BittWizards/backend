@@ -6,7 +6,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import ModelSerializer
 
 from ambassadors.models import Ambassador
 from content.mixins import (
@@ -40,7 +40,7 @@ class PromoCodeViewSet(ListCreateDestroyViewSet):
         .order_by("-created_at")
     )
 
-    def get_serializer_class(self) -> Serializer:
+    def get_serializer_class(self) -> ModelSerializer:
         if self.request.method in ["POST"]:
             return PostPromocodeSerializer
         return PromocodeSerializer
@@ -172,7 +172,7 @@ class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     )
     http_method_names = ["get", "post", "patch", "delete"]
 
-    def get_serializer_class(self) -> Serializer:
+    def get_serializer_class(self) -> ModelSerializer:
         if self.request.method in ["POST", "PATCH"]:
             return PostContentSerializer
         return ContentSerializers

@@ -6,6 +6,7 @@ from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from ambassadors.models import Ambassador, YandexProgramm
 from ambassadors.serializers import (
@@ -39,7 +40,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
     filterset_fields = ["status"]
     http_method_names = ["get", "post", "patch", "delete"]
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> ModelSerializer:
         if self.action == "list":
             return AmbassadorListSerializer
         return AmbassadorSerializer

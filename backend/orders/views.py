@@ -7,7 +7,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import views, viewsets
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import ModelSerializer
 from rest_framework.status import HTTP_200_OK, HTTP_201_CREATED
 
 from ambassadors.models import Ambassador
@@ -67,7 +67,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["ambassador__id", "status"]
 
-    def get_serializer_class(self) -> Serializer:
+    def get_serializer_class(self) -> ModelSerializer:
         if self.request.method == "GET" and self.action == "list":
             return AllOrdersListSerialiazer
         return OrderSerializer
@@ -83,7 +83,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
             serializer.data, status=HTTP_201_CREATED, headers=headers
         )
 
-    def perform_create(self, serializer: Serializer, merch: Merch) -> None:
+    def perform_create(self, serializer: ModelSerializer, merch: Merch) -> None:
         ambassador = get_object_or_404(
             Ambassador, pk=self.request.data["ambassador"]
         )
