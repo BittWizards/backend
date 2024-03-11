@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "orders",
     "content",
     "bot",
-    "websocket",
+    # "websocket",
     "mailing",
 ]
 
