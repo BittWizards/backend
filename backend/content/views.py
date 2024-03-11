@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.db.models import Count, OuterRef, Subquery, Value
 from django.db.models.functions import Coalesce
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -21,9 +21,15 @@ from content.serializers import (
     PostPromocodeSerializer,
     PromocodeSerializer,
 )
+from openapi.contents_schema import (
+    allcontent_extended_schema_view,
+    content_extended_schema_view,
+    new_content_scheme,
+    promocode_extend_schema_view,
+)
 
 
-@extend_schema(tags=["Промокоды"])
+@extend_schema_view(**promocode_extend_schema_view)
 class PromoCodeViewSet(ListCreateDestroyViewSet):
     queryset = (
         Promocode.objects.all()
@@ -37,7 +43,7 @@ class PromoCodeViewSet(ListCreateDestroyViewSet):
         return PromocodeSerializer
 
 
-@extend_schema(tags=["Контент"])
+@extend_schema_view(**allcontent_extended_schema_view)
 class AllContentsViewSet(ListViewSet):
     """Просмотр всего контента всех амбассадоров"""
 
@@ -152,7 +158,7 @@ class AllContentsViewSet(ListViewSet):
         return queryset
 
 
-@extend_schema(tags=["Контент"])
+@extend_schema_view(**content_extended_schema_view)
 class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     """Просмотр, создание, изменение, удаление карточки контента"""
 
@@ -168,7 +174,7 @@ class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
             return PostContentSerializer
         return ContentSerializers
 
-    @extend_schema(responses=NewContentSerializer(many=True))
+    @extend_schema(**new_content_scheme)
     @action(methods=["get"], detail=False, url_path="new")
     def new_content(self, request, *args, **kwargs):
         """Просмотр новых заявок на контент"""
