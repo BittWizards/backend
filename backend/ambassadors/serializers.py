@@ -239,7 +239,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
     gender = serializers.CharField()
     ya_programm = serializers.CharField()
     purpose = serializers.CharField()
-    purpose_extra = serializers.CharField(required=False)
+    purpose_extra = serializers.CharField(required=False, allow_blank=True)
     foot_size = serializers.IntegerField()
     clothes_size = serializers.CharField()
     country = serializers.CharField()
@@ -297,43 +297,43 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
             purpose = validated_data.pop("purpose")
 
         prepared_fio = full_name.split()
-
-        ambassador = Ambassador.objects.create(
-            ya_programm=YandexProgramm.objects.get_or_create(
-                title=ya_programm
-            )[0],
-            purpose=purpose,
-            last_name=prepared_fio[0],
-            first_name=prepared_fio[1],
-            middle_name=prepared_fio[2] if len(prepared_fio) > 2 else None,
-            **validated_data,
-        )
-        address_data = AmbassadorAddress.objects.create(
-            ambassador_id=ambassador,
-            country=country,
-            city=city,
-            street_home=street_home,
-            post_index=post_index,
-        )
-        size_data = AmbassadorSize.objects.create(
-            ambassador_id=ambassador,
-            clothes_size=clothes_size,
-            foot_size=foot_size,
-        )
-        action_data = actions.split(", ")
-        for action in action_data:
-            current_action = Actions.objects.get_or_create(
-                title=action,
+        with transaction.atomic():
+            ambassador = Ambassador.objects.create(
+                ya_programm=YandexProgramm.objects.get_or_create(
+                    title=ya_programm
+                )[0],
+                purpose=purpose,
+                last_name=prepared_fio[0],
+                first_name=prepared_fio[1],
+                middle_name=prepared_fio[2] if len(prepared_fio) > 2 else None,
+                **validated_data,
             )
-            AmbassadorActions.objects.create(
-                action=current_action[0],
+            address_data = AmbassadorAddress.objects.create(
                 ambassador_id=ambassador,
+                country=country,
+                city=city,
+                street_home=street_home,
+                post_index=post_index,
             )
+            size_data = AmbassadorSize.objects.create(
+                ambassador_id=ambassador,
+                clothes_size=clothes_size,
+                foot_size=foot_size,
+            )
+            action_data = actions.split(", ")
+            for action in action_data:
+                current_action = Actions.objects.get_or_create(
+                    title=action,
+                )
+                AmbassadorActions.objects.create(
+                    action=current_action[0],
+                    ambassador_id=ambassador,
+                )
 
-        ambassador.address = address_data
-        ambassador.size = size_data
-        ambassador.save()
-        return ambassador
+            ambassador.address = address_data
+            ambassador.size = size_data
+            ambassador.save()
+            return ambassador
 
     def to_representation(self, instance: Ambassador) -> dict:
         return AmbassadorSerializer(instance).data
