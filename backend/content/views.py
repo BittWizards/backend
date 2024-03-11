@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db.models import Count, OuterRef, Subquery, Value
 from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view
+from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
@@ -21,6 +22,7 @@ from content.serializers import (
     PostPromocodeSerializer,
     PromocodeSerializer,
 )
+from content.validators import validate_start_guide
 from openapi.contents_schema import (
     allcontent_extended_schema_view,
     content_extended_schema_view,
@@ -173,6 +175,18 @@ class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
         if self.request.method in ["POST", "PATCH"]:
             return PostContentSerializer
         return ContentSerializers
+
+    def create(self, request, *args, **kwargs):
+        data = request.data
+        if "start_guide" in data and isinstance(data.get("start_guide"), str):
+            validate_start_guide(data)
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data, status=status.HTTP_201_CREATED, headers=headers
+        )
 
     @extend_schema(**new_content_scheme)
     @action(methods=["get"], detail=False, url_path="new")
