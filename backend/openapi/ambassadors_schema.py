@@ -79,7 +79,7 @@ ambassador_extend_schema_view = {
     )
 }
 form_create_schema = {
-    "summary": "Создание экземпляра амбассадора через Яндекс форму",
+    "summary": "Создание объекта амбассадора через Яндекс форму",
     "description": "Возращает объект амбассадора",
     "request": {
         "post": OpenApiRequest(
