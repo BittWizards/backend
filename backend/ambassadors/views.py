@@ -44,7 +44,6 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         """
         Создание экземпляра амбассадора через форму.
         """
-        print(request.data)
         serializer = FormCreateAmbassadorSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
