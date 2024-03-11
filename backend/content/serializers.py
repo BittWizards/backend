@@ -98,7 +98,7 @@ class AmbassadorForContentPromoCardSerializer(serializers.ModelSerializer):
             "city",
         )
 
-    def get_city(self, obj) -> str:
+    def get_city(self, obj: Ambassador) -> str:
         city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
         return city
 
@@ -153,7 +153,7 @@ class PostContentSerializer(serializers.ModelSerializer):
             "files",
         )
 
-    def create(self, validated_data) -> Content:
+    def create(self, validated_data: dict) -> Content:
         fio = validated_data.pop("name")  # noqa: F841
         tg_acc = validated_data.pop("tg_acc")
         files = None
@@ -172,19 +172,19 @@ class PostContentSerializer(serializers.ModelSerializer):
 
         return content[0]
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Content, validated_data: dict):
         super().update(instance, validated_data)
         if not validated_data.get("accepted"):
             return instance
         add_achievments(instance.ambassador)
         return instance
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Content) -> dict:
         return ContentSerializers(
             instance, context={"request": self.context.get("request")}
         ).data
 
-    def validate(self, data):
+    def validate(self, data: dict) -> dict:
         if "tg_acc" in data:
             tg_acc_validator(data)
         if "files" in data:
@@ -219,12 +219,12 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         model = Promocode
         fields = ("promocode", "ambassador")
 
-    def deactivate(self, last_promo) -> None:
+    def deactivate(self, last_promo: list[Promocode]) -> None:
         for promocode in last_promo:
             promocode.is_active = False
             promocode.save()
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Promocode:
         last_promo = Promocode.objects.filter(
             ambassador=validated_data["ambassador"], is_active=True
         )
@@ -234,7 +234,7 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
         new_promo = Promocode.objects.create(**validated_data)
         return new_promo
 
-    def validate(self, data):
+    def validate(self, data: dict) -> dict:
         promocode = data.get("promocode")
         if not re.fullmatch(PATTERN_PROMO, promocode):
             raise ValidationError(ERROR_MESSAGE_PROMOCODE)
@@ -242,7 +242,7 @@ class PostPromocodeSerializer(serializers.ModelSerializer):
             raise ValidationError(ERROR_MESSAGE_SISE_PROMOCODE)
         return data
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Promocode) -> dict:
         return PromocodeSerializer(
             instance, context={"request": self.context.get("request")}
         ).data

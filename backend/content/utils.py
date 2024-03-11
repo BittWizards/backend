@@ -11,7 +11,7 @@ from orders.models import Order
 
 
 def change_achievement_create_order(
-    ambassador: Ambassador, new_achievement
+    ambassador: Ambassador, new_achievement: str
 ) -> None:
     ambassador.achievement = new_achievement
     ambassador.save()
