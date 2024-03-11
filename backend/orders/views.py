@@ -108,7 +108,9 @@ class AllMerchToAmbassadorView(views.APIView):
 
     def get(self, request: Request) -> Response:
         subquery = (
-            Order.objects.filter(ambassador=OuterRef("pk"))
+            Order.objects.filter(
+                ambassador=OuterRef("pk"), status=OrderStatus.DELIVERED
+            )
             .values("merch__name")
             .annotate(
                 data=JSONObject(name=F("merch__name"), count=Count("merch"))
