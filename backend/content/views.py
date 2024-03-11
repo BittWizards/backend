@@ -21,10 +21,12 @@ from content.serializers import (
     PostPromocodeSerializer,
     PromocodeSerializer,
 )
-from openapi.contents_schema import (promocode_extend_schema_view,
-                                    content_extended_schema_view,
-                                    new_content_scheme,
-                                    allcontent_extended_schema_view)
+from openapi.contents_schema import (
+    allcontent_extended_schema_view,
+    content_extended_schema_view,
+    new_content_scheme,
+    promocode_extend_schema_view,
+)
 
 
 @extend_schema_view(**promocode_extend_schema_view)

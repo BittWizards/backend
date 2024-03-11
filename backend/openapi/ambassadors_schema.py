@@ -1,24 +1,21 @@
 from drf_spectacular.utils import (
-    OpenApiResponse,
     OpenApiRequest,
+    OpenApiResponse,
     extend_schema,
 )
+
 from ambassadors.serializers import (
     AmbassadorListSerializer,
     AmbassadorSerializer,
+    FormCreateAmbassadorSerializer,
     YandexProgrammSerializer,
-    FormCreateAmbassadorSerializer
 )
 
 ambassador_extend_schema_view = {
     "create": extend_schema(
         summary="Создание нового амбассадора",
         description="Создает объект амбассадора",
-        request={
-            "post": OpenApiRequest(
-                request=AmbassadorSerializer
-            )
-        },
+        request={"post": OpenApiRequest(request=AmbassadorSerializer)},
         responses={
             201: OpenApiResponse(
                 description="Возвращает новго амбассадора",
@@ -55,11 +52,7 @@ ambassador_extend_schema_view = {
         summary="Частичное обновление объекта амбассадор",
         description="Изменение одного или нескольких полей существующего \
             объекта амбассадора",
-        request={
-            "post": OpenApiRequest(
-                request=AmbassadorSerializer
-            )
-        },
+        request={"post": OpenApiRequest(request=AmbassadorSerializer)},
         responses={
             201: OpenApiResponse(
                 description="Возвращает изменного амбассадора",
@@ -76,15 +69,13 @@ ambassador_extend_schema_view = {
             204: OpenApiResponse(description="Амбассадор удален"),
         },
         tags=["Амбассадоры"],
-    )
+    ),
 }
 form_create_schema = {
     "summary": "Создание объекта амбассадора через Яндекс форму",
     "description": "Возращает объект амбассадора",
     "request": {
-        "post": OpenApiRequest(
-            request=FormCreateAmbassadorSerializer
-        )
+        "post": OpenApiRequest(request=FormCreateAmbassadorSerializer)
     },
     "responses": {
         201: OpenApiResponse(

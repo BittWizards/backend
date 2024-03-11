@@ -19,14 +19,14 @@ from ambassadors.serializers import (
 )
 from content.mixins import ListViewSet
 from content.models import Content, Promocode
-from openapi.contents_schema import (
-    all_promocodes_of_ambassador,
-    allcontent_to_ambassador
-)
 from openapi.ambassadors_schema import (
     ambassador_extend_schema_view,
+    form_create_schema,
     yandex_programms_extend_schema_view,
-    form_create_schema
+)
+from openapi.contents_schema import (
+    all_promocodes_of_ambassador,
+    allcontent_to_ambassador,
 )
 
 

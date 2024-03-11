@@ -4,15 +4,15 @@ from drf_spectacular.utils import (
     extend_schema,
 )
 
+from ambassadors.serializers import (
+    AmbassadorContentSerializer,
+    AmbassadorPromocodeSerializer,
+)
 from content.serializers import (
     AllContentSerializer,
     ContentSerializers,
     NewContentSerializer,
     PromocodeSerializer,
-)
-from ambassadors.serializers import (
-    AmbassadorPromocodeSerializer,
-    AmbassadorContentSerializer
 )
 
 content_request_example = {
@@ -24,12 +24,9 @@ content_request_example = {
     "accepted": True,
     "name": "string",
     "tg_acc": "string",
-    "files": "URLstring"
+    "files": "URLstring",
 }
-promocode_request_example = {
-    "promocode": "string",
-    "ambassador": 0
-}
+promocode_request_example = {"promocode": "string", "ambassador": 0}
 
 promocode_extend_schema_view = {
     "create": extend_schema(
@@ -68,7 +65,7 @@ promocode_extend_schema_view = {
             204: OpenApiResponse(description="Промокод удален"),
         },
         tags=["Промокоды"],
-    )
+    ),
 }
 
 all_promocodes_of_ambassador = {
@@ -81,7 +78,7 @@ all_promocodes_of_ambassador = {
             response=AmbassadorPromocodeSerializer,
         )
     },
-    "tags": ["Промокоды"]
+    "tags": ["Промокоды"],
 }
 
 content_extended_schema_view = {
@@ -89,9 +86,7 @@ content_extended_schema_view = {
         summary="Создание карточки нового контента",
         description="Создает карточку нового контента для амбассадора",
         examples=[
-            OpenApiExample(
-                "post", content_request_example, request_only=True
-            ),
+            OpenApiExample("post", content_request_example, request_only=True),
         ],
         responses={
             201: OpenApiResponse(
@@ -132,7 +127,7 @@ content_extended_schema_view = {
             204: OpenApiResponse(description="Контент удален"),
         },
         tags=["Контент"],
-    )
+    ),
 }
 new_content_scheme = {
     "summary": "Просмотр новых заявок на контент",
@@ -140,7 +135,7 @@ new_content_scheme = {
     "responses": {
         200: OpenApiResponse(
             description="Возвращает спискок нового контента",
-            response=NewContentSerializer(many=True)
+            response=NewContentSerializer(many=True),
         ),
     },
     "tags": ["Контент"],
@@ -152,7 +147,7 @@ allcontent_extended_schema_view = {
         responses={
             200: OpenApiResponse(
                 description="Список всего контента",
-                response=AllContentSerializer
+                response=AllContentSerializer,
             )
         },
         tags=["Контент"],
@@ -165,7 +160,7 @@ allcontent_to_ambassador = {
         200: OpenApiResponse(
             description="Возвращает спискок нового контента \
                 принадлежащего амбассадору",
-            response=AmbassadorContentSerializer
+            response=AmbassadorContentSerializer,
         ),
     },
     "tags": ["Контент"],
