@@ -6,7 +6,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 class ChatConsumer(AsyncWebsocketConsumer):
     """Класс асинхронного вебсокета."""
 
-    async def connect(self):
+    async def connect(self) -> None:
         """Подключение к каналу."""
         self.room_group_name = "notification"
         await self.channel_layer.group_add(
@@ -15,13 +15,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         await self.accept()
 
-    async def disconnect(self, close_code):
+    async def disconnect(self, close_code) -> None:
         """Отключение от канала."""
         await self.channel_layer.group_discard(
             self.room_group_name, self.channel_name
         )
 
-    async def receive(self, text_data):
+    async def receive(self, text_data: str) -> None:
         """Принимаем сообщение."""
         text_data_json = json.loads(text_data)
         message = text_data_json["message"]
@@ -30,7 +30,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name, {"type": "chat_message", "message": message}
         )
 
-    async def chat_message(self, event):
+    async def chat_message(self, event: dict) -> None:
         """Отправляем сообщение."""
         message = event["message"]
 
