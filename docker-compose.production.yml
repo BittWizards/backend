@@ -45,6 +45,7 @@ services:
       - static:/static/
       - media:/media/
       - certs:/etc/letsencrypt
+      - bot_static:/bot_static/
 
   frontend:
     env_file: .env
