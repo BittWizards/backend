@@ -2,57 +2,20 @@
 [Проект](https://ambassadors.sytes.net/)
 ## Оглавление <a id="contents"></a>
 1. [О проекте](#about)
-2. [Авторы проекта](#authors)
-3. [Архив с кодом репозитория и скриншотами](#archive)
-4. [Документация](#documentation)
-5. [Стек технологий](#tools)
-6. [Установка зависимостей](#installation)
-7. [Настройка](#setting)
-8. [Запуск](#start)
-9. [Наполнение БД](#database)
-10. [Тесты и покрытие](#tests)
-11. [Frontend](#frontend)
+2. [Архив с кодом репозитория и скриншотами](#archive)
+3. [Документация](#documentation)
+4. [Стек технологий](#tools)
+5. [Установка зависимостей](#installation)
+6. [Настройка](#setting)
+7. [Запуск](#start)
+8. [Наполнение БД](#database)
+9. [Тесты и покрытие](#tests)
+10. [Frontend](#frontend)
+11. [Авторы проекта](#authors)
 
 
 ## О проекте <a id="about"></a>
 MVP CRM-системы для Амбассадоров Яндекс Практикума.
-
-## Авторы проекта <a id="authors"></a>
-
-Команда:
-
-- Project manager
-  - Кравцова Елена
-
-- Product manager
-  - Смирнов Алексей
-
-- Business analytics
-  - Филимонова Ольга
-  - Кашина Елена
-
-- System analytics
-  - Карпетис Александр
-  - Гогорян Даниил
-  - Ольховская Елена
-
-- Designers
-  - Каравашкина Александра
-  - Каткова Анастасия
-  - Храковская Ирина
-  - Теплова Полина
-
-- Frontend
-  - [Шматенко Наталья](https://github.com/NatashaSolntseva)
-  - [Тюлюкин Роман](https://github.com/JayWeee)
-  - [Фрикина София](https://github.com/SofiaFrikina)
-
-- Backend
-  - [Синюков Алексей](https://github.com/aleksey2299-1)
-  - [Дунаева Клавдия](https://github.com/KlavaD)
-  - [Дровнин Павел](https://github.com/pashpiter)
-  - [Варачев Андрей](https://github.com/Dartanyun)
-
 
 ## Архив с кодом репозитория и скриншотами <a id="archive"></a>
 
@@ -156,15 +119,26 @@ sudo apt install docker-compose-plugin
 
 ## Тесты и покрытие <a id="tests"></a>
 
+[Проект покрыт тестами на 84%](coverage_html/index.html)
+
 Запустите тесты в терминале из текущей папки:
 
   ```
     docker compose exec backend run -m pytest
   ```
 
-
 ##  Frontend <a id="frontend"></a>
 
 [Ссылка на репозиторий](https://github.com/BittWizards/frontend)
+
+## Авторы проекта <a id="authors"></a>
+
+- Backend
+  - [Синюков Алексей](https://github.com/aleksey2299-1)
+  - [Дунаева Клавдия](https://github.com/KlavaD)
+  - [Дровнин Павел](https://github.com/pashpiter)
+  - [Варачев Андрей](https://github.com/Dartanyun)
+
+
 
 [Оглавление](#contents)
