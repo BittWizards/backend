@@ -54,7 +54,7 @@ services:
       - static:/frontend_static
 
   bot:
-    image: aleksey299/ambassadors_bot_frontend:latest
+    image: aleksey2299/ambassadors_bot_frontend:latest
     volumes:
       - bot_static:/frontend_static
 
