@@ -62,7 +62,7 @@ class OrderSerializer(serializers.ModelSerializer):
             attrs["merch"] = merch
         return attrs
 
-    def create(self, validated_data: dict):
+    def create(self, validated_data: dict) -> Order:
         merch = validated_data.pop("merch")
         order = Order.objects.create(**validated_data)
         order.merch.add(*merch)
@@ -84,7 +84,7 @@ class OrderSerializer(serializers.ModelSerializer):
             instance.save()
         return instance
 
-    def to_representation(self, instance: Order):
+    def to_representation(self, instance: Order) -> dict:
         instance = super().to_representation(instance)
         instance["merch"] = MerchSerializer(instance["merch"], many=True).data
         return instance

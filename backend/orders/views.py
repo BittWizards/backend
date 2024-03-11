@@ -67,7 +67,7 @@ class OrdersViewSet(viewsets.ModelViewSet):
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["ambassador__id", "status"]
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Serializer:
         if self.request.method == "GET" and self.action == "list":
             return AllOrdersListSerialiazer
         return OrderSerializer
@@ -105,7 +105,7 @@ class AllMerchToAmbassadorView(views.APIView):
     и мерча который был им отправлен"""
 
     def get(self, request: Request) -> Response:
-        subsuery = (
+        subquery = (
             Order.objects.filter(ambassador=OuterRef("pk"))
             .values("merch__name")
             .annotate(
@@ -115,7 +115,7 @@ class AllMerchToAmbassadorView(views.APIView):
         )
         query = (
             Ambassador.objects.annotate(
-                merch=ArraySubquery(subsuery),
+                merch=ArraySubquery(subquery),
                 last_delivery_date=Max("orders__delivered_date"),
             )
             .filter(orders__status=OrderStatus.DELIVERED)
