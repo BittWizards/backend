@@ -6,12 +6,13 @@
 2. [Архив с кодом репозитория и скриншотами](#archive)
 3. [Документация](#documentation)
 4. [Стек технологий](#tools)
-5. [Установка зависимостей](#installation)
-6. [Настройка](#setting)
+5. [Функционал](#functional)
+6. [Установка зависимостей](#installation)
 7. [Запуск](#start)
 8. [Наполнение БД](#database)
-9. [Тесты и покрытие](#tests)
-10. [Авторы проекта](#authors)
+9. [Telegram бот](#bot)
+10. [Тесты и покрытие](#tests)
+11. [Авторы проекта](#authors)
 
 
 ## О проекте <a id="about"></a>
@@ -29,15 +30,15 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 
 ## Стек технологий <a id="tools"></a>
 
-[![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat&logo=Python)](https://www.python.org/)
-[![Django](https://img.shields.io/badge/Django-%204.2-blue?style=flat&logo=django)](https://www.djangoproject.com/)
-[![DRF](https://img.shields.io/badge/DjangoRESTFramework-%203.14.0-blue?style=flat&logo=django)](https://www.django-rest-framework.org/)
-[![Celery](https://img.shields.io/badge/Celery-%205.3.6-blue?style=flat&logo=celery)](https://docs.celeryq.dev/en/stable/)
-[![Redis](https://img.shields.io/badge/Redis-%205.0.1-blue?style=flat&logo=redis)](https://redis.io/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%2016-blue?style=flat&logo=PostgreSQL)]([https://www.postgresql.org/])
-[![Gunicorn](https://img.shields.io/badge/Gunicorn-%2020.1.0-blue?style=flat&logo=gunicorn)](https://gunicorn.org/)
-[![drf-spectacular](https://img.shields.io/badge/drf--spectacular-0.27.0-blue)](https://drf-spectacular.readthedocs.io/)
-[![django-channels](https://img.shields.io/badge/django--channels-4.0.0-blue)](https://channels.readthedocs.io/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=Python)](https://www.python.org/)
+[![Django](https://img.shields.io/badge/Django-%204.2-blue?style=for-the-badge&logo=django)](https://www.djangoproject.com/)
+[![DRF](https://img.shields.io/badge/DjangoRESTFramework-%203.14.0-blue?style=for-the-badge&logo=django)](https://www.django-rest-framework.org/)
+[![Celery](https://img.shields.io/badge/Celery-%205.3.6-blue?style=for-the-badge&logo=celery)](https://docs.celeryq.dev/en/stable/)
+[![Redis](https://img.shields.io/badge/Redis-%205.0.1-blue?style=for-the-badge&logo=redis)](https://redis.io/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-%2016-blue?style=for-the-badge&logo=PostgreSQL)]([https://www.postgresql.org/])
+[![Gunicorn](https://img.shields.io/badge/Gunicorn-%2020.1.0-blue?style=for-the-badge&logo=gunicorn)](https://gunicorn.org/)
+[![drf-spectacular](https://img.shields.io/badge/drf--spectacular-0.27.0-blue?style=for-the-badge)](https://drf-spectacular.readthedocs.io/)
+[![django-channels](https://img.shields.io/badge/django--channels-4.0.0-blue?style=for-the-badge)](https://channels.readthedocs.io/)
 
 [![Swagger](https://img.shields.io/badge/Swagger-4A154B?style=for-the-badge&logo=swagger&logoColor=Black)](https://swagger.io/)
 [![Docker](https://img.shields.io/badge/Docker-white?style=for-the-badge&logo=docker&logoColor=White)](https://www.docker.com/)
@@ -47,6 +48,18 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 [![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://docs.github.com/ru)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions&logoColor=white)](https://docs.github.com/en/actions)
 
+## Функционал<a id="functional"></a>
+
+1. Реализован базовый функционал CRM приложения.
+2. Настроена интеграция с Yandex Forms.
+3. Добавлена возможность наполнения бд через xlsx файл.
+4. Настроен websocket для push уведомлений.
+5. Подключен прототип telegram бота.
+6. Реализована рассылка через email и telegram.
+7. Для рассылки подкючен celery.
+
+Помимо всего прочего для удобства ведения дальнейшей разработки мы использовали аннотацию типов и докстринги.
+
 ## Установка зависимостей для полного разворачивания проекта<a id="installation"></a>
 
 1. Склонируйте репозиторий на локальную машину и перейдите в него:
@@ -54,9 +67,6 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
   git clone https://github.com/BittWizards/backend.git
   cd backend
   ```
-  Если вы хотите запустить на сервере, то:
-
-  Скачайте и добавьте файл **docker-compose.production.yml**.
 
 2. Создайте .env файл:
   ```bash
@@ -66,22 +76,25 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 3. Заполните по примеру своими значениями:
   [скопируйте этот файл](.env.example)
 
+4. [Установить docker](https://www.docker.com/get-started/)
+
+  В терминале linux это можно сделать так:
+  ````bash
+    sudo apt update
+    sudo apt install curl
+    curl -fSL https://get.docker.com -o get-docker.sh
+    sudo sh ./get-docker.sh
+    sudo apt install docker-compose-plugin
+  ````
+
+> **Примечание.** Для запуска на сервере достаточно настроить файл .env и запустить файл docker-compose.production.yml
+***
+
 ## Запуск <a id="start"></a>
 
-[Установить docker](https://www.docker.com/get-started/)
-
-В терминале linux это можно сделать так:
-````bash
-  sudo apt update
-  sudo apt install curl
-  curl -fSL https://get.docker.com -o get-docker.sh
-  sudo sh ./get-docker.sh
-  sudo apt install docker-compose-plugin
-````
-
-1. Запустите контейнеры с проектом следующей командой:
+1. Запустите контейнеры с проектом следующей командой (используйте флаг -d для запуска в фоновом режиме):
   ```bash
-  docker compose up -d --build
+  docker compose up
   ```
 На сервере:
   ```bash
@@ -110,9 +123,22 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 Посмотреть документацию:
 [Swagger](http://localhost:8000/api/docs/)
 
+## Telegram bot<a id="bot"></a>
+
+Реализован небольшой функционал чат бота. Добавлено веб приложение для бота.
+
+Для прослушивания уведомлений от telegram api используется webhook.
+
+Чтобы установить вебхук для вашего домена воспользуетесь следующей командой:
+
+```bash
+docker compose exec backend python manage.py telegram_webhook -s
+```
+
+
 ## Тесты и покрытие <a id="tests"></a>
 
-Покрытие составляет 84 процентов.
+Покрытие составляет 84 процента.
 
 ![Процент покрытия](backend/media/test_coverage.png)
 
@@ -124,11 +150,10 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 
 ## Авторы проекта <a id="authors"></a>
 
-- Backend
-  - [Синюков Алексей](https://github.com/aleksey2299-1)
-  - [Дунаева Клавдия](https://github.com/KlavaD)
-  - [Дровнин Павел](https://github.com/pashpiter)
-  - [Варачев Андрей](https://github.com/Dartanyun)
+- [Синюков Алексей](https://github.com/aleksey2299-1)
+- [Дунаева Клавдия](https://github.com/KlavaD)
+- [Дровнин Павел](https://github.com/pashpiter)
+- [Варачев Андрей](https://github.com/Dartanyun)
 
 
 
