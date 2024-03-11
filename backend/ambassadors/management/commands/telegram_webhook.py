@@ -37,12 +37,12 @@ class Command(BaseCommand):
                     )
                 )
                 if response.status_code == status.HTTP_200_OK:
-                    print(
+                    self.stdout.write(
                         "Webhook настроен на адрес "
                         f"https://{settings.DOMAIN}/{kwargs['path']}"
                     )
                 else:
-                    print(
+                    self.stdout.write(
                         "Не удалость подключить webhook, проверьто что домен "
                         "указан правильно и у вас имеются для него сертификаты."
                     )
@@ -52,32 +52,32 @@ class Command(BaseCommand):
                     + f"SetWebhook?url=https://{settings.DOMAIN}/api/tg"
                 )
                 if response.status_code == status.HTTP_200_OK:
-                    print(
+                    self.stdout.write(
                         "Webhook настроен на адрес "
                         f"https://{settings.DOMAIN}/api/tg"
                     )
                 else:
-                    print(
+                    self.stdout.write(
                         "Не удалость подключить webhook, проверьто что домен "
                         "указан правильно и у вас имеются для него сертификаты."
                     )
         elif kwargs["remove"]:
             response = requests.post(self.url + "DeleteWebhook")
             if response.status_code == status.HTTP_200_OK:
-                print("Webhook успешно удален.")
+                self.stdout.write("Webhook успешно удален.")
             else:
-                print("Что-то полшло не так.")
+                self.stdout.write("Что-то полшло не так.")
         elif kwargs["path"]:
             response = requests.post(
                 self.url + f"SetWebhook?url={kwargs['path']}"
             )
             if response.status_code == status.HTTP_200_OK:
-                print(
+                self.stdout.write(
                     "Webhook настроен на адрес "
                     f"https://{settings.DOMAIN}/{kwargs['path']}"
                 )
             else:
-                print(
+                self.stdout.write(
                     "Не удалость подключить webhook, проверьто что домен "
                     "указан правильно и у вас имеются для него сертификаты."
                 )
