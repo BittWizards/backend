@@ -39,7 +39,7 @@ class MessageSerializer(serializers.ModelSerializer):
             "ambassadors",
         )
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Message:
         ambassadors_data = validated_data.pop("ambassadors")
         with transaction.atomic():
             instance = Message.objects.create(**validated_data)
@@ -47,14 +47,14 @@ class MessageSerializer(serializers.ModelSerializer):
             instance.ambassadors.set(ambassadors_id)
         return instance
 
-    def update(self, instance: Message, validated_data):
+    def update(self, instance: Message, validated_data: dict) -> Message:
         ambassadors_data = validated_data.pop("ambassadors", None)
-        if instance.is_sent is True:
+        if instance.is_sent:
             raise ValidationError("Это сообщение уже нельзя изменить.")
         with transaction.atomic():
             for attr, value in validated_data.items():
                 setattr(instance, attr, value)
-            if ambassadors_data is not None:
+            if ambassadors_data:
                 ambassadors_id = check_ambassadors(ambassadors_data)
                 instance.ambassadors.set(ambassadors_id)
             instance.save()
