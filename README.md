@@ -10,8 +10,7 @@
 7. [Запуск](#start)
 8. [Наполнение БД](#database)
 9. [Тесты и покрытие](#tests)
-10. [Frontend](#frontend)
-11. [Авторы проекта](#authors)
+10. [Авторы проекта](#authors)
 
 
 ## О проекте <a id="about"></a>
@@ -126,10 +125,6 @@ sudo apt install docker-compose-plugin
   ```
     docker compose exec backend run -m pytest
   ```
-
-##  Frontend <a id="frontend"></a>
-
-[Ссылка на репозиторий](https://github.com/BittWizards/frontend)
 
 ## Авторы проекта <a id="authors"></a>
 
