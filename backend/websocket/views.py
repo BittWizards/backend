@@ -1,6 +1,6 @@
 # Файл для тестирования работоспособности
-from django.shortcuts import render
 from django.http import HttpResponse
+from django.shortcuts import render
 from rest_framework.request import Request
 
 

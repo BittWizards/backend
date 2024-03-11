@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from django.db.models import Count, OuterRef, Subquery, Value, QuerySet
+from django.db.models import Count, OuterRef, QuerySet, Subquery, Value
 from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
