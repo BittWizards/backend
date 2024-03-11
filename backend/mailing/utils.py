@@ -2,7 +2,6 @@ import requests
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import QuerySet
-from rest_framework.request import Request
 
 from ambassadors.models import Ambassador
 
@@ -16,7 +15,7 @@ def send_to_ambassadors_email(
     if isinstance(ambassadors, Ambassador):
         emails = list(ambassadors.email)
     else:
-        [emails.append(ambassador.email) for ambassador in ambassadors]
+        emails = [ambassador.email for ambassador in ambassadors]
     return send_mail(
         subject=subject,
         message=message,
@@ -27,7 +26,7 @@ def send_to_ambassadors_email(
 
 def send_to_ambassadors_tg(
     ambassadors: QuerySet[Ambassador] | Ambassador, message: str
-) -> Request:
+) -> None:
     """Отправляем сообщения каждому амбассадору в телеграм."""
     if not settings.BOT_TOKEN:
         return
