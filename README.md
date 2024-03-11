@@ -1,5 +1,5 @@
-# backend
-
+# MVP CRM-системы для Амбассадоров Яндекс Практикума.
+[Проект](https://ambassadors.sytes.net/)
 ## Оглавление <a id="contents"></a>
 1. [О проекте](#about)
 2. [Авторы проекта](#authors)
@@ -15,7 +15,7 @@
 
 
 ## О проекте <a id="about"></a>
-MVP CRM ambassador
+MVP CRM-системы для Амбассадоров Яндекс Практикума.
 
 ## Авторы проекта <a id="authors"></a>
 
@@ -56,7 +56,7 @@ MVP CRM ambassador
 
 ## Архив с кодом репозитория и скриншотами <a id="archive"></a>
 
-  [ЯндексДиск](https://disk.yandex.ru/d/b80S8N8Itl96Jg)
+  [Диск](https://drive.google.com/drive/folders/1I5QRQc8Knz1CPwSR6HE3Q9DF2NiDPO0M)
 
 ## Документация <a id="documentation"></a>
 
@@ -88,83 +88,20 @@ MVP CRM ambassador
 
 ### В Docker контейнерах
 
-Создайте и перейдите в директорию проекта:
-
-```bash
-mkdir ambassadors
-cd ambassadors/
-```
-
-Скачайте и добавьте файл **docker-compose.production.yml** в директорию.
-
-Cоздайте файл **.env**:
-
-```bash
-nano .env
-```
-
-Добавьте следующие строки и подставьте свои значения:
-````dotenv
-POSTGRES_DB=DB                           # название db
-POSTGRES_USER=USER                       # имя пользователя для db
-POSTGRES_PASSWORD=PASSWORD               # пароль пользователя для db
-DB_HOST=db                               # если поменять, то тогда нужно поменять название сервиса в docker-compose.production.yml
-DB_PORT=5432                             # это порт для доступа к db
-SECRET_KEY=SECRET_KEY                    # SECRET_KEY в настройках django
-DEBUG=False                              # режим debug (True или False)
-ALLOWED_HOSTS=127.0.0.1 backend          # ваши адреса через пробел (пример:localhost 127.0.0.1 xxxx.com)
-GET_CERTS=False                          # True для получения сертификатов (обязательно укажите email в CERTBOT_EMAIL
-CERTBOT_EMAIL=example@example.com        # Email для регистрации certbot
-DOMAIN=exemple.com                       # Домен на котором вы разворачиваете
-BOT_TOKEN=telegram_bot_token             # Токен телеграм бота, если вы планируете его использовать
-USE_SMTP=False                           # использовать ли настоящий сервис по отправке почты, иначе сообщения будут сохранятся внутри контейнера (папка sent_emails)
-EMAIL_HOST=EMAIL_HOST                    # сервер вашего email service
-EMAIL_PORT=EMAIL_PORT                    # порт для сервера
-EMAIL_HOST_USER=EMAIL_HOST_USER          # email с которогу будет осуществлятся рассылка
-EMAIL_HOST_PASSWORD=EMAIL_HOST_PASSWORD  # пароль для доступа со стороны стороннего приложения
-EMAIL_USE_TLS=False                      # использовать TLS (True или False)
-EMAIL_USE_SSL=True                       # использовать SSL (True или False)
-````
-
-Установить docker: https://www.docker.com/get-started/
-
-В терминале linux это можно сделать так:
-````bash
-sudo apt update
-sudo apt install curl
-curl -fSL https://get.docker.com -o get-docker.sh
-sudo sh ./get-docker.sh
-sudo apt install docker-compose-plugin
-````
-
-Запустить Docker в директории с файлом **docker-compose.yaml** (чтобы запустить в фоновом режиме добавьте флаг -d):
-````bash
-docker compose -f docker-compose.production.yml up
-````
-В терминале Linux могут потребоваться права суперпользователя:
-````bash
-sudo docker compose -f docker-compose.production.yml up
-````
-
-Для доступа в админ-зону (если вам нужны какие-то данные из бд, или нужно создать объекты) перейдите на страницу http://localhost:8000/admin/:
-
-Логин: `admin@admin.com`
-
-Пароль: `admin`
-
-Для импорта начальных данных воспользуйтесь командой:
-````bash
-docker compose -f docker-compose.production.yml exec python manage.py fill_db
-````
-
-### Локально
-
-1. Склонируйте репозиторий на локальную машину и перейдите в него:
+1. Создайте и перейдите в директорию проекта:
 
   ```bash
-    git clone https://github.com/BittWizards/backend.git
-    cd backend
+  mkdir ambassadors
+  cd ambassadors/
   ```
+  Склонируйте репозиторий на локальную машину и перейдите в него:
+  ```bash
+      git clone https://github.com/BittWizards/backend.git
+      cd backend
+  ```
+  Если вы хотите запустить на сервере, то:
+
+  Скачайте и добавьте файл **docker-compose.production.yml** в директорию.
 
 2. Создайте .env файл:
   ```bash
@@ -176,14 +113,39 @@ docker compose -f docker-compose.production.yml exec python manage.py fill_db
 
 ## Запуск <a id="start"></a>
 
-Запустите контейнеры с проектом следующей командой:
+[Установить docker](https://www.docker.com/get-started/)
+
+В терминале linux это можно сделать так:
+````bash
+sudo apt update
+sudo apt install curl
+curl -fSL https://get.docker.com -o get-docker.sh
+sudo sh ./get-docker.sh
+sudo apt install docker-compose-plugin
+````
+
+1. Запустите контейнеры с проектом следующей командой:
   ```
-    docker-compose up -d
+    docker compose up -d --build
   ```
+На сервере:
+  ```bash
+  docker compose -f docker-compose.production.yml up
+  ```
+В терминале Linux могут потребоваться права суперпользователя:
+  ```bash
+  sudo docker compose -f docker-compose.production.yml up
+  ```
+
+2. Для доступа в [админ-зону](http://localhost:8000/admin/):
+
+Логин: `admin@admin.com`
+
+Пароль: `admin`
+
 ## Наполнение БД <a id="database"></a>
 
-Наполните БД тестовыми данными:
-
+Для импорта начальных данных воспользуйтесь командой:
   ```
     docker compose exec backend python manage.py fill_db
   ```
@@ -194,16 +156,12 @@ docker compose -f docker-compose.production.yml exec python manage.py fill_db
 
 ## Тесты и покрытие <a id="tests"></a>
 
-Запустите тесты в терминале из текущей папки infra:
+Запустите тесты в терминале из текущей папки:
 
   ```
-    docker compose exec backend python manage.py test
+    docker compose exec backend run -m pytest
   ```
-  или
-  ```
-    docker compose exec backend coverage run manage.py test
-    docker compose exec backend coverage report
-  ```
+
 
 ##  Frontend <a id="frontend"></a>
 
