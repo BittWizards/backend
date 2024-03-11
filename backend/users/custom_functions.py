@@ -1,7 +1,4 @@
-from users.models import User
-
-
-def get_full_name(obj: User) -> str:
+def get_full_name(obj) -> str:
     """
     Возвращает полное ФИО объекта.
     """
