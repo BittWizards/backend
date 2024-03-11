@@ -51,6 +51,7 @@ class AmbassadorOrdersViewSet(RetrieveMixin):
                     delivered_date=F("delivered_date"),
                 )
             )
+            .order_by("-created_date")
             .values_list("data")
         )
         return Ambassador.objects.filter(id=ambassador_id).annotate(
