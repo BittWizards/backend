@@ -131,6 +131,7 @@ class AllMerchToAmbassadorView(views.APIView):
                 "last_name",
                 "image",
                 "tg_acc",
+                "achievement",
                 "merch",
                 "last_delivery_date",
                 "total",
