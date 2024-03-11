@@ -1,5 +1,6 @@
 # MVP CRM-системы для Амбассадоров Яндекс Практикума.
 [Посмотреть проект можно по ссылке](https://ambassadors.sytes.net/)
+
 ## Оглавление <a id="contents"></a>
 1. [О проекте](#about)
 2. [Архив с кодом репозитория и скриншотами](#archive)
@@ -48,8 +49,6 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 
 ## Установка зависимостей для полного разворачивания проекта<a id="installation"></a>
 
-### В Docker контейнерах
-
 1. Создайте и перейдите в директорию проекта:
 
   ```bash
@@ -58,8 +57,8 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
   ```
   Склонируйте репозиторий на локальную машину и перейдите в него:
   ```bash
-      git clone https://github.com/BittWizards/backend.git
-      cd backend
+  git clone https://github.com/BittWizards/backend.git
+  cd backend
   ```
   Если вы хотите запустить на сервере, то:
 
@@ -67,7 +66,7 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 
 2. Создайте .env файл:
   ```bash
-    touch .env
+  touch .env
   ```
 
 3. Заполните по примеру своими значениями:
@@ -79,16 +78,16 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 
 В терминале linux это можно сделать так:
 ````bash
-sudo apt update
-sudo apt install curl
-curl -fSL https://get.docker.com -o get-docker.sh
-sudo sh ./get-docker.sh
-sudo apt install docker-compose-plugin
+  sudo apt update
+  sudo apt install curl
+  curl -fSL https://get.docker.com -o get-docker.sh
+  sudo sh ./get-docker.sh
+  sudo apt install docker-compose-plugin
 ````
 
 1. Запустите контейнеры с проектом следующей командой:
-  ```
-    docker compose up -d --build
+  ```bash
+  docker compose up -d --build
   ```
 На сервере:
   ```bash
@@ -108,8 +107,8 @@ sudo apt install docker-compose-plugin
 ## Наполнение БД <a id="database"></a>
 
 Для импорта начальных данных воспользуйтесь командой:
-  ```
-    docker compose exec backend python manage.py fill_db
+  ```bash
+  docker compose exec backend python manage.py fill_db
   ```
 
 Запущенный проект можно будет посмотреть по [ссылке](http://localhost:8000/).
@@ -118,12 +117,14 @@ sudo apt install docker-compose-plugin
 
 ## Тесты и покрытие <a id="tests"></a>
 
-[Проект покрыт тестами на 84%](coverage_html/index.html)
+Покрытие составляет 84 процентов.
+
+![Процент покрытия](./media/test_coverage.jpg)
 
 Запустите тесты в терминале из текущей папки:
 
-  ```
-    docker compose exec backend run -m pytest
+  ```bash
+  docker compose exec backend run -m pytest
   ```
 
 ## Авторы проекта <a id="authors"></a>
