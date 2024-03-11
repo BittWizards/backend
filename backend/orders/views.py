@@ -83,7 +83,9 @@ class OrdersViewSet(viewsets.ModelViewSet):
             serializer.data, status=HTTP_201_CREATED, headers=headers
         )
 
-    def perform_create(self, serializer: ModelSerializer, merch: Merch) -> None:
+    def perform_create(
+        self, serializer: ModelSerializer, merch: Merch
+    ) -> None:
         ambassador = get_object_or_404(
             Ambassador, pk=self.request.data["ambassador"]
         )
