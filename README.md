@@ -105,7 +105,8 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
   docker compose exec backend python manage.py fill_db
   ```
 
-Запущенный проект можно будет посмотреть по [ссылке](http://localhost:8000/).
+После запуска проект можно будет посмотреть по [ссылке](http://localhost:8000/).
+
 Посмотреть документацию:
 [Swagger](http://localhost:8000/api/docs/)
 
