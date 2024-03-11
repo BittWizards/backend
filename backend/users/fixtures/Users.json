@@ -1,0 +1,54 @@
+[
+    {
+        "model": "users.User",
+        "pk": 2,
+        "fields": {
+            "email": "test@test.ru",
+            "first_name": "Игорь",
+            "last_name": "Суханов",
+            "middle_name": "Олегович",
+            "phone": "+79990009901",
+            "password": "pbkdf2_sha256$600000$n44r3ZFVuLtVA7Wfa9KsDC$PYk8YZJ2i7vr0SXpubnA5pUKBoZtCbXyXp53EesCfDo=",
+            "is_active": "True"
+        }
+    },
+    {
+        "model": "users.User",
+        "pk": 3,
+        "fields": {
+            "email": "test1@test.ru",
+            "first_name": "Виталий",
+            "last_name": "Борисов",
+            "middle_name": "Дмитриевич",
+            "phone": "+79990009902",
+            "password": "pbkdf2_sha256$600000$n44r3ZFVuLtVA7Wfa9KsDC$PYk8YZJ2i7vr0SXpubnA5pUKBoZtCbXyXp53EesCfDo=",
+            "is_active": "True"
+        }
+    },
+    {
+        "model": "users.User",
+        "pk": 4,
+        "fields": {
+            "email": "test2@test.ru",
+            "first_name": "Андрей",
+            "last_name": "Варачев",
+            "phone": "+79990009903",
+            "password": "pbkdf2_sha256$600000$n44r3ZFVuLtVA7Wfa9KsDC$PYk8YZJ2i7vr0SXpubnA5pUKBoZtCbXyXp53EesCfDo="
+        }
+    },
+    {
+        "model": "users.User",
+        "pk": 5,
+        "fields": {
+            "email": "admin@admin.ru",
+            "first_name": "admin",
+            "last_name": "adminov",
+            "middle_name": "adminovich",
+            "phone": "+79990009904",
+            "password": "pbkdf2_sha256$600000$ykY9x5e9HrhiW1GkSLbswS$mTTlLdB34DhAbd9rEHvjpelldeCotFwGw+6pgRqL+gk=",
+            "is_staff": "True",
+            "is_superuser": "True",
+            "is_active": "True"
+        }
+    }
+]
