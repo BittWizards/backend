@@ -4,9 +4,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view
-from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from ambassadors.models import Ambassador, YandexProgramm
 from ambassadors.serializers import (
@@ -36,16 +36,14 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
 
     queryset = Ambassador.objects.all()
     serializer_class = AmbassadorListSerializer
-    permission_classes = (AllowAny,)
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ["status"]
     http_method_names = ["get", "post", "patch", "delete"]
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> ModelSerializer:
         if self.action == "list":
             return AmbassadorListSerializer
-        else:
-            return AmbassadorSerializer
+        return AmbassadorSerializer
 
     @extend_schema(**form_create_schema)
     @action(detail=False, url_path="form", methods=("POST",))
@@ -91,7 +89,7 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
 
     @extend_schema(**all_promocodes_of_ambassador)
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/promocodes")
-    def promocodes(self, request, ambassador_id):
+    def promocodes(self, request: Request, ambassador_id: int) -> Response:
         """Все промокоды амбассадора."""
 
         queryset = Ambassador.objects.filter(
@@ -115,7 +113,6 @@ class YandexProgrammViewSet(ListViewSet):
 
     queryset = YandexProgramm.objects.all()
     serializer_class = YandexProgrammSerializer
-    permission_classes = (AllowAny,)
 
 
 @extend_schema(exclude=True)

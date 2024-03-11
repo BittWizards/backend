@@ -41,4 +41,6 @@ def validate_exsisting_merch(merch: Merch | None) -> None:
 def validate_delivered_date(data: dict) -> None:
     if "status" in data and data["status"] == "delivered":
         if "delivered_date" not in data:
-            raise ValidationError(DELIVERED_STATUS_WITHOUT_DATE_ERROR, 400)
+            raise ValidationError(
+                DELIVERED_STATUS_WITHOUT_DATE_ERROR, code=HTTP_400_BAD_REQUEST
+            )

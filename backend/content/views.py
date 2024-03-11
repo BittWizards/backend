@@ -1,11 +1,12 @@
 from datetime import datetime
 
-from django.db.models import Count, OuterRef, Subquery, Value
+from django.db.models import Count, OuterRef, QuerySet, Subquery, Value
 from django.db.models.functions import Coalesce
 from drf_spectacular.utils import extend_schema, extend_schema_view
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from ambassadors.models import Ambassador
 from content.mixins import (
@@ -39,7 +40,7 @@ class PromoCodeViewSet(ListCreateDestroyViewSet):
         .order_by("-created_at")
     )
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> ModelSerializer:
         if self.request.method in ["POST"]:
             return PostPromocodeSerializer
         return PromocodeSerializer
@@ -51,7 +52,7 @@ class AllContentsViewSet(ListViewSet):
 
     serializer_class = AllContentSerializer
 
-    def get_queryset(self):
+    def get_queryset(self) -> QuerySet:
         queryset = Ambassador.objects.annotate(
             rating=Coalesce(
                 Subquery(
@@ -171,7 +172,7 @@ class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
     )
     http_method_names = ["get", "post", "patch", "delete"]
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> ModelSerializer:
         if self.request.method in ["POST", "PATCH"]:
             return PostContentSerializer
         return ContentSerializers
@@ -190,7 +191,7 @@ class ContentDetailViewSet(CreateRetrieveUpdateDeleteViewSet):
 
     @extend_schema(**new_content_scheme)
     @action(methods=["get"], detail=False, url_path="new")
-    def new_content(self, request, *args, **kwargs):
+    def new_content(self, request, *args, **kwargs) -> Response:
         """Просмотр новых заявок на контент"""
         queryset = Content.objects.filter(accepted=False).select_related(
             "ambassador"

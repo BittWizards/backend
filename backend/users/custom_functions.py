@@ -1,4 +1,10 @@
-def get_full_name(obj):
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from users.models import User
+
+
+def get_full_name(obj: "User") -> str:
     """
     Возвращает полное ФИО объекта.
     """

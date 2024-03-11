@@ -10,14 +10,12 @@ def send_to_ambassadors_email(
     ambassadors: QuerySet[Ambassador] | Ambassador,
     subject: str,
     message: str,
-):
+) -> int:
     """Формируем список почтовых адресов и отправляем сообщения."""
     if isinstance(ambassadors, Ambassador):
         emails = list(ambassadors.email)
     else:
-        emails = []
-        for ambassador in ambassadors:
-            emails.append(ambassador.email)
+        emails = [ambassador.email for ambassador in ambassadors]
     return send_mail(
         subject=subject,
         message=message,
@@ -28,7 +26,7 @@ def send_to_ambassadors_email(
 
 def send_to_ambassadors_tg(
     ambassadors: QuerySet[Ambassador] | Ambassador, message: str
-):
+) -> None:
     """Отправляем сообщения каждому амбассадору в телеграм."""
     if not settings.BOT_TOKEN:
         return

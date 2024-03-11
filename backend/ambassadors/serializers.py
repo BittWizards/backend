@@ -117,12 +117,12 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             "created",
         )
 
-    def validate(self, data):
+    def validate(self, data: dict) -> dict:
         if "tg_acc" in data:
             tg_acc_validator(data)
         return data
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Ambassador:
         ya_programm = validated_data.pop("ya_programm")
         address = validated_data.pop("address")
         size = validated_data.pop("size")
@@ -134,22 +134,18 @@ class AmbassadorSerializer(serializers.ModelSerializer):
                 )[0],
                 **validated_data,
             )
-            # TODO Валидация
             address_data = AmbassadorAddress.objects.create(
                 **address,
                 ambassador_id=ambassador,
             )
-            # TODO Валидация
             size_data = AmbassadorSize.objects.create(
                 ambassador_id=ambassador,
                 **size,
             )
             for action_data in actions_data:
-                # TODO Валидация
                 current_action = Actions.objects.get_or_create(
                     **action_data["action"],
                 )
-                # TODO Валидация
                 AmbassadorActions.objects.create(
                     action=current_action[0],
                     ambassador_id=ambassador,
@@ -160,7 +156,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             ambassador.save()
             return ambassador
 
-    def update(self, instance: Ambassador, validated_data):
+    def update(self, instance: Ambassador, validated_data: dict) -> Ambassador:
         if "status" in validated_data:
             if (
                 validated_data["status"] == "Active"
@@ -169,13 +165,11 @@ class AmbassadorSerializer(serializers.ModelSerializer):
                 validated_data["created"] = timezone.now()
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
-            # TODO Валидация
             instance.ya_programm = YandexProgramm.objects.get_or_create(
                 **ya_programm
             )[0]
         if "address" in validated_data:
             address = validated_data.pop("address")
-            # TODO Валидация
             try:
                 AmbassadorAddress.objects.get(ambassador_id=instance).delete()
             except Exception:
@@ -185,7 +179,6 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             )
         if "size" in validated_data:
             size = validated_data.pop("size")
-            # TODO Валидация
             try:
                 AmbassadorSize.objects.get(ambassador_id=instance).delete()
             except Exception:
@@ -203,11 +196,9 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             except Exception:
                 ...
             for action_data in actions_data:
-                # TODO Валидация
                 current_action = Actions.objects.get_or_create(
                     **action_data["action"]
                 )
-                # TODO Валидация
                 AmbassadorActions.objects.create(
                     action=current_action[0], ambassador_id=instance
                 )
@@ -280,14 +271,14 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
             "extra_info",
         )
 
-    def validate(self, data):
+    def validate(self, data: dict) -> dict:
         if "tg_acc" in data:
             tg_acc_validator(data)
         if "gender" in data:
             gender_validator(data)
         return data
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict) -> Ambassador:
         full_name = validated_data.pop("full_name")
         ya_programm = validated_data.pop("ya_programm")
         actions = validated_data.pop("actions")
@@ -344,7 +335,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
         ambassador.save()
         return ambassador
 
-    def to_representation(self, instance):
+    def to_representation(self, instance: Ambassador) -> dict:
         return AmbassadorSerializer(instance).data
 
 
@@ -371,7 +362,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
             "city",
         ]
 
-    def get_city(self, obj) -> str:
+    def get_city(self, obj: Ambassador) -> str:
         city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
         return city
 
@@ -385,7 +376,7 @@ class ContentsForAmbassadorSerializer(serializers.ModelSerializer):
         model = Content
         fields = ("id", "created_at", "platform", "link", "documents")
 
-    def get_documents(self, obj) -> int:
+    def get_documents(self, obj: Content) -> int:
         return obj.documents.count()
 
 

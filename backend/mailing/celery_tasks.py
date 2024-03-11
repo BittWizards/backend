@@ -5,7 +5,7 @@ from mailing.utils import send_to_ambassadors_email, send_to_ambassadors_tg
 
 
 @shared_task
-def send_messages_celery(instance_id: int):
+def send_messages_celery(instance_id: int) -> bool:
     instance = Message.objects.get(id=instance_id)
     if instance.by_email:
         send_to_ambassadors_email(
