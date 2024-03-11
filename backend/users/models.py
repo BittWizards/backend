@@ -18,7 +18,7 @@ class AbstractUser(models.Model):
         verbose_name="Фамилия", max_length=100, blank=False
     )
     middle_name = models.CharField(
-        verbose_name="Отчество", max_length=100, blank=True
+        verbose_name="Отчество", max_length=100, blank=True, null=True
     )
     phone = models.CharField(
         verbose_name="Номер телефона",

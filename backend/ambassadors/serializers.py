@@ -238,7 +238,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField()
     gender = serializers.CharField()
     ya_programm = serializers.CharField()
-    purpose = serializers.CharField(required=False)
+    purpose = serializers.CharField()
     purpose_extra = serializers.CharField(required=False)
     foot_size = serializers.IntegerField()
     clothes_size = serializers.CharField()
@@ -292,6 +292,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
 
         if purpose == "Свой вариант":
             purpose = validated_data.pop("purpose_extra")
+            validated_data.pop("purpose")
         else:
             purpose = validated_data.pop("purpose")
 

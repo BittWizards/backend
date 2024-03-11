@@ -153,24 +153,41 @@ class PostContentSerializer(serializers.ModelSerializer):
             "files",
         )
 
-    def create(self, validated_data: dict) -> Content:
+    def validate(self, data):
+        if "tg_acc" in data:
+            tg_acc_validator(data)
+        if "files" in data:
+            files = data.pop("files").split(", ")
+            new_files = ""
+            for file in files:
+                if len(files) > 0:
+                    if re.search(r"\w*$", file).group(0) in [
+                        "png",
+                        "jpg",
+                        "jpeg",
+                    ]:
+                        new_files += file + ","
+                        data["files"] = new_files
+        return data
+
+    def create(self, validated_data) -> Content:
         fio = validated_data.pop("name")  # noqa: F841
         tg_acc = validated_data.pop("tg_acc")
         files = None
         if "files" in validated_data:
-            files = validated_data.pop("files").split(",")
+            files = validated_data.pop("files").split(", ")
         ambassador = get_object_or_404(Ambassador, tg_acc=tg_acc)
         with transaction.atomic():
             content = Content.objects.get_or_create(
                 **validated_data, ambassador=ambassador
-            )
+            )[0]
             if files:
                 docs_to_create = [
                     Documents(content=content, document=file) for file in files
                 ]
                 Documents.objects.bulk_create(docs_to_create)
 
-        return content[0]
+        return content
 
     def update(self, instance: Content, validated_data: dict):
         super().update(instance, validated_data)
@@ -183,23 +200,6 @@ class PostContentSerializer(serializers.ModelSerializer):
         return ContentSerializers(
             instance, context={"request": self.context.get("request")}
         ).data
-
-    def validate(self, data: dict) -> dict:
-        if "tg_acc" in data:
-            tg_acc_validator(data)
-        if "files" in data:
-            files = data.pop("files").split(",")
-            new_files = ""
-            for file in files:
-                if len(files) > 0:
-                    if re.search(r"\w*$", file).group(0) in [
-                        "png",
-                        "jpg",
-                        "jpeg",
-                    ]:
-                        new_files += file + ","
-                        data["files"] = new_files
-        return data
 
 
 class PromocodeSerializer(serializers.ModelSerializer):

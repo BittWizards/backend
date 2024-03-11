@@ -45,15 +45,15 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         return AmbassadorSerializer
 
     @extend_schema(**form_create_schema)
-    @action(detail=False, url_path="form", methods=("post",))
+    @action(detail=False, url_path="form", methods=("POST",))
     def form(self, request):
         """
         Создание экземпляра амбассадора через форму.
         """
         serializer = FormCreateAmbassadorSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(**allcontent_to_ambassador)
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")
