@@ -2,8 +2,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
 
-from .custom_functions import get_full_name
-from .manager import MyUserManager
+from users.custom_functions import get_full_name
+from users.manager import MyUserManager
 
 
 class AbstractUser(models.Model):
