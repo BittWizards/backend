@@ -23,7 +23,6 @@ from orders.views import (
     MerchViewSet,
     OrdersViewSet,
 )
-from websocket.views import index, room
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
@@ -58,9 +57,7 @@ api_urlpatterns = [
     path(
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
     ),
-    path("<str:room_name>/", room, name="room"),
     path("tg", bot_view),
-    path("", index, name="index"),
 ]
 
 urlpatterns = [
