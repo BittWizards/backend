@@ -21,7 +21,7 @@ def editing_response_data(query: list[dict]) -> list[dict]:
     """Добавление недостающего мерча к амбассадору"""
     all_merch = Merch.objects.distinct("name").values("name")
     for obj in query:
-        obj["image"] = f"http://{DOMAIN}/{obj['image']}"
+        obj["image"] = f"http://{DOMAIN}/media/{obj['image']}"
         [
             obj["merch"].append({"name": merch["name"], "count": 0})
             for merch in all_merch
