@@ -38,19 +38,21 @@ class AmbassadorViewSet(viewsets.ModelViewSet):
         else:
             return AmbassadorSerializer
 
-    @action(detail=False, url_path="form", methods=("post",))
-    def form(self, request):
+    # @extend_schema(exclude=True)
+    @action(detail=False, url_path="form", methods=("POST",))
+    def form(self, request: Request) -> Response:
         """
         Создание экземпляра амбассадора через форму.
         """
+        print(request.data)
         serializer = FormCreateAmbassadorSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @extend_schema(tags=["Контент"], responses=AmbassadorContentSerializer())
     @action(detail=False, url_path=r"(?P<ambassador_id>\d+)/content")
-    def contents(self, request, ambassador_id):
+    def contents(self, request: Request, ambassador_id: int) -> Response:
         """Весь контент амбассадора."""
 
         queryset = (
