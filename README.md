@@ -115,7 +115,7 @@ DEBUG=False                              # режим debug (True или False)
 ALLOWED_HOSTS=127.0.0.1 backend          # ваши адреса через пробел (пример:localhost 127.0.0.1 xxxx.com)
 GET_CERTS=False                          # True для получения сертификатов (обязательно укажите email в CERTBOT_EMAIL
 CERTBOT_EMAIL=example@example.com        # Email для регистрации certbot
-DOMAIN=exemple.com                       # Домен на котором вы разворачиваете 
+DOMAIN=exemple.com                       # Домен на котором вы разворачиваете
 BOT_TOKEN=telegram_bot_token             # Токен телеграм бота, если вы планируете его использовать
 USE_SMTP=False                           # использовать ли настоящий сервис по отправке почты, иначе сообщения будут сохранятся внутри контейнера (папка sent_emails)
 EMAIL_HOST=EMAIL_HOST                    # сервер вашего email service
@@ -134,7 +134,7 @@ sudo apt update
 sudo apt install curl
 curl -fSL https://get.docker.com -o get-docker.sh
 sudo sh ./get-docker.sh
-sudo apt install docker-compose-plugin 
+sudo apt install docker-compose-plugin
 ````
 
 Запустить Docker в директории с файлом **docker-compose.yaml** (чтобы запустить в фоновом режиме добавьте флаг -d):
