@@ -1,3 +1,5 @@
+import re
+
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import serializers
@@ -284,7 +286,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
         full_name = validated_data.pop("full_name")
         ya_programm = validated_data.pop("ya_programm")
         actions = validated_data.pop("actions")
-        purpose = validated_data.get("purpose")
+        purpose = validated_data.pop("purpose")
         foot_size = validated_data.pop("foot_size")
         clothes_size = validated_data.pop("clothes_size")
         country = validated_data.pop("country")
@@ -294,9 +296,8 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
 
         if purpose == "Свой вариант":
             purpose = validated_data.pop("purpose_extra")
-            validated_data.pop("purpose")
         else:
-            purpose = validated_data.pop("purpose")
+            validated_data.pop("purpose_extra")
 
         prepared_fio = full_name.split()
         with transaction.atomic():
@@ -322,7 +323,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
                 clothes_size=clothes_size,
                 foot_size=foot_size,
             )
-            action_data = actions.split(", ")
+            action_data = re.split(r',\s(?![a-zа-я])', actions)
             for action in action_data:
                 current_action = Actions.objects.get_or_create(
                     title=action,
