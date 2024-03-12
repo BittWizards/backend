@@ -12,6 +12,7 @@ from ambassadors.models import (
 )
 from ambassadors.validators import gender_validator, tg_acc_validator
 from content.models import Content, Promocode
+from mailing.utils import send_to_ambassadors_tg
 
 
 class YandexProgrammSerializer(serializers.ModelSerializer):
@@ -162,6 +163,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
                 validated_data["status"] == "Active"
                 and instance.status == "Clarify"
             ):
+                send_to_ambassadors_tg(instance, "Вы приняты!")
                 validated_data["created"] = timezone.now()
         if "ya_programm" in validated_data:
             ya_programm = validated_data.pop("ya_programm")
