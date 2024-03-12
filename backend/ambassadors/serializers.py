@@ -323,7 +323,7 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
                 clothes_size=clothes_size,
                 foot_size=foot_size,
             )
-            action_data = re.split(r',\s(?![a-zа-я])', actions)
+            action_data = re.split(r",\s(?![a-zа-я])", actions)
             for action in action_data:
                 current_action = Actions.objects.get_or_create(
                     title=action,
