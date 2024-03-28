@@ -58,18 +58,18 @@ def create_ambassadors(db):
         )
 
         AmbassadorActions.objects.create(
-            ambassador_id=ambassador,
+            ambassador=ambassador,
             action=actions[i - 1],
         )
         AmbassadorAddress.objects.create(
-            ambassador_id=ambassador,
+            ambassador=ambassador,
             country="Страна",
             city=f"Город{i}",
             street_home=f"Улица{i}",
             post_index=f"10000{i}",
         )
         AmbassadorSize.objects.create(
-            ambassador_id=ambassador,
+            ambassador=ambassador,
             clothes_size="M",
             foot_size="37",
         )
@@ -90,7 +90,7 @@ def create_new_ambassadors(create_ambassadors):
             ya_programm_id=i,
             phone=f"7(917)123-45-6{5 + i}",
             tg_acc=f"ivanov{5 + i}",
-            # purpose="Закончить",
+            purpose="Закончить",
             education="9 классов",
             work="Беллинсгаузен",
             status="Clarify",
@@ -155,17 +155,6 @@ def create_merch():
 
 @pytest.fixture
 def create_orders(create_ambassadors, create_merch):
-    # hoodie = Merch.objects.create(
-    #     name="Толстовка",
-    #     size="XL",
-    # )
-    # plus = Merch.objects.create(
-    #     name="plus",
-    # )
-    # socks = Merch.objects.create(
-    #     name="Носки",
-    #     size=37,
-    # )
     for i in range(1, 6):
         order = Order.objects.create(
             id=i,

@@ -145,7 +145,7 @@ class AmbassadorActions(models.Model):
     Связанная таблица Ambassador и Actions.
     """
 
-    ambassador_id = models.ForeignKey(
+    ambassador = models.ForeignKey(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
@@ -169,7 +169,7 @@ class AmbassadorAddress(AbstractAmbassadorAddress):
     Модель адреса амбассадора.
     """
 
-    ambassador_id = models.OneToOneField(
+    ambassador = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
@@ -192,7 +192,7 @@ class AmbassadorSize(models.Model):
     Таблица размеров амбассадоров.
     """
 
-    ambassador_id = models.OneToOneField(
+    ambassador = models.OneToOneField(
         Ambassador,
         verbose_name="Амбассадор",
         on_delete=models.CASCADE,
