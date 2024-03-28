@@ -139,10 +139,10 @@ class AmbassadorSerializer(serializers.ModelSerializer):
             )
             address_data = AmbassadorAddress.objects.create(
                 **address,
-                ambassador_id=ambassador,
+                ambassador=ambassador,
             )
             size_data = AmbassadorSize.objects.create(
-                ambassador_id=ambassador,
+                ambassador=ambassador,
                 **size,
             )
             for action_data in actions_data:
@@ -151,7 +151,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
                 )
                 AmbassadorActions.objects.create(
                     action=current_action[0],
-                    ambassador_id=ambassador,
+                    ambassador=ambassador,
                 )
 
             ambassador.address = address_data
@@ -175,28 +175,26 @@ class AmbassadorSerializer(serializers.ModelSerializer):
         if "address" in validated_data:
             address = validated_data.pop("address")
             try:
-                AmbassadorAddress.objects.get(ambassador_id=instance).delete()
+                AmbassadorAddress.objects.get(ambassador=instance).delete()
             except Exception:
                 ...
             AmbassadorAddress.objects.update_or_create(
-                **address, ambassador_id=instance
+                **address, ambassador=instance
             )
         if "size" in validated_data:
             size = validated_data.pop("size")
             try:
-                AmbassadorSize.objects.get(ambassador_id=instance).delete()
+                AmbassadorSize.objects.get(ambassador=instance).delete()
             except Exception:
                 ...
             AmbassadorSize.objects.update_or_create(
                 **size,
-                ambassador_id=instance,
+                ambassador=instance,
             )
         if "actions" in validated_data:
             actions_data = validated_data.pop("actions")
             try:
-                AmbassadorActions.objects.filter(
-                    ambassador_id=instance
-                ).delete()
+                AmbassadorActions.objects.filter(ambassador=instance).delete()
             except Exception:
                 ...
             for action_data in actions_data:
@@ -204,7 +202,7 @@ class AmbassadorSerializer(serializers.ModelSerializer):
                     **action_data["action"]
                 )
                 AmbassadorActions.objects.create(
-                    action=current_action[0], ambassador_id=instance
+                    action=current_action[0], ambassador=instance
                 )
 
         for attr, value in validated_data.items():
@@ -312,25 +310,25 @@ class FormCreateAmbassadorSerializer(serializers.ModelSerializer):
                 **validated_data,
             )
             address_data = AmbassadorAddress.objects.create(
-                ambassador_id=ambassador,
+                ambassador=ambassador,
                 country=country,
                 city=city,
                 street_home=street_home,
                 post_index=post_index,
             )
             size_data = AmbassadorSize.objects.create(
-                ambassador_id=ambassador,
+                ambassador=ambassador,
                 clothes_size=clothes_size,
                 foot_size=foot_size,
             )
-            action_data = re.split(r',\s(?![a-zа-я])', actions)
+            action_data = re.split(r",\s(?![a-zа-я])", actions)
             for action in action_data:
                 current_action = Actions.objects.get_or_create(
                     title=action,
                 )
                 AmbassadorActions.objects.create(
                     action=current_action[0],
-                    ambassador_id=ambassador,
+                    ambassador=ambassador,
                 )
 
             ambassador.address = address_data
@@ -366,7 +364,7 @@ class AmbassadorContentPromoSerializer(serializers.ModelSerializer):
         ]
 
     def get_city(self, obj: Ambassador) -> str:
-        city = AmbassadorAddress.objects.get(ambassador_id=obj.id).city
+        city = AmbassadorAddress.objects.get(ambassador=obj.id).city
         return city
 
 
