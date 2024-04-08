@@ -1,7 +1,9 @@
 # MVP CRM-системы для Амбассадоров Яндекс Практикума.
+
 [Посмотреть проект можно по ссылке](https://ambassadors.sytes.net/)
 
 ## Оглавление <a id="contents"></a>
+
 1. [О проекте](#about)
 2. [Архив с кодом репозитория и скриншотами](#archive)
 3. [Документация](#documentation)
@@ -14,13 +16,13 @@
 10. [Тесты и покрытие](#tests)
 11. [Авторы проекта](#authors)
 
-
 ## О проекте <a id="about"></a>
+
 MVP CRM-системы для Амбассадоров Яндекс Практикума.
 
 ## Архив с кодом репозитория и скриншотами <a id="archive"></a>
 
-  [Диск](https://drive.google.com/drive/folders/1I5QRQc8Knz1CPwSR6HE3Q9DF2NiDPO0M)
+[Диск](https://drive.google.com/drive/folders/1I5QRQc8Knz1CPwSR6HE3Q9DF2NiDPO0M)
 
 ## Документация <a id="documentation"></a>
 
@@ -65,47 +67,56 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 ## Установка зависимостей для полного разворачивания проекта<a id="installation"></a>
 
 1. Склонируйте репозиторий на локальную машину и перейдите в него:
-  ```bash
-  git clone https://github.com/BittWizards/backend.git
-  cd backend
-  ```
+
+```bash
+git clone https://github.com/BittWizards/backend.git
+cd backend
+```
 
 2. Создайте .env файл:
-  ```bash
-  touch .env
-  ```
+
+```bash
+touch .env
+```
 
 3. Заполните по примеру своими значениями:
-  [скопируйте этот файл](.env.example)
+   [скопируйте этот файл](.env.example)
 
 4. [Установить docker](https://www.docker.com/get-started/)
 
-  В терминале linux это можно сделать так:
-  ````bash
-    sudo apt update
-    sudo apt install curl
-    curl -fSL https://get.docker.com -o get-docker.sh
-    sudo sh ./get-docker.sh
-    sudo apt install docker-compose-plugin
-  ````
+В терминале linux это можно сделать так:
+
+```bash
+  sudo apt update
+  sudo apt install curl
+  curl -fSL https://get.docker.com -o get-docker.sh
+  sudo sh ./get-docker.sh
+  sudo apt install docker-compose-plugin
+```
 
 > **Примечание.** Для запуска на сервере достаточно настроить файл .env и запустить файл docker-compose.production.yml
-***
+
+---
 
 ## Запуск <a id="start"></a>
 
 1. Запустите контейнеры с проектом следующей командой (используйте флаг -d для запуска в фоновом режиме):
-  ```bash
-  docker compose up
-  ```
+
+```bash
+docker compose up
+```
+
 На сервере:
-  ```bash
-  docker compose -f docker-compose.production.yml up
-  ```
+
+```bash
+docker compose -f docker-compose.production.yml up
+```
+
 В терминале Linux могут потребоваться права суперпользователя:
-  ```bash
-  sudo docker compose -f docker-compose.production.yml up
-  ```
+
+```bash
+sudo docker compose -f docker-compose.production.yml up
+```
 
 2. Для доступа в [админ-зону](http://localhost:8000/admin/):
 
@@ -116,9 +127,10 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 ## Наполнение БД <a id="database"></a>
 
 Для импорта начальных данных воспользуйтесь командой:
-  ```bash
-  docker compose exec backend python manage.py fill_db
-  ```
+
+```bash
+docker compose exec backend python manage.py xml_import
+```
 
 После запуска проект можно будет посмотреть по [ссылке](http://localhost:8000/).
 
@@ -137,7 +149,6 @@ MVP CRM-системы для Амбассадоров Яндекс Практи
 docker compose exec backend python manage.py telegram_webhook -s
 ```
 
-
 ## Тесты и покрытие <a id="tests"></a>
 
 Покрытие составляет 84 процента.
@@ -146,9 +157,9 @@ docker compose exec backend python manage.py telegram_webhook -s
 
 Запустите тесты в терминале из текущей папки:
 
-  ```bash
-  docker compose exec backend run -m pytest
-  ```
+```bash
+docker compose exec backend run -m pytest
+```
 
 ## Авторы проекта <a id="authors"></a>
 
@@ -156,7 +167,5 @@ docker compose exec backend python manage.py telegram_webhook -s
 - [Дунаева Клавдия](https://github.com/KlavaD)
 - [Дровнин Павел](https://github.com/pashpiter)
 - [Варачев Андрей](https://github.com/Dartanyun)
-
-
 
 [Оглавление](#contents)

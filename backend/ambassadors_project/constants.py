@@ -1,3 +1,4 @@
+REGEX_PATTERN = r"\b{name}(?:s|es)?\b"
 PROMOSIZE = 15
 PATTERN_PROMO = "[А-ЯA-Z0-9]+"
 REVIEW_COUNT_FOR_ACHIEV = 1

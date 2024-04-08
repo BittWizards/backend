@@ -50,7 +50,7 @@ services:
   frontend:
     env_file: .env
     image: natashasolntseva/ambassadors_frontend:latest
-    command: cp -r /app/dist/. /frontend_static/
+    entrypoint: /app/entrypoint.sh
     volumes:
       - static:/frontend_static
 
