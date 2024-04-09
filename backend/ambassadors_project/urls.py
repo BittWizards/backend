@@ -23,6 +23,7 @@ from orders.views import (
     MerchViewSet,
     OrdersViewSet,
 )
+from users.veiws import get_user_info
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
@@ -53,6 +54,7 @@ v1_urlpatterns = [
 
 api_urlpatterns = [
     path("v1/", include(v1_urlpatterns)),
+    path("login/", get_user_info),
     path("schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "docs/", SpectacularSwaggerView.as_view(url_name="schema"), name="docs"
