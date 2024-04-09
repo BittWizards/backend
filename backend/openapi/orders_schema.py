@@ -89,7 +89,7 @@ orders_extend_schema_view = {
         description="Создает новый заказ в базе",
         examples=[
             OpenApiExample(
-                "post", order_one_request_example, request_only=True
+                "create", order_one_request_example, request_only=True
             ),
             OpenApiExample("201", order_response_example, response_only=True),
         ],
