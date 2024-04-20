@@ -23,7 +23,7 @@ from orders.views import (
     MerchViewSet,
     OrdersViewSet,
 )
-from users.veiws import get_user_info
+from users.views import get_user_info
 
 router_v1 = routers.DefaultRouter()
 router_v1.register("allcontent", AllContentsViewSet, basename="allcontent")
