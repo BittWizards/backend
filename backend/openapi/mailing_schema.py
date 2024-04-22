@@ -1,8 +1,4 @@
-from drf_spectacular.utils import (
-    OpenApiRequest,
-    OpenApiResponse,
-    extend_schema,
-)
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 
 from mailing.serializers import MessageSerializer
 
@@ -10,7 +6,6 @@ mailing_extended_schema_view = {
     "create": extend_schema(
         summary="Создание новой рассылки",
         description="Создает новый объект рассылки",
-        request={"post": OpenApiRequest(request=MessageSerializer)},
         responses={
             201: OpenApiResponse(
                 description="Возвращает созданную рассылку",
@@ -46,7 +41,6 @@ mailing_extended_schema_view = {
         summary="Частичное обновление объекта рассылки",
         description="Изменение одного или нескольких полей существующего \
             объекта рассылки",
-        request={"post": OpenApiRequest(request=MessageSerializer)},
         responses={
             201: OpenApiResponse(
                 description="Возвращает изменный объект рассылки",

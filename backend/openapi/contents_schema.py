@@ -34,7 +34,7 @@ promocode_extend_schema_view = {
         description="Создает новый промокод для конкретного амбассадора",
         examples=[
             OpenApiExample(
-                "post", promocode_request_example, request_only=True
+                "create", promocode_request_example, request_only=True
             ),
         ],
         responses={
@@ -86,7 +86,9 @@ content_extended_schema_view = {
         summary="Создание карточки нового контента",
         description="Создает карточку нового контента для амбассадора",
         examples=[
-            OpenApiExample("post", content_request_example, request_only=True),
+            OpenApiExample(
+                "create", content_request_example, request_only=True
+            ),
         ],
         responses={
             201: OpenApiResponse(
