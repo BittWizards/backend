@@ -8,6 +8,13 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     ports:
       - 5432:5432
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $POSTGRES_USER -d $POSTGRES_DB']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
 
   backend:
     restart: always
@@ -20,7 +27,8 @@ services:
       - media:/app/media
       - ./backend/:/app/
     depends_on:
-      - db
+      db:
+        condition: service_healthy
 
   redis:
     image: redis:7.2.4-alpine
@@ -50,6 +58,8 @@ services:
       - bot_static:/bot_static/
       - media:/media/
       - certs:/etc/letsencrypt
+    depends_on:
+      - backend
 
   bot:
     build: ./webapp_bot/
