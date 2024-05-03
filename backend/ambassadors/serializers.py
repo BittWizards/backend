@@ -81,6 +81,7 @@ class AmbassadorListSerializer(serializers.ModelSerializer):
             "tg_acc",
             "status",
             "achievement",
+            "gender",
             "created",
         )
 
