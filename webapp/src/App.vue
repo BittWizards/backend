@@ -1,0 +1,58 @@
+<script setup lang="ts">
+import Info from './components/Info/Info.vue';
+import Achievements from './components/Achievements/Achievements.vue';
+import ProgressSpinner from 'primevue/progressspinner';
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
+import { useFetch } from './hooks/api.ts';
+// import { useTelegram } from './hooks/telegram.ts';
+import Statistic from './components/Statistic/Statistic.vue';
+import { IUser, IUserContent } from './types/types.ts';
+import { Ref, ref, watchEffect } from 'vue';
+import axios from 'axios';
+
+// const { webApp, user } = useTelegram();
+
+const user = { username: 'Igor' };
+const contentData: Ref<IUserContent | null> = ref(null);
+
+const { data: userData } = useFetch<IUser>(
+  `https://ambassadors.sytes.net/api/v1/ambassador_by_tg_username/${user.username}/`
+);
+
+watchEffect(async () => {
+  if (userData.value) {
+    try {
+      const response = await axios.get(
+        `https://ambassadors.sytes.net/api/v1/ambassadors/${userData.value.id}/content/`
+      );
+      contentData.value = response.data;
+    } catch (error) {
+      console.error('Error fetching content data:', error);
+    }
+  }
+});
+</script>
+
+<template>
+  <div class="fullwidth" v-if="userData">
+    <TabView :pt="{ nav: { style: 'justify-content: space-between; width: 100%' } }">
+      <TabPanel header="Personal info">
+        <Info :user="userData" />
+      </TabPanel>
+      <TabPanel header="Achievements">
+        <Achievements :user="userData" />
+      </TabPanel>
+      <TabPanel header="Statistic">
+        <Statistic v-if="contentData" :data="contentData" />
+      </TabPanel>
+    </TabView>
+  </div>
+  <ProgressSpinner v-else />
+</template>
+
+<style scoped>
+.fullwidth {
+  width: 100vh;
+}
+</style>
