@@ -116,7 +116,7 @@ jobs:
           tags: aleksey2299/ambassadors_nginx:latest
 
   build_bot_frontend_and_push_to_docker_hub:
-    name: Push nginx Docker image to DockerHub
+    name: Push webapp Docker image to DockerHub
     runs-on: ubuntu-latest
     steps:
       - name: Check out the repo
