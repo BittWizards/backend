@@ -18,12 +18,16 @@ const contentData: Ref<IUserContent | null> = ref(null);
 const active = ref(0);
 let startX: number | null = null;
 
-const { data: userData } = useFetch<IUser>(`/api/v1/ambassador_by_tg_username/${user.username}/`);
+const { data: userData } = useFetch<IUser>(
+  `https://ambassadors.sytes.net/api/v1/ambassador_by_tg_username/${user.username}/`
+);
 
 watchEffect(async () => {
   if (userData.value) {
     try {
-      const response = await axios.get(`/api/v1/ambassadors/${userData.value.id}/content/`);
+      const response = await axios.get(
+        `https://ambassadors.sytes.net/api/v1/ambassadors/${userData.value.id}/content/`
+      );
       contentData.value = response.data;
     } catch (error) {
       console.error('Error fetching content data:', error);
@@ -52,7 +56,7 @@ const switchTabOnSwipe = (e: TouchEvent) => {
     class="fullwidth"
     v-if="userData"
     @touchstart="startX = $event.touches[0].clientX"
-    @touchmove.prevent="switchTabOnSwipe"
+    @touchmove="switchTabOnSwipe"
     @touchend="startX = null"
   >
     <TabView
