@@ -52,7 +52,7 @@ const switchTabOnSwipe = (e: TouchEvent) => {
     class="fullwidth"
     v-if="userData"
     @touchstart="startX = $event.touches[0].clientX"
-    @touchmove.prevent="switchTabOnSwipe"
+    @touchmove="switchTabOnSwipe"
     @touchend="startX = null"
   >
     <TabView
