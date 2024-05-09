@@ -18,7 +18,7 @@ const platformColors: { [key: string]: string } = {
 const dateCategoryList: ('halfYear' | 'month' | 'day')[] = ['halfYear', 'month', 'day'];
 const dateCategory = { halfYear: 'Month', month: 'Date', day: 'Hours' };
 const titleCategory = {
-  halfYear: 'Статистика за последние полгода',
+  halfYear: 'Статистика за последний год',
   month: 'Статистика за ',
   day: 'Статистика ',
 };
@@ -27,8 +27,12 @@ const currentChart: Ref<'halfYear' | 'month' | 'day'> = ref('halfYear');
 const choosedDate: Ref<Date> = ref(new Date());
 const chart: Ref<Chart | null> = ref(null);
 
+window.addEventListener('resize', () => {
+  chart.value?.reinit();
+});
+
 const sixMonthsAgo = new Date();
-sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 11);
 sixMonthsAgo.setDate(1);
 
 const sixMonthsContent = props.data.my_content.filter(
@@ -52,7 +56,7 @@ const createData = (category: 'halfYear' | 'month' | 'day', date: Date) => {
   ) {
     const xLabel =
       category === 'halfYear'
-        ? i.toLocaleString('default', { month: 'long' })
+        ? i.toLocaleString('default', { month: 'long' }).substring(0, 3)
         : i[`get${dateCategory[category]}` as 'getMonth' | 'getDate' | 'getHours']().toString();
     const groupContent: IData = { x: xLabel };
     sixMonthsContent
@@ -82,7 +86,7 @@ Object.keys(platformColors).forEach((platform) => {
   dataset.push({
     label: platform,
     data: monthsData,
-    parsing: { yAxisKey: `${platform}.length` },
+    parsing: { xAxisKey: `${platform}.length`, yAxisKey: 'x' },
     backgroundColor: platformColors[platform],
   });
 });
@@ -101,21 +105,14 @@ const setChartData = () => {
   };
 };
 
-const test = (e: ChartSelectEvent) => {
-  const months = [
-    'январь',
-    'февраль',
-    'март',
-    'апрель',
-    'май',
-    'июнь',
-    'июль',
-    'август',
-    'сентябрь',
-    'октябрь',
-    'ноябрь',
-    'декабрь',
-  ];
+const dateHelper = new Date(0, 0);
+const months: string[] = [];
+for (let i = dateHelper; i.getMonth() != 11; i.setMonth(i.getMonth() + 1)) {
+  const monthName = i.toLocaleString('default', { month: 'long' }).substring(0, 3);
+  months.push(monthName);
+}
+
+const tabSelect = (e: ChartSelectEvent) => {
   const test = chart.value!.getChart();
   const xLabel = e.element.element.$context.raw.x;
   const nextCategory =
@@ -155,13 +152,14 @@ const setChartOptions = () => {
   const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
 
   return {
-    aspectRatio: 2,
+    maintainAspectRatio: false,
+    indexAxis: 'y',
     plugins: {
       title: {
         display: true,
         color: textColor,
         font: { size: 20, weight: 'normal' },
-        text: 'Статистика за последние полгода',
+        text: 'Статистика за последний год',
       },
       tooltips: {
         mode: 'index',
@@ -176,8 +174,10 @@ const setChartOptions = () => {
     scales: {
       x: {
         stacked: true,
+        suggestedMax: 5,
         ticks: {
           color: textColorSecondary,
+          callback: (v: number) => (v % 1 === 0 ? v : undefined),
         },
         grid: {
           color: surfaceBorder,
@@ -185,10 +185,7 @@ const setChartOptions = () => {
       },
       y: {
         stacked: true,
-        suggestedMax: 5,
         ticks: {
-          display: true,
-          callback: (v: number) => (v % 1 === 0 ? v : undefined),
           color: textColorSecondary,
         },
         grid: {
@@ -201,7 +198,14 @@ const setChartOptions = () => {
 </script>
 
 <template>
-  <Chart type="bar" :data="chartData" :options="chartOptions" v-on:select="test" ref="chart" />
+  <Chart
+    type="bar"
+    :data="chartData"
+    :options="chartOptions"
+    v-on:select="tabSelect"
+    ref="chart"
+    :style="`min-height: ${currentChart === 'month' ? 800 : currentChart === 'day' ? 700 : 450}px`"
+  />
   <br />
   <p>Всего контента выложено: {{ data.my_content.length }}</p>
 </template>

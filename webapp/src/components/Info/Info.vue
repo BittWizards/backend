@@ -113,8 +113,17 @@ const sizes = ['Размер одежды:', 'Размер ноги:'];
 .fieldset {
   background-color: transparent;
 }
+/* @media (min-width: 800px) {
+  .grid {
+    display: grid;
+    grid-template-columns: 400px 400px;
+  }
+} */
+
+/* @media (max-width: 799.98px) { */
 .grid {
   display: grid;
-  grid-template-columns: 40% 40%;
+  grid-template-columns: 50% 50%;
 }
+/* } */
 </style>
