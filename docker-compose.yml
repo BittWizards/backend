@@ -62,7 +62,7 @@ services:
       - backend
 
   bot:
-    build: ./webapp_bot/
+    build: ./webapp/
     volumes:
       - bot_static:/frontend_static
 
